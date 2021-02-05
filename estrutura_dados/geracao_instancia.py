@@ -23,11 +23,14 @@ def gera_instancia(nome,
         os.mkdir(local)
 
     gera_ambiente(local, tamanho_quadro, quantidade_quadros)
+    print('Ambiente gerado')
 
     gera_anuncios(local, quantidade_anuncio, tamanho_min,
                   tamanho_max, frequencia_min, frequencia_max)
+    print('Anúncios gerados')
 
     gera_conflito(local, quantidade_anuncio, porcentagem_conflito)
+    print('Conflitos gerados')
 
 
 def gera_ambiente(local, tamanho_quadro, quantidade_quadros):
@@ -65,13 +68,72 @@ def gera_conflito(local, quantidade_anuncios, porcentagem_conflito):
 
 
 def gera_basico_pequeno(seed=1):
+    A = 100
+    K = 75
+    L = 50
+    W = 30
+    C = 0.3
     gera_instancia('aleatorio_pequeno',
-                   tamanho_quadro=50,
-                   quantidade_quadros=75,
-                   quantidade_anuncio=100,
+                   tamanho_quadro=L,
+                   quantidade_quadros=K,
+                   quantidade_anuncio=A,
                    tamanho_min=1,
-                   tamanho_max=50,
+                   tamanho_max=L,
                    frequencia_min=1,
-                   frequencia_max=30,
-                   porcentagem_conflito=0.3,
+                   frequencia_max=W,
+                   porcentagem_conflito=C,
+                   seed=seed)
+
+
+def gera_basico_medio(seed=1):
+    A = 500
+    K = 250
+    L = 100
+    W = 30
+    C = 0.3
+    gera_instancia('aleatorio_medio',
+                   tamanho_quadro=L,
+                   quantidade_quadros=K,
+                   quantidade_anuncio=A,
+                   tamanho_min=1,
+                   tamanho_max=L,
+                   frequencia_min=1,
+                   frequencia_max=W,
+                   porcentagem_conflito=C,
+                   seed=seed)
+
+
+def gera_basico_grande(seed=1):
+    A = 1000
+    K = 500
+    L = 250
+    W = 30
+    C = 0.4
+    gera_instancia('aleatorio_grande',
+                   tamanho_quadro=L,
+                   quantidade_quadros=K,
+                   quantidade_anuncio=A,
+                   tamanho_min=1,
+                   tamanho_max=L,
+                   frequencia_min=1,
+                   frequencia_max=W,
+                   porcentagem_conflito=C,
+                   seed=seed)
+
+
+def gera_basico_gigante(seed=1):
+    A = 10000
+    K = 500
+    L = 200
+    W = 30
+    C = 0.4
+    gera_instancia('aleatorio_gigante',
+                   tamanho_quadro=L,
+                   quantidade_quadros=K,
+                   quantidade_anuncio=A,
+                   tamanho_min=1,
+                   tamanho_max=L,
+                   frequencia_min=1,
+                   frequencia_max=W,
+                   porcentagem_conflito=C,
                    seed=seed)
