@@ -1,69 +1,77 @@
-from typing import List, Tuple
+from typing import Tuple
 
 import pandas as pd
 from pandas.api.types import is_integer_dtype
-from pandas.core.frame import DataFrame, Series
+from pandas.core.frame import DataFrame
 
 
-def obtemInstancia(caminhoInstancia: str) -> Tuple[DataFrame, DataFrame, DataFrame]:
+def obtem_instancia(caminho_instancia: str) -> Tuple[DataFrame, DataFrame, DataFrame]:
 
-    dfAmbiente = pd.read_csv(caminhoInstancia + '/ambiente.csv')
-    dfAnuncio = pd.read_csv(caminhoInstancia + '/anuncios.csv', index_col='indice')
-    dfConflito = pd.read_csv(caminhoInstancia + '/conflitos.csv', index_col='indice/indice')
+    df_ambiente = pd.read_csv(caminho_instancia + '/ambiente.csv')
+    df_anuncio = pd.read_csv(
+        caminho_instancia + '/anuncios.csv', index_col='indice')
+    df_conflito = pd.read_csv(
+        caminho_instancia + '/conflitos.csv', index_col='indice/indice')
 
-    validaEntrada(dfAmbiente, dfAnuncio, dfConflito)
+    valida_entrada(df_ambiente, df_anuncio, df_conflito)
 
-    return dfAnuncio, dfConflito, dfAmbiente["tamanho-quadro"][0], dfAmbiente["quantidade-quadros"][0]
-
-
-def validaEntrada(dfAmbiente: DataFrame, dfAnuncio: DataFrame, dfConflito: DataFrame):
-    
-    validaDfAmbiente(dfAmbiente)
-    validaDfAnuncio(dfAnuncio)
-    validaDfConflito(dfConflito)
-
-    if not (dfAnuncio.index == dfConflito.index).all():
-        raise Exception("Tabela de conflitos está com índices diferentes dos anúncios")
+    return df_anuncio, df_conflito, df_ambiente["tamanho-quadro"][0], df_ambiente["quantidade-quadros"][0]
 
 
-def validaDfAmbiente(dfAmbiente: DataFrame):
+def valida_entrada(df_ambiente: DataFrame, df_anuncio: DataFrame, df_conflito: DataFrame):
 
-    tamanhoQuadro = int(dfAmbiente["tamanho-quadro"][0])
-    quantidadeQuadros = int(dfAmbiente["quantidade-quadros"][0])
+    valida_ambiente(df_ambiente)
+    valida_anuncio(df_anuncio)
+    valida_conflito(df_conflito)
 
-    if tamanhoQuadro <= 0:
+    if (df_anuncio.index != df_conflito.index).all():
+        raise Exception(
+            "Tabela de conflitos está com índices diferentes dos anúncios")
+
+
+def valida_ambiente(df_ambiente: DataFrame):
+
+    tamanho_quadro = df_ambiente["tamanho-quadro"][0]
+    quantidade_quadros = df_ambiente["quantidade-quadros"][0]
+
+    if tamanho_quadro <= 0 or not is_integer_dtype(tamanho_quadro):
         raise Exception('Tamanho de quadro inválido')
 
-    if quantidadeQuadros <= 0:
+    if quantidade_quadros <= 0 or not is_integer_dtype(quantidade_quadros):
         raise Exception('Quantidade de quadros inválida')
 
 
-def validaDfAnuncio(dfAnuncio: DataFrame):
+def valida_anuncio(df_anuncio: DataFrame):
 
-    if len(dfAnuncio) <= 0:
+    if len(df_anuncio) <= 0:
         raise Exception('Quantidade de anúncios inválida')
 
-    listaTamanho = dfAnuncio["tamanho"]
-    listaFrequencia = dfAnuncio["frequencia"]
+    lista_tamanho = df_anuncio["tamanho"]
+    lista_frequencia = df_anuncio["frequencia"]
 
-    if any(listaTamanho <= 0) or not is_integer_dtype(listaTamanho):
+    if any(lista_tamanho <= 0) or not is_integer_dtype(lista_tamanho):
         raise Exception('Tamanho de anúncio inválido')
 
-    if any(listaFrequencia <= 0) or not is_integer_dtype(listaFrequencia):
+    if any(lista_frequencia <= 0) or not is_integer_dtype(lista_frequencia):
         raise Exception('Frequencia de anúncio inválido')
 
 
-def validaDfConflito(dfConflito: DataFrame):
+def valida_conflito(df_conflito: DataFrame):
 
-    if len(dfConflito) <= 0:
+    if len(df_conflito) <= 0:
         raise Exception('Quantidade de conflitos inválida')
 
-    if len(dfConflito) != len(dfConflito.columns):
+    if len(df_conflito) != len(df_conflito.columns):
         raise Exception(
             'Tabela de conflitos possui número diferente de linhas e colunas')
 
-    if not (dfConflito.values == dfConflito.values.T).all():
+    if (df_conflito.values != df_conflito.values.T).all():
         raise Exception('Tabela de conflitos está ambígua')
 
-    if not (dfConflito.columns.astype(str) == dfConflito.index.astype(str)).all():
+    if (df_conflito.columns.astype(str) != df_conflito.index.astype(str)).all():
         raise Exception('Tabela de conflitos está com índices errados')
+
+    for linha in df_conflito.values:
+        for item in linha:
+            if item != 1 and item != 0:
+                raise Exception('Tabela de conflitos possui valor inválido')
