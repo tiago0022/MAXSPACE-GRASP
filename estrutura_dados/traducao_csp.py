@@ -127,5 +127,4 @@ def gera_todos_falkenauer_u(seed=1):
         print(f'Fim do grupo U {grupo}')
     print('Fim de Falkenauer U')
 
-gera_todos_falkenauer_t()
-gera_todos_falkenauer_u()
+    
