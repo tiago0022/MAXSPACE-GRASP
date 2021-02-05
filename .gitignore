@@ -135,3 +135,6 @@ instancias/*
 !instancias/aleatorio_pequeno
 !instancias/aleatorio_medio
 !instancias/aleatorio_grande
+
+# Instâncias do CSP
+instancias_csp/*
