@@ -1,5 +1,5 @@
 import sys
-from estrutura_dados.leitor_entrada import obtem_instancia
+from estrutura_dados.leitura_entrada import obtem_instancia
 
 caminho_instancia = 'instancias/basico/'
 
