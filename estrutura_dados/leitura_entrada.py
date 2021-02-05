@@ -7,11 +7,11 @@ from pandas.core.frame import DataFrame
 
 def obtem_instancia(caminho_instancia: str) -> Tuple[DataFrame, DataFrame, DataFrame]:
 
-    df_ambiente = pd.read_csv(caminho_instancia + '/ambiente.csv')
+    df_ambiente = pd.read_csv(caminho_instancia + 'ambiente.csv')
     df_anuncio = pd.read_csv(
-        caminho_instancia + '/anuncios.csv', index_col='indice')
+        caminho_instancia + 'anuncios.csv', index_col='indice')
     df_conflito = pd.read_csv(
-        caminho_instancia + '/conflitos.csv', index_col='indice/indice')
+        caminho_instancia + 'conflitos.csv', index_col='indice/indice')
 
     valida_entrada(df_ambiente, df_anuncio, df_conflito)
 
