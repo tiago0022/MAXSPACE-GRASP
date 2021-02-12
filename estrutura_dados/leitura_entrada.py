@@ -63,10 +63,10 @@ def valida_conflito(df_conflito: DataFrame):
         raise Exception(
             'Tabela de conflitos possui número diferente de linhas e colunas')
 
-    if (df_conflito.values != df_conflito.values.T).all():
+    if (df_conflito.values != df_conflito.values.T).any():
         raise Exception('Tabela de conflitos está ambígua')
 
-    if (df_conflito.columns.astype(str) != df_conflito.index.astype(str)).all():
+    if (df_conflito.columns.astype(str) != df_conflito.index.astype(str)).any():
         raise Exception('Tabela de conflitos está com índices errados')
 
     for linha in df_conflito.values:
