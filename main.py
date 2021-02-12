@@ -1,11 +1,22 @@
+import random as rd
 import sys
-from estrutura_dados.leitura_entrada import obtem_instancia
 
+from grasp.grasp import grasp
+
+# Parâmetros padrão
 caminho_instancia = 'instancias/basico/'
+alpha = 0.25
+seed = 1
 
-if len(sys.argv) >= 2:
-    caminho_instancia = sys.argv[1]
+# Leitura dos parâmetros de entrada
+for i in range(1, len(sys.argv) , 2):
+    if sys.argv[i] == '-p':
+        caminho_instancia = sys.argv[i+1]
+    if sys.argv[i] == '-a':
+        alpha = float(sys.argv[i+1])
+    if sys.argv[i] == '-s':
+        seed = int(sys.argv[i+1])
 
-df_anuncio, df_conflito, tamanho_quadro, quantidade_quadros = obtem_instancia(caminho_instancia)
+rd.seed(seed)
 
-print(f"Tamanho do quadro L: {tamanho_quadro}\nQuantidade de quadros B: {quantidade_quadros}\n\nAnúncios A_i:\n{df_anuncio}\n\nConflitos C_ij:\n{df_conflito}\n")
+grasp(caminho_instancia, alpha, seed)
