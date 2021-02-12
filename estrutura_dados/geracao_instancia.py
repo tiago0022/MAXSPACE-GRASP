@@ -18,7 +18,7 @@ def gera_instancia(nome,
 
     rd.seed(seed)
 
-    local = f'instancias/{nome}'
+    local = f'instancias/Aleatorio/{nome}'
     if not os.path.exists(local):
         os.mkdir(local)
 
@@ -67,13 +67,13 @@ def gera_conflito(local, quantidade_anuncios, porcentagem_conflito):
     df_conflito.to_csv(f'{local}/conflitos.csv')
 
 
-def gera_basico_pequeno(seed=1):
+def gera_basico_pequeno(indice='00', seed=1):
     A = 100
     K = 75
     L = 50
     W = 30
     C = 0.3
-    gera_instancia('aleatorio_pequeno',
+    gera_instancia(f'aleatorio_pequeno_{indice}',
                    tamanho_quadro=L,
                    quantidade_quadros=K,
                    quantidade_anuncio=A,
@@ -85,13 +85,13 @@ def gera_basico_pequeno(seed=1):
                    seed=seed)
 
 
-def gera_basico_medio(seed=1):
+def gera_basico_medio(indice='00', seed=1):
     A = 500
     K = 250
     L = 100
     W = 30
     C = 0.3
-    gera_instancia('aleatorio_medio',
+    gera_instancia(f'aleatorio_medio_{indice}',
                    tamanho_quadro=L,
                    quantidade_quadros=K,
                    quantidade_anuncio=A,
@@ -103,13 +103,13 @@ def gera_basico_medio(seed=1):
                    seed=seed)
 
 
-def gera_basico_grande(seed=1):
+def gera_basico_grande(indice='00', seed=1):
     A = 1000
     K = 500
     L = 250
     W = 30
     C = 0.4
-    gera_instancia('aleatorio_grande',
+    gera_instancia(f'aleatorio_grande_{indice}',
                    tamanho_quadro=L,
                    quantidade_quadros=K,
                    quantidade_anuncio=A,
@@ -121,13 +121,13 @@ def gera_basico_grande(seed=1):
                    seed=seed)
 
 
-def gera_basico_gigante(seed=1):
+def gera_basico_gigante(indice='00', seed=1):
     A = 10000
     K = 500
     L = 200
     W = 30
     C = 0.4
-    gera_instancia('aleatorio_gigante',
+    gera_instancia(f'aleatorio_gigante_{indice}',
                    tamanho_quadro=L,
                    quantidade_quadros=K,
                    quantidade_anuncio=A,
@@ -137,3 +137,34 @@ def gera_basico_gigante(seed=1):
                    frequencia_max=W,
                    porcentagem_conflito=C,
                    seed=seed)
+
+
+def gera_grupo_aleatorio_pequeno(quantidade=20):
+    for i in range(quantidade):
+        print('\nInstancia', i)
+        indice = str(i).zfill(2)
+        gera_basico_pequeno(indice, seed=i)
+
+
+def gera_grupo_aleatorio_medio(quantidade=20):
+    for i in range(quantidade):
+        print('\nInstancia', i)
+        indice = str(i).zfill(2)
+        gera_basico_medio(indice, seed=i)
+
+
+def gera_grupo_aleatorio_grande(quantidade=20):
+    for i in range(quantidade):
+        print('\nInstancia', i)
+        indice = str(i).zfill(2)
+        gera_basico_grande(indice, seed=i)
+
+
+def gera_grupo_aleatorio_gigante(quantidade=20):
+    for i in range(quantidade):
+        print('\nInstancia', i)
+        indice = str(i).zfill(2)
+        gera_basico_gigante(indice, seed=i)
+
+
+gera_grupo_aleatorio_gigante()

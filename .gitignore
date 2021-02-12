@@ -129,12 +129,9 @@ dmypy.json
 .pyre/
 
 # Ignora todas as instâncias...
-instancias/*
+instancias*/*
 # ...exceto estas
 !instancias/basico
-!instancias/aleatorio_pequeno
-!instancias/aleatorio_medio
-!instancias/aleatorio_grande
-
-# Instâncias do CSP
-instancias_csp/*
+!instancias/Aleatorio/aleatorio_pequeno_00
+!instancias/Aleatorio/aleatorio_medio_00
+!instancias/Aleatorio/aleatorio_grande_00
