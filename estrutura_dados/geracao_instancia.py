@@ -165,6 +165,3 @@ def gera_grupo_aleatorio_gigante(quantidade=20):
         print('\nInstancia', i)
         indice = str(i).zfill(2)
         gera_basico_gigante(indice, seed=i)
-
-
-gera_grupo_aleatorio_gigante()
