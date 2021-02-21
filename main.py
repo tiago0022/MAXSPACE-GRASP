@@ -1,15 +1,16 @@
 import random as rd
 import sys
+import time
 
-from grasp.grasp import grasp
+from grasp.grasp import Grasp
 
 # Parâmetros padrão
 caminho_instancia = 'instancias/basico/'
 alpha = 0.25
-seed = 1
+seed = int(time.time())
 
 # Leitura dos parâmetros de entrada
-for i in range(1, len(sys.argv) , 2):
+for i in range(1, len(sys.argv), 2):
     if sys.argv[i] == '-p':
         caminho_instancia = sys.argv[i+1]
     if sys.argv[i] == '-a':
@@ -19,4 +20,4 @@ for i in range(1, len(sys.argv) , 2):
 
 rd.seed(seed)
 
-grasp(caminho_instancia, alpha, seed)
+Grasp(caminho_instancia, alpha, seed).soluciona()
