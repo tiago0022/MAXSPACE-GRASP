@@ -1,8 +1,7 @@
+import csv
 import math
 import os
 import random as rd
-
-from pandas import DataFrame
 
 from geracao_instancia import gera_ambiente, gera_conflito
 
@@ -12,6 +11,7 @@ CAMINHO_SAIDA_FALKENAUER_U = 'instancias/Falkenauer_U/'
 CAMINHO_ENTRADA_FALKENAUER_T = 'instancias_csp/Falkenauer_T/'
 CAMINHO_SAIDA_FALKENAUER_T = 'instancias/Falkenauer_T/'
 
+
 def arquivo_texto_para_matriz(caminho):
     arquivo = open(caminho, "r")
     matriz = []
@@ -20,7 +20,8 @@ def arquivo_texto_para_matriz(caminho):
     arquivo.close()
     return matriz
 
-def gera_instancia_falkenauer_u(nome_arquivo:str, seed=1):
+
+def gera_instancia_falkenauer_u(nome_arquivo: str, seed=1):
 
     rd.seed(seed)
 
@@ -29,13 +30,13 @@ def gera_instancia_falkenauer_u(nome_arquivo:str, seed=1):
         os.mkdir(caminho_nova_pasta)
 
     matriz = arquivo_texto_para_matriz(CAMINHO_ENTRADA_FALKENAUER_U + nome_arquivo)
-    
+
     gera_ambiente_falkenauer_u(caminho_nova_pasta, matriz)
     gera_anuncios_csp(caminho_nova_pasta, matriz)
     gera_conflito_csp(caminho_nova_pasta, matriz)
 
 
-def gera_instancia_falkenauer_t(nome_arquivo:str, seed=1):
+def gera_instancia_falkenauer_t(nome_arquivo: str, seed=1):
 
     rd.seed(seed)
 
@@ -44,12 +45,12 @@ def gera_instancia_falkenauer_t(nome_arquivo:str, seed=1):
         os.mkdir(caminho_nova_pasta)
 
     matriz = arquivo_texto_para_matriz(CAMINHO_ENTRADA_FALKENAUER_T + nome_arquivo)
-    
+
     gera_ambiente_falkenauer_t(caminho_nova_pasta, matriz)
     gera_anuncios_csp(caminho_nova_pasta, matriz)
     gera_conflito_csp(caminho_nova_pasta, matriz)
-    
-    
+
+
 def gera_ambiente_falkenauer_u(local, matriz):
     tamanho_quadro = matriz[1][0]
     quantidade_quadro = obtem_quantidade_quadro_falkenauer_u(matriz)
@@ -91,14 +92,15 @@ def obtem_quantidade_quadro_falkenauer_t(matriz):
 
 def gera_anuncios_csp(local, matriz):
     quantidade_anuncios = matriz[0][0]
-    df_anuncio = DataFrame(columns=['indice', 'tamanho', 'frequencia'])
+    lista_tamanho_frequencia = [[0, 0]] * quantidade_anuncios
     for i in range(quantidade_anuncios):
-        indice = i + 1
         tamanho = matriz[i + 2][0]
         frequencia = matriz[i + 2][1]
-        df_anuncio = df_anuncio.append({'indice': indice, 'tamanho': tamanho, 'frequencia': frequencia}, ignore_index=True)
-    df_anuncio.set_index('indice', inplace=True)
-    df_anuncio.to_csv(f'{local}/anuncios.csv')
+        lista_tamanho_frequencia[i] = [tamanho, frequencia]
+    arquivo = open(f'{local}/anuncios.csv', 'w+')
+    arquivo_csv = csv.writer(arquivo)
+    arquivo_csv.writerows(lista_tamanho_frequencia)
+    arquivo.close()
 
 
 def gera_conflito_csp(local, matriz):
@@ -117,6 +119,7 @@ def gera_todos_falkenauer_t(seed=1):
         print(f'Fim do grupo T {grupo}')
     print('Fim de Falkenauer T')
 
+
 def gera_todos_falkenauer_u(seed=1):
     lista_grupo = ['120', '250', '500', '1000']
     for grupo in lista_grupo:
@@ -127,4 +130,10 @@ def gera_todos_falkenauer_u(seed=1):
         print(f'Fim do grupo U {grupo}')
     print('Fim de Falkenauer U')
 
-    
+
+def gera_todos_falkenauer(seed=1):
+    gera_todos_falkenauer_t(seed)
+    gera_todos_falkenauer_u(seed)
+
+
+# gera_todos_falkenauer()
