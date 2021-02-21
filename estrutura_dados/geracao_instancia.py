@@ -1,8 +1,6 @@
+import csv
 import os
 import random as rd
-
-import numpy as np
-from pandas import DataFrame
 
 
 def gera_instancia(nome,
@@ -34,37 +32,35 @@ def gera_instancia(nome,
 
 
 def gera_ambiente(local, tamanho_quadro, quantidade_quadros):
-    df_ambiente = DataFrame(columns=['tamanho-quadro', 'quantidade-quadros'])
-    df_ambiente = df_ambiente.append(
-        {'tamanho-quadro': tamanho_quadro, 'quantidade-quadros': quantidade_quadros}, ignore_index=True)
-    df_ambiente.to_csv(f'{local}/ambiente.csv', index=False)
+    arquivo = open(f'{local}/ambiente.csv', 'w+')
+    arquivo_csv = csv.writer(arquivo)
+    arquivo_csv.writerow(['tamanho-quadro', 'quantidade-quadros'])
+    arquivo_csv.writerow([tamanho_quadro, quantidade_quadros])
+    arquivo.close()
 
 
 def gera_anuncios(local, quantidade_anuncios, tamanho_min, tamanho_max, frequencia_min, frequencia_max):
-    df_anuncio = DataFrame(columns=['indice', 'tamanho', 'frequencia'])
+    lista_tamanho_frequencia = [[0, 0]] * quantidade_anuncios
     for i in range(quantidade_anuncios):
-        indice = i + 1
         tamanho = rd.randint(tamanho_min, tamanho_max)
         frequencia = rd.randint(frequencia_min, frequencia_max)
-        df_anuncio = df_anuncio.append(
-            {'indice': indice, 'tamanho': tamanho, 'frequencia': frequencia}, ignore_index=True)
-    df_anuncio.set_index('indice', inplace=True)
-    df_anuncio.to_csv(f'{local}/anuncios.csv')
+        lista_tamanho_frequencia[i] = [tamanho, frequencia]
+    arquivo = open(f'{local}/anuncios.csv', 'w+')
+    arquivo_csv = csv.writer(arquivo)
+    arquivo_csv.writerow(['tamanho', 'frequencia'])
+    arquivo_csv.writerows(lista_tamanho_frequencia)
+    arquivo.close()
 
 
 def gera_conflito(local, quantidade_anuncios, porcentagem_conflito):
-    matriz_conflito = np.zeros(
-        (quantidade_anuncios, quantidade_anuncios), dtype=int)
+    arquivo = open(f'{local}/conflitos.csv', 'w+')
+    arquivo_csv = csv.writer(arquivo)
     for i in range(quantidade_anuncios):
+        linha_conflito = [0] * (i + 1)
         for j in range(i):
-            conflito = int(rd.random() < porcentagem_conflito)
-            matriz_conflito[i][j] = conflito
-            matriz_conflito[j][i] = conflito
-    df_conflito = DataFrame(
-        matriz_conflito, columns=range(1, quantidade_anuncios + 1))
-    df_conflito['indice/indice'] = range(1, quantidade_anuncios + 1)
-    df_conflito.set_index('indice/indice', inplace=True)
-    df_conflito.to_csv(f'{local}/conflitos.csv')
+            linha_conflito[j] = int(rd.random() < porcentagem_conflito)
+        arquivo_csv.writerow(linha_conflito)
+    arquivo.close()
 
 
 def gera_basico_pequeno(indice='00', seed=1):
@@ -172,3 +168,6 @@ def gera_todas_instancias(quantidade=20):
     gera_grupo_aleatorio_medio(quantidade)
     gera_grupo_aleatorio_grande(quantidade)
     gera_grupo_aleatorio_gigante(quantidade)
+
+
+# gera_todas_instancias()
