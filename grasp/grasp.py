@@ -1,12 +1,11 @@
-from numpy.core.numeric import False_
 from estrutura_dados.leitura_entrada import obtem_instancia
 from tempo_execucao import RegistroTempo
 
 from grasp.construcao import constroi
 
-EXIBE_INSTANCIA = 0
-EXIBE_TEMPO = 1
-EXIBE_SOLUCAO = 0
+EXIBE_INSTANCIA = 0  # padrão = False
+EXIBE_TEMPO = 1  # padrão = True
+EXIBE_SOLUCAO = 0  # padrão = True
 
 
 class Grasp:
@@ -15,8 +14,7 @@ class Grasp:
     seed = None
     df_anuncio = None
     df_conflito = None
-    tamanho_quadro = None
-    quantidade_quadros = None
+    ambiente = None
 
     tempo_total = None
     tempo_leitura = None
@@ -33,7 +31,7 @@ class Grasp:
         self.tempo_leitura = RegistroTempo('Tempo para ler entrada')
         self.tempo_solucao = RegistroTempo('Tempo para encontrar a solução', inicializa_agora=False)
 
-        self.df_anuncio, self.df_conflito, self.tamanho_quadro, self.quantidade_quadros = obtem_instancia(caminho_instancia)
+        self.df_anuncio, self.df_conflito, self.ambiente = obtem_instancia(caminho_instancia)
         self.tempo_leitura.finaliza()
 
         self.exibe_instancia()
@@ -49,9 +47,9 @@ class Grasp:
 
     def exibe_tempo(self):
         if EXIBE_TEMPO:
-            self.tempo_leitura.exibe()
-            self.tempo_solucao.exibe()
-            self.tempo_total.exibe()
+            self.tempo_leitura.exibe(ignora_inativacao=1)
+            self.tempo_solucao.exibe(ignora_inativacao=1)
+            self.tempo_total.exibe(ignora_inativacao=1)
 
     def exibe_solucao(self):
         if EXIBE_SOLUCAO:

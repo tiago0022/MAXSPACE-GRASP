@@ -1,75 +1,101 @@
-from typing import Tuple
+import csv
 
-import pandas as pd
-from pandas.api.types import is_integer_dtype
-from pandas.core.frame import DataFrame
+from modelagem.ambiente import Ambiente
+from tempo_execucao import RegistroTempo
 
-
-def obtem_instancia(caminho_instancia: str) -> Tuple[DataFrame, DataFrame, DataFrame]:
-
-    df_ambiente = pd.read_csv(caminho_instancia + 'ambiente.csv')
-    df_anuncio = pd.read_csv(caminho_instancia + 'anuncios.csv', index_col='indice')
-    df_conflito = pd.read_csv(caminho_instancia + 'conflitos.csv', index_col='indice/indice')
-
-    valida_entrada(df_ambiente, df_anuncio, df_conflito)
-
-    return df_anuncio, df_conflito, df_ambiente["tamanho-quadro"][0], df_ambiente["quantidade-quadros"][0]
+ATIVA_VALIDACAO = 0  # padrão = False
 
 
-def valida_entrada(df_ambiente: DataFrame, df_anuncio: DataFrame, df_conflito: DataFrame):
-
-    valida_ambiente(df_ambiente)
-    valida_anuncio(df_anuncio)
-    valida_conflito(df_conflito)
-
-    if (df_anuncio.index != df_conflito.index).all():
-        raise Exception(
-            "Tabela de conflitos está com índices diferentes dos anúncios")
+def obtem_ambiente(caminho):
+    arquivo = open(caminho, "r")
+    matriz = list(csv.reader(arquivo))
+    arquivo.close()
+    return Ambiente(int(matriz[1][0]), int(matriz[1][1]))
 
 
-def valida_ambiente(df_ambiente: DataFrame):
+def obtem_matriz_anuncio(caminho):
+    arquivo = open(caminho, "r")
+    arquivo_csv = csv.reader(arquivo)
+    matriz = [[int(linha[0]), int(linha[1])] for linha in arquivo_csv if linha]
+    arquivo.close()
+    return matriz
 
-    tamanho_quadro = df_ambiente["tamanho-quadro"][0]
-    quantidade_quadros = df_ambiente["quantidade-quadros"][0]
 
-    if tamanho_quadro <= 0 or not is_integer_dtype(tamanho_quadro):
+def obtem_matriz_conflito(caminho):
+    arquivo = open(caminho, "r")
+    arquivo_csv = csv.reader(arquivo)
+    matriz_conflito = []
+    for linha in arquivo_csv:
+        linha = list(map(bool, linha))
+        matriz_conflito.append(linha)
+    arquivo.close()
+    return matriz_conflito
+
+
+def obtem_instancia(caminho_instancia: str):
+
+    tempo = RegistroTempo('Tempo para ler csv ambiente')
+    ambiente = obtem_ambiente(caminho_instancia + 'ambiente.csv')
+    tempo.exibe()
+
+    tempo = RegistroTempo('Tempo para ler csv anuncios')
+    matriz_anuncio = obtem_matriz_anuncio(caminho_instancia + 'anuncios.csv')
+    tempo.exibe()
+
+    tempo = RegistroTempo('Tempo para ler csv conflitos')
+    matriz_conflito = obtem_matriz_conflito(caminho_instancia + 'conflitos.csv')
+    tempo.exibe(1)
+
+    tempo = RegistroTempo('Tempo para validação da entrada')
+    valida_entrada(ambiente, matriz_anuncio, matriz_conflito)
+    tempo.exibe(1)
+
+    return matriz_anuncio, matriz_conflito, ambiente
+
+
+def valida_entrada(ambiente, matriz_anuncio, matriz_conflito):
+
+    if ATIVA_VALIDACAO:
+
+        valida_ambiente(ambiente)
+        valida_anuncio(matriz_anuncio)
+        valida_conflito(matriz_conflito)
+
+        if len(matriz_anuncio) != len(matriz_conflito):
+            raise Exception("Tabela de conflitos está com índices diferentes dos anúncios")
+
+
+def valida_ambiente(ambiente: Ambiente):
+
+    if ambiente.tamanho_quadro <= 0:
         raise Exception('Tamanho de quadro inválido')
 
-    if quantidade_quadros <= 0 or not is_integer_dtype(quantidade_quadros):
+    if ambiente.quantidade_quadros <= 0:
         raise Exception('Quantidade de quadros inválida')
 
 
-def valida_anuncio(df_anuncio: DataFrame):
+def valida_anuncio(matriz_anuncio):
 
-    if len(df_anuncio) <= 0:
+    quantidade_anuncios = len(matriz_anuncio)
+
+    if quantidade_anuncios <= 0:
         raise Exception('Quantidade de anúncios inválida')
 
-    lista_tamanho = df_anuncio["tamanho"]
-    lista_frequencia = df_anuncio["frequencia"]
-
-    if any(lista_tamanho <= 0) or not is_integer_dtype(lista_tamanho):
-        raise Exception('Tamanho de anúncio inválido')
-
-    if any(lista_frequencia <= 0) or not is_integer_dtype(lista_frequencia):
-        raise Exception('Frequencia de anúncio inválido')
+    for i in range(quantidade_anuncios):
+        if matriz_anuncio[i][0] <= 0:
+            raise Exception('Tamanho de anúncio inválido')
+        if matriz_anuncio[i][1] <= 0:
+            raise Exception('Frequencia de anúncio inválido')
 
 
-def valida_conflito(df_conflito: DataFrame):
+def valida_conflito(matriz_conflito):
 
-    if len(df_conflito) <= 0:
+    quantidade_anuncio = len(matriz_conflito)
+    if quantidade_anuncio <= 0:
         raise Exception('Quantidade de conflitos inválida')
 
-    if len(df_conflito) != len(df_conflito.columns):
-        raise Exception(
-            'Tabela de conflitos possui número diferente de linhas e colunas')
-
-    if (df_conflito.values != df_conflito.values.T).any():
-        raise Exception('Tabela de conflitos está ambígua')
-
-    if (df_conflito.columns.astype(str) != df_conflito.index.astype(str)).any():
-        raise Exception('Tabela de conflitos está com índices errados')
-
-    for linha in df_conflito.values:
-        for item in linha:
-            if item != 1 and item != 0:
+    for i in range(quantidade_anuncio):
+        for j in range(i):
+            elemento = matriz_conflito[i][j]
+            if elemento != 1 and elemento != 0:
                 raise Exception('Tabela de conflitos possui valor inválido')
