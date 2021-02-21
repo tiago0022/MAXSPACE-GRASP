@@ -1,54 +1,51 @@
 import csv
 
 from modelagem.ambiente import Ambiente
+from modelagem.anuncio import obtem_anuncio
 from tempo_execucao import RegistroTempo
 
 ATIVA_VALIDACAO = 0  # padrão = False
 
 
 def obtem_ambiente(caminho):
+    tempo = RegistroTempo('Tempo para ler csv ambiente')
     arquivo = open(caminho, "r")
     matriz = list(csv.reader(arquivo))
     arquivo.close()
+    tempo.exibe()
     return Ambiente(int(matriz[1][0]), int(matriz[1][1]))
 
 
 def obtem_matriz_anuncio(caminho):
+    tempo = RegistroTempo('Tempo para ler csv anuncios')
     arquivo = open(caminho, "r")
     arquivo_csv = csv.reader(arquivo)
-    matriz = [[int(linha[0]), int(linha[1])] for linha in arquivo_csv if linha]
+    matriz = [obtem_anuncio(linha) for linha in arquivo_csv if linha]
     arquivo.close()
+    tempo.exibe()
     return matriz
 
 
 def obtem_matriz_conflito(caminho):
+    tempo = RegistroTempo('Tempo para ler csv conflitos')
     arquivo = open(caminho, "r")
     arquivo_csv = csv.reader(arquivo)
     matriz_conflito = []
     for linha in arquivo_csv:
-        linha = list(map(bool, linha))
+        linha = [True if x == '1' else False for x in linha]
         matriz_conflito.append(linha)
     arquivo.close()
+    tempo.exibe(1)
     return matriz_conflito
 
 
 def obtem_instancia(caminho_instancia: str):
 
-    tempo = RegistroTempo('Tempo para ler csv ambiente')
     ambiente = obtem_ambiente(caminho_instancia + 'ambiente.csv')
-    tempo.exibe()
-
-    tempo = RegistroTempo('Tempo para ler csv anuncios')
     matriz_anuncio = obtem_matriz_anuncio(caminho_instancia + 'anuncios.csv')
-    tempo.exibe()
-
-    tempo = RegistroTempo('Tempo para ler csv conflitos')
     matriz_conflito = obtem_matriz_conflito(caminho_instancia + 'conflitos.csv')
-    tempo.exibe(1)
 
-    tempo = RegistroTempo('Tempo para validação da entrada')
     valida_entrada(ambiente, matriz_anuncio, matriz_conflito)
-    tempo.exibe(1)
 
     return matriz_anuncio, matriz_conflito, ambiente
 
@@ -56,6 +53,7 @@ def obtem_instancia(caminho_instancia: str):
 def valida_entrada(ambiente, matriz_anuncio, matriz_conflito):
 
     if ATIVA_VALIDACAO:
+        tempo = RegistroTempo('Tempo para validação da entrada')
 
         valida_ambiente(ambiente)
         valida_anuncio(matriz_anuncio)
@@ -63,6 +61,8 @@ def valida_entrada(ambiente, matriz_anuncio, matriz_conflito):
 
         if len(matriz_anuncio) != len(matriz_conflito):
             raise Exception("Tabela de conflitos está com índices diferentes dos anúncios")
+
+        tempo.exibe(1)
 
 
 def valida_ambiente(ambiente: Ambiente):

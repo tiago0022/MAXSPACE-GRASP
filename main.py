@@ -20,4 +20,4 @@ for i in range(1, len(sys.argv), 2):
 
 rd.seed(seed)
 
-Grasp(caminho_instancia, alpha, seed)
+Grasp(caminho_instancia, alpha, seed).soluciona()

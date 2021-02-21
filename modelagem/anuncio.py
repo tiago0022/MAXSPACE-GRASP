@@ -1,6 +1,6 @@
-from pandas import DataFrame
-
-
-def calcula_ganho(df_anuncio: DataFrame):
-    df_anuncio['ganho'] = df_anuncio['tamanho'] * df_anuncio['frequencia']
-    return df_anuncio
+def obtem_anuncio(lista_parametro):
+    tamanho = int(lista_parametro[0])
+    frequencia = int(lista_parametro[1])
+    ganho = tamanho * frequencia
+    inserido = 0
+    return tamanho, frequencia, ganho, inserido
