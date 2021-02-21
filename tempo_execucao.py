@@ -10,7 +10,7 @@ class RegistroTempo:
         if inicializa_agora:
             self.inicializa()
 
-    def exibe(self):
+    def exibe(self, nova_linha=False):
 
         if self.fim is None:
             self.finaliza()
@@ -20,9 +20,14 @@ class RegistroTempo:
             texto = texto + '.'
 
         print(f'{texto}{round(self.fim - self.inicio, 3)} s')
+        if nova_linha:
+            print()
+
+        return self.fim - self.inicio
 
     def inicializa(self):
         self.inicio = time.time()
 
     def finaliza(self):
         self.fim = time.time()
+        return self.fim - self.inicio

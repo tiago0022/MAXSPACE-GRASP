@@ -4,9 +4,9 @@ from tempo_execucao import RegistroTempo
 
 from grasp.construcao import constroi
 
-EXIBE_INSTANCIA = False
-EXIBE_TEMPO = True
-EXIBE_SOLUCAO = True
+EXIBE_INSTANCIA = 0
+EXIBE_TEMPO = 1
+EXIBE_SOLUCAO = 0
 
 
 class Grasp:
