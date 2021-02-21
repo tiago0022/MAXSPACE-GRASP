@@ -47,7 +47,6 @@ def gera_anuncios(local, quantidade_anuncios, tamanho_min, tamanho_max, frequenc
         lista_tamanho_frequencia[i] = [tamanho, frequencia]
     arquivo = open(f'{local}/anuncios.csv', 'w+')
     arquivo_csv = csv.writer(arquivo)
-    arquivo_csv.writerow(['tamanho', 'frequencia'])
     arquivo_csv.writerows(lista_tamanho_frequencia)
     arquivo.close()
 
