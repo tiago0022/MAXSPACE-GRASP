@@ -45,17 +45,18 @@ def constroi(matriz_anuncio, matriz_conflito, ambiente: Ambiente, aleatoriedade,
 
         lista_tempo_total[iteracao] = tempo_iteracao.finaliza()
 
-    exibe_dados_tempo(lista_tempo_total)
+    exibe_dados_tempo(lista_tempo_total, quantidade_anuncios)
     tempo_construcao.exibe(1)
 
     return matriz_solucao
 
 
-def exibe_dados_tempo(lista_tempo_total: list):
+def exibe_dados_tempo(lista_tempo_total: list, quantidade_anuncios):
     if EXIBE_DADOS_TEMPO:
-        print(f'Média por iteração: {round(np.average(lista_tempo_total), 5)} s')
-        print(f'Iteração mais rápida: {round(np.min(lista_tempo_total), 5)} s')
-        print(f'Iteração mais lenta: {round(np.max(lista_tempo_total), 5)} s\n')
+        print(f'Quantidade de iterações: {quantidade_anuncios}')
+        print(f'Média por iteração: {round(np.average(lista_tempo_total) * 100, 1)} ms')
+        print(f'Iteração mais rápida: {round(np.min(lista_tempo_total) * 100, 1)} ms')
+        print(f'Iteração mais lenta: {round(np.max(lista_tempo_total) * 100, 1)} ms\n')
 
 
 def obtem_menor_e_maior_ganhos_disponiveis(matriz_anuncio, quantidade_anuncios, lista_disponibilidade_anuncio):
