@@ -1,6 +1,6 @@
 import time
 
-EXIBE_TEMPO = 1  # padrão = False
+EXIBE_TEMPO = 0  # padrão = False
 
 
 class RegistroTempo:

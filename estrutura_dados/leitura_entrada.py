@@ -1,14 +1,14 @@
 import csv
 
 from modelagem.ambiente import Ambiente
-from modelagem.anuncio import obtem_anuncio
+from modelagem.anuncio import FREQUENCIA, TAMANHO, obtem_anuncio
 from tempo_execucao import RegistroTempo
 
 ATIVA_VALIDACAO = 0  # padrão = False
 
 
 def obtem_ambiente(caminho):
-    tempo = RegistroTempo('Tempo para ler csv ambiente')
+    tempo = RegistroTempo('Ler csv ambiente')
     arquivo = open(caminho, "r")
     matriz = list(csv.reader(arquivo))
     arquivo.close()
@@ -17,7 +17,7 @@ def obtem_ambiente(caminho):
 
 
 def obtem_matriz_anuncio(caminho):
-    tempo = RegistroTempo('Tempo para ler csv anuncios')
+    tempo = RegistroTempo('Ler csv anuncios')
     arquivo = open(caminho, "r")
     arquivo_csv = csv.reader(arquivo)
     matriz = [obtem_anuncio(linha) for linha in arquivo_csv if linha]
@@ -27,7 +27,7 @@ def obtem_matriz_anuncio(caminho):
 
 
 def obtem_matriz_conflito(caminho):
-    tempo = RegistroTempo('Tempo para ler csv conflitos')
+    tempo = RegistroTempo('Ler csv conflitos')
     arquivo = open(caminho, "r")
     arquivo_csv = csv.reader(arquivo)
     matriz_conflito = []
@@ -53,7 +53,7 @@ def obtem_instancia(caminho_instancia: str):
 def valida_entrada(ambiente, matriz_anuncio, matriz_conflito):
 
     if ATIVA_VALIDACAO:
-        tempo = RegistroTempo('Tempo para validação da entrada')
+        tempo = RegistroTempo('Validar entrada')
 
         valida_ambiente(ambiente)
         valida_anuncio(matriz_anuncio)
@@ -82,9 +82,9 @@ def valida_anuncio(matriz_anuncio):
         raise Exception('Quantidade de anúncios inválida')
 
     for i in range(quantidade_anuncios):
-        if matriz_anuncio[i][0] <= 0:
+        if matriz_anuncio[i][TAMANHO] <= 0:
             raise Exception('Tamanho de anúncio inválido')
-        if matriz_anuncio[i][1] <= 0:
+        if matriz_anuncio[i][FREQUENCIA] <= 0:
             raise Exception('Frequencia de anúncio inválido')
 
 
@@ -93,9 +93,3 @@ def valida_conflito(matriz_conflito):
     quantidade_anuncio = len(matriz_conflito)
     if quantidade_anuncio <= 0:
         raise Exception('Quantidade de conflitos inválida')
-
-    for i in range(quantidade_anuncio):
-        for j in range(i):
-            elemento = matriz_conflito[i][j]
-            if elemento != 1 and elemento != 0:
-                raise Exception('Tabela de conflitos possui valor inválido')

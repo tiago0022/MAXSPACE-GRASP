@@ -2,52 +2,54 @@
 import random as rd
 
 from modelagem.ambiente import Ambiente
-from modelagem.quadro import pode_ser_inserido
+from modelagem.anuncio import FREQUENCIA, GANHO, TAMANHO
+from modelagem.quadro import (ESPACO_OCUPADO, LISTA_INDICE_ANUNCIO,
+                              pode_ser_inserido)
 from pandas import DataFrame
 from tempo_execucao import RegistroTempo
 
-EXIBE_ITERACAO = 1  # Padrão = False
-
-# Indices
-TAMANHO = 0
-FREQUENCIA = 1
-GANHO = 2
-INSERIDO = 3
+EXIBE_ITERACAO = 0  # Padrão = False
 
 
 def constroi(matriz_anuncio, matriz_conflito, ambiente: Ambiente, aleatoriedade, seed=1):
 
+    tempo = RegistroTempo('Construção')
+
     matriz_solucao = solucao_vazia(ambiente.quantidade_quadros)
-    contagem_anuncio_disponivel = len(matriz_anuncio)
 
-    iteracao = 0
-    while contagem_anuncio_disponivel > 0:
+    quantidade_anuncios = len(matriz_anuncio)
+    lista_disponibilidade_anuncio = [1] * quantidade_anuncios
 
-        menor_ganho, maior_ganho = obtem_menor_e_maior_ganhos_disponiveis(matriz_anuncio)
+    exibe_iteracao(-1, matriz_anuncio, matriz_solucao, lista_disponibilidade_anuncio)
+
+    for iteracao in range(quantidade_anuncios):
+
+        menor_ganho, maior_ganho = obtem_menor_e_maior_ganhos_disponiveis(matriz_anuncio, quantidade_anuncios, lista_disponibilidade_anuncio)
 
         limite_inferior = maior_ganho - aleatoriedade * (maior_ganho - menor_ganho)
 
-        lista_indice_anuncio_candidato = obtem_lista_indice_anuncio_candidato(matriz_anuncio, limite_inferior)
-        candidato_selecionado = escolhe_candidato(lista_indice_anuncio_candidato)
+        lista_indice_candidato = obtem_lista_indice_anuncio_candidato(matriz_anuncio, limite_inferior, quantidade_anuncios, lista_disponibilidade_anuncio)
+        indice_selecionado = escolhe_candidato(lista_indice_candidato)
 
-        exibe_iteracao(iteracao, matriz_anuncio, limite_inferior, lista_indice_anuncio_candidato, candidato_selecionado, matriz_solucao)
+        insere_first_fit(matriz_solucao, matriz_anuncio[indice_selecionado], indice_selecionado, matriz_conflito, ambiente)
 
-        insere_first_fit(matriz_solucao, candidato_selecionado, matriz_conflito, tamanho_quadro)
-        contagem_anuncio_disponivel.drop(candidato_selecionado.index, inplace=True)
-        iteracao = iteracao + 1
+        exibe_iteracao(iteracao, matriz_anuncio, matriz_solucao, lista_disponibilidade_anuncio, limite_inferior, lista_indice_candidato, indice_selecionado)
 
+        lista_disponibilidade_anuncio[indice_selecionado] = 0
+
+    tempo.exibe(1)
     return matriz_solucao
 
 
-def obtem_menor_e_maior_ganhos_disponiveis(matriz_anuncio):
+def obtem_menor_e_maior_ganhos_disponiveis(matriz_anuncio, quantidade_anuncios, lista_disponibilidade_anuncio):
 
-    tempo = RegistroTempo('Tempo para obter limites de ganho')
+    tempo = RegistroTempo('Obter limites de ganho')
     menor_ganho = None
     maior_ganho = None
 
-    for anuncio in matriz_anuncio:
-        ganho = anuncio[GANHO]
-        if not anuncio[INSERIDO]:
+    for i in range(quantidade_anuncios):
+        if lista_disponibilidade_anuncio[i]:
+            ganho = matriz_anuncio[i][GANHO]
             if menor_ganho is None:
                 menor_ganho = ganho
                 maior_ganho = ganho
@@ -56,18 +58,18 @@ def obtem_menor_e_maior_ganhos_disponiveis(matriz_anuncio):
             elif ganho > maior_ganho:
                 maior_ganho = ganho
 
-    tempo.exibe(0)
+    tempo.exibe()
     return menor_ganho, maior_ganho
 
 
-def obtem_lista_indice_anuncio_candidato(matriz_anuncio, limite_inferior):
-    tempo = RegistroTempo('Tempo para obter candidatos')
+def obtem_lista_indice_anuncio_candidato(matriz_anuncio, limite_inferior, quantidade_anuncios, lista_disponibilidade_anuncio):
+    tempo = RegistroTempo('Obter candidatos')
     lista_indice = []
-    for i in range(len(matriz_anuncio)):
+    for i in range(quantidade_anuncios):
         anuncio = matriz_anuncio[i]
-        if not anuncio[INSERIDO] and anuncio[GANHO] >= limite_inferior:
+        if lista_disponibilidade_anuncio[i] and anuncio[GANHO] >= limite_inferior:
             lista_indice.append(i)
-    tempo.exibe()
+    tempo.exibe(1)
     return lista_indice
 
 
@@ -75,43 +77,69 @@ def escolhe_candidato(lista_indice_anuncio_candidato):
     return lista_indice_anuncio_candidato[rd.randint(0, len(lista_indice_anuncio_candidato) - 1)]
 
 
-def insere_first_fit(df_solucao: DataFrame, candidato: DataFrame, df_conflito, tamanho_quadro):
+def insere_first_fit(matriz_solucao, candidato, indice_candidato, matriz_conflito, ambiente: Ambiente):
 
-    frequencia_anuncio = candidato['frequencia'].values[0]
+    tempo = RegistroTempo('First Fit')
+    frequencia_anuncio = candidato[FREQUENCIA]
 
-    lista_quadro_selecionado = []
+    lista_indice_quadro_selecionado = [-1] * frequencia_anuncio
+    contagem_quadros = 0
 
-    for indice_quadro, quadro in df_solucao.iterrows():
-        if pode_ser_inserido(quadro, candidato, df_conflito, tamanho_quadro):
-            lista_quadro_selecionado.append(indice_quadro)
-        if len(lista_quadro_selecionado) == frequencia_anuncio:
-            insere_na_solucao(df_solucao, lista_quadro_selecionado, candidato)
+    for indice_quadro in range(ambiente.quantidade_quadros):
+        if pode_ser_inserido(matriz_solucao[indice_quadro], candidato, indice_candidato, matriz_conflito, ambiente.tamanho_quadro):
+            lista_indice_quadro_selecionado[contagem_quadros] = indice_quadro
+            contagem_quadros = contagem_quadros + 1
+        if contagem_quadros == frequencia_anuncio:
+            insere_na_solucao(matriz_solucao, lista_indice_quadro_selecionado, candidato, indice_candidato)
             break
 
+    tempo.exibe(1)
 
-def insere_na_solucao(df_solucao: DataFrame, lista_quadro_selecionado, anuncio: DataFrame):
 
-    indice_anuncio = anuncio.first_valid_index()
-    tamanho_anuncio = anuncio['tamanho'].values[0]
+def insere_na_solucao(matriz_solucao, lista_quadro_selecionado, anuncio, indice_anuncio):
+
+    tempo = RegistroTempo('Inserir na solução')
+    tamanho_anuncio = anuncio[TAMANHO]
 
     for indice_quadro in lista_quadro_selecionado:
-        df_solucao.at[indice_quadro, 'espaco_ocupado'] = df_solucao.at[indice_quadro, 'espaco_ocupado'] + tamanho_anuncio
-        df_solucao.at[indice_quadro, 'lista_indice_anuncio'] = df_solucao.at[indice_quadro, 'lista_indice_anuncio'] + [indice_anuncio]
+        matriz_solucao[indice_quadro][ESPACO_OCUPADO] = matriz_solucao[indice_quadro][ESPACO_OCUPADO] + tamanho_anuncio
+        matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO].append(indice_anuncio)
+
+    tempo.exibe(1)
 
 
-def exibe_iteracao(iteracao, matriz_anuncio, limite_inferior, lista_candidato, candidato_selecionado, matriz_solucao):
+def exibe_iteracao(iteracao, matriz_anuncio, matriz_solucao, lista_disponibilidade_anuncio, limite_inferior=None, lista_candidato=None, candidato_selecionado=None):
     if EXIBE_ITERACAO:
-        df_anuncio = DataFrame(matriz_anuncio, columns=['Tamanho', 'Frequencia', 'Ganho', 'Inserido'])
-        print(f'Iteração {iteracao + 1}:\n\nAnúncios disponíveis C:')
-        print(df_anuncio)
-        print(f'\nLimite inferior: {limite_inferior}\n\nCandidatos RC:')
-        print(df_anuncio.filter(lista_candidato, axis=0))
-        print('\nCandidato selecionado A_j:')
-        print(df_anuncio.filter([candidato_selecionado], axis=0))
+
+        print(f'\nIteração {iteracao + 1}:')
+
+        df_anuncio = DataFrame(matriz_anuncio, columns=['Tamanho', 'Frequencia', 'Ganho'])
+        lista_anuncio_disponivel = [i for i, x in enumerate(lista_disponibilidade_anuncio) if x == 1]
+
+        print('\nAnúncios disponíveis C:')
+        print(df_anuncio.filter(lista_anuncio_disponivel, axis=0))
+
+        if limite_inferior != None:
+            print(f'\nLimite inferior: {limite_inferior}')
+
+        if lista_candidato != None:
+            print(f'\nCandidatos RC:')
+            print(df_anuncio.filter(lista_candidato, axis=0))
+
+        if candidato_selecionado != None:
+            print('\nCandidato selecionado A_j:')
+            print(df_anuncio.filter([candidato_selecionado], axis=0))
+
         print('\nSolução parcial S:')
         print(DataFrame(matriz_solucao, columns=['Espaço ocupado', 'Anúncios inseridos']))
+
         print('\n==================================\n')
 
 
 def solucao_vazia(quantidade_quadros):
-    return [[0, []]] * quantidade_quadros
+    tempo = RegistroTempo('Construir solução vazia')
+    matriz_solucao = []
+    for _ in range(quantidade_quadros):
+        matriz_solucao.append([0, []])
+    tempo.exibe(1)
+    return matriz_solucao

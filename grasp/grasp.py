@@ -50,7 +50,7 @@ class Grasp:
         if EXIBE_TEMPO:
             self.tempo_leitura.exibe(ignora_inativacao=1)
             self.tempo_solucao.exibe(ignora_inativacao=1)
-            self.tempo_total.exibe(ignora_inativacao=1)
+            self.tempo_total.exibe(nova_linha=1, ignora_inativacao=1)
 
     def exibe_solucao(self):
         if EXIBE_SOLUCAO:
