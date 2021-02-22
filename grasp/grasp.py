@@ -1,4 +1,5 @@
 import numpy as np
+from pandas.core.frame import DataFrame
 from estrutura_dados.leitura_entrada import obtem_instancia
 from tempo_execucao import RegistroTempo
 
@@ -6,7 +7,7 @@ from grasp.construcao import constroi
 
 EXIBE_INSTANCIA = 0  # padrão = False
 EXIBE_TEMPO = 1  # padrão = True
-EXIBE_SOLUCAO = 0  # padrão = True
+EXIBE_SOLUCAO = 1  # padrão = True
 
 
 class Grasp:
@@ -20,6 +21,7 @@ class Grasp:
     tempo_total = None
     tempo_leitura = None
     tempo_solucao = None
+    tempo_exibicao = None
 
     matriz_solucao_construida = None
 
@@ -28,9 +30,10 @@ class Grasp:
         self.alpha = alpha
         self.seed = seed
 
-        self.tempo_total = RegistroTempo('Tempo total de execução')
         self.tempo_leitura = RegistroTempo('Tempo para ler entrada')
         self.tempo_solucao = RegistroTempo('Tempo para encontrar a solução', inicializa_agora=False)
+        self.tempo_exibicao = RegistroTempo('Tempo para exibir a solução', inicializa_agora=False)
+        self.tempo_total = RegistroTempo('Tempo total de execução')
 
         self.matriz_anuncio, self.matriz_conflito, self.ambiente = obtem_instancia(caminho_instancia)
         self.tempo_leitura.finaliza()
@@ -50,12 +53,18 @@ class Grasp:
         if EXIBE_TEMPO:
             self.tempo_leitura.exibe(ignora_inativacao=1)
             self.tempo_solucao.exibe(ignora_inativacao=1)
+            self.tempo_exibicao.exibe(nova_linha=1, ignora_inativacao=1)
             self.tempo_total.exibe(nova_linha=1, ignora_inativacao=1)
 
     def exibe_solucao(self):
+        self.tempo_exibicao.inicializa()
         if EXIBE_SOLUCAO:
-            porcentagem_espaco_ocupado = (self.matriz_solucao_construida['espaco_ocupado'].sum() / (self.tamanho_quadro * self.quantidade_quadros)) * 100
-            print(f'Solução construída:\n{self.matriz_solucao_construida}\n\nEspaço ocupado: {round(porcentagem_espaco_ocupado,2)}%\n')
+            df_solucao = DataFrame(self.matriz_solucao_construida, columns=['Espaço ocupado', 'Anúncios inseridos'])
+            espaco_ocupado = df_solucao['Espaço ocupado'].sum()
+            espaco_disponivel = (self.ambiente.tamanho_quadro * self.ambiente.quantidade_quadros)
+            porcentagem_espaco_ocupado = (espaco_ocupado / espaco_disponivel) * 100
+            print(f'\nSolução construída:\n{df_solucao}')
+            print(f'\nEspaço ocupado: {round(porcentagem_espaco_ocupado,2)}%\n')
 
     def exibe_instancia(self):
         if EXIBE_INSTANCIA:

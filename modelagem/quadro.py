@@ -16,14 +16,14 @@ def pode_ser_inserido(quadro, anuncio, indice_anuncio, matriz_conflito, tamanho_
     lista_indice_anuncio_inserido = quadro[LISTA_INDICE_ANUNCIO]
 
     if espaco_ocupado + tamanho_anuncio > tamanho_quadro:
-        tempo.exibe()
+        # tempo.exibe()
         return False
 
     if existe_conflito(matriz_conflito, indice_anuncio, lista_indice_anuncio_inserido):
-        tempo.exibe()
+        # tempo.exibe()
         return False
 
-    tempo.exibe()
+    # tempo.exibe()
     return True
 
 

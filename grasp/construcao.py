@@ -1,6 +1,7 @@
 
 import random as rd
 
+import numpy as np
 from modelagem.ambiente import Ambiente
 from modelagem.anuncio import FREQUENCIA, GANHO, TAMANHO
 from modelagem.quadro import (ESPACO_OCUPADO, LISTA_INDICE_ANUNCIO,
@@ -9,20 +10,25 @@ from pandas import DataFrame
 from tempo_execucao import RegistroTempo
 
 EXIBE_ITERACAO = 0  # Padrão = False
+EXIBE_DADOS_TEMPO = 1  # Padrão = False
 
 
 def constroi(matriz_anuncio, matriz_conflito, ambiente: Ambiente, aleatoriedade, seed=1):
 
-    tempo = RegistroTempo('Construção')
+    tempo_construcao = RegistroTempo('Construção')
 
     matriz_solucao = solucao_vazia(ambiente.quantidade_quadros)
 
     quantidade_anuncios = len(matriz_anuncio)
     lista_disponibilidade_anuncio = [1] * quantidade_anuncios
 
+    lista_tempo_total = [0] * quantidade_anuncios
+
     exibe_iteracao(-1, matriz_anuncio, matriz_solucao, lista_disponibilidade_anuncio)
 
     for iteracao in range(quantidade_anuncios):
+
+        tempo_iteracao = RegistroTempo()
 
         menor_ganho, maior_ganho = obtem_menor_e_maior_ganhos_disponiveis(matriz_anuncio, quantidade_anuncios, lista_disponibilidade_anuncio)
 
@@ -37,8 +43,19 @@ def constroi(matriz_anuncio, matriz_conflito, ambiente: Ambiente, aleatoriedade,
 
         lista_disponibilidade_anuncio[indice_selecionado] = 0
 
-    tempo.exibe(1)
+        lista_tempo_total[iteracao] = tempo_iteracao.finaliza()
+
+    exibe_dados_tempo(lista_tempo_total)
+    tempo_construcao.exibe(1)
+
     return matriz_solucao
+
+
+def exibe_dados_tempo(lista_tempo_total: list):
+    if EXIBE_DADOS_TEMPO:
+        print(f'Média por iteração: {round(np.average(lista_tempo_total), 5)} s')
+        print(f'Iteração mais rápida: {round(np.min(lista_tempo_total), 5)} s')
+        print(f'Iteração mais lenta: {round(np.max(lista_tempo_total), 5)} s\n')
 
 
 def obtem_menor_e_maior_ganhos_disponiveis(matriz_anuncio, quantidade_anuncios, lista_disponibilidade_anuncio):
@@ -58,7 +75,7 @@ def obtem_menor_e_maior_ganhos_disponiveis(matriz_anuncio, quantidade_anuncios, 
             elif ganho > maior_ganho:
                 maior_ganho = ganho
 
-    tempo.exibe()
+    # tempo.exibe()
     return menor_ganho, maior_ganho
 
 
@@ -69,7 +86,7 @@ def obtem_lista_indice_anuncio_candidato(matriz_anuncio, limite_inferior, quanti
         anuncio = matriz_anuncio[i]
         if lista_disponibilidade_anuncio[i] and anuncio[GANHO] >= limite_inferior:
             lista_indice.append(i)
-    tempo.exibe(1)
+    # tempo.exibe(1)
     return lista_indice
 
 
@@ -93,7 +110,7 @@ def insere_first_fit(matriz_solucao, candidato, indice_candidato, matriz_conflit
             insere_na_solucao(matriz_solucao, lista_indice_quadro_selecionado, candidato, indice_candidato)
             break
 
-    tempo.exibe(1)
+    # tempo.exibe(1)
 
 
 def insere_na_solucao(matriz_solucao, lista_quadro_selecionado, anuncio, indice_anuncio):
@@ -105,7 +122,7 @@ def insere_na_solucao(matriz_solucao, lista_quadro_selecionado, anuncio, indice_
         matriz_solucao[indice_quadro][ESPACO_OCUPADO] = matriz_solucao[indice_quadro][ESPACO_OCUPADO] + tamanho_anuncio
         matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO].append(indice_anuncio)
 
-    tempo.exibe(1)
+    # tempo.exibe(1)
 
 
 def exibe_iteracao(iteracao, matriz_anuncio, matriz_solucao, lista_disponibilidade_anuncio, limite_inferior=None, lista_candidato=None, candidato_selecionado=None):
@@ -141,5 +158,5 @@ def solucao_vazia(quantidade_quadros):
     matriz_solucao = []
     for _ in range(quantidade_quadros):
         matriz_solucao.append([0, []])
-    tempo.exibe(1)
+    # tempo.exibe(1)
     return matriz_solucao
