@@ -33,13 +33,27 @@ class Construcao:
         self._lista_tempo_candidato = None
         self._lista_tempo_first_fit = None
 
+        self._limite_inferior_atual = None
+        self._menor_ganho_atual = None
+        self._maior_ganho_atual = None
+        self._lista_indice_anuncio_candidato_atual = None
+        self._tamanho_lista_indice_anuncio_candidato_atual = None
+
     def _limpa_construcao(self):
         self._tempo_construcao = RegistroTempo('Construção')
         tempo = RegistroTempo('Limpar solução anterior')
         self.matriz_solucao = self._solucao_vazia()
         self._lista_disponibilidade_anuncio = [1] * self.quantidade_anuncios
         self._limpa_lista_tempo()
+        self._limpa_dados_atuais()
         # tempo.exibe(1)
+
+    def _limpa_dados_atuais(self):
+        self._limite_inferior_atual = None
+        self._menor_ganho_atual = None
+        self._maior_ganho_atual = None
+        self._lista_indice_anuncio_candidato_atual = None
+        self._tamanho_lista_indice_anuncio_candidato_atual = None
 
     def _limpa_lista_tempo(self):
         self._lista_tempo_total = [0] * self.quantidade_anuncios
@@ -57,13 +71,13 @@ class Construcao:
 
             tempo_iteracao = RegistroTempo()
 
-            limite_inferior = self._obtem_limite_inferior(aleatoriedade, iteracao)
+            self._atualiza_limite_inferior_atual(aleatoriedade, iteracao)
 
-            lista_indice_candidato, indice_selecionado = self._obtem_candidato(limite_inferior, iteracao)
+            indice_selecionado = self._obtem_candidato(iteracao)
 
             self._insere_first_fit(indice_selecionado, iteracao)
 
-            self._exibe_iteracao(iteracao, limite_inferior, lista_indice_candidato, indice_selecionado)
+            self._exibe_iteracao(iteracao, indice_selecionado)
 
             self._lista_disponibilidade_anuncio[indice_selecionado] = 0
 
@@ -73,19 +87,32 @@ class Construcao:
 
         return self.matriz_solucao
 
-    def _obtem_candidato(self, limite_inferior, iteracao):
-        tempo_candidatos = RegistroTempo()
-        lista_indice_candidato = self._obtem_lista_indice_anuncio_candidato(limite_inferior)
-        indice_selecionado = self._escolhe_candidato(lista_indice_candidato)
-        self._lista_tempo_candidato[iteracao] = tempo_candidatos.finaliza()
-        return lista_indice_candidato, indice_selecionado
+    def _obtem_candidato(self, iteracao):
 
-    def _obtem_limite_inferior(self, aleatoriedade, iteracao):
+        tempo_candidatos = RegistroTempo()
+
+        if self._lista_indice_anuncio_candidato_atual == None:
+            self._atualiza_lista_indice_anuncio_candidato()
+
+        indice_selecionado = self._escolhe_candidato()
+
+        self._lista_tempo_candidato[iteracao] = tempo_candidatos.finaliza()
+
+        return indice_selecionado
+
+    def _atualiza_limite_inferior_atual(self, aleatoriedade, iteracao):
+
         tempo_limites = RegistroTempo()
-        menor_ganho, maior_ganho = self._obtem_menor_e_maior_ganhos_disponiveis()
-        limite_inferior = maior_ganho - aleatoriedade * (maior_ganho - menor_ganho)
+
+        if self._maior_ganho_atual == None or self._menor_ganho_atual == None or self._limite_inferior_atual == None:
+
+            self._atualiza_menor_e_maior_ganhos_disponiveis_atuais()
+
+            self._limite_inferior_atual = self._maior_ganho_atual - aleatoriedade * (self._maior_ganho_atual - self._menor_ganho_atual)
+
+            self._lista_indice_anuncio_candidato_atual = None
+
         self._lista_tempo_limites[iteracao] = tempo_limites.finaliza()
-        return limite_inferior
 
     def _exibe_dados_tempo(self):
         if EXIBE_TEMPO:
@@ -101,7 +128,7 @@ class Construcao:
 
             self._tempo_construcao.exibe(1)
 
-    def _obtem_menor_e_maior_ganhos_disponiveis(self):
+    def _atualiza_menor_e_maior_ganhos_disponiveis_atuais(self):
 
         tempo = RegistroTempo('Obter limites de ganho')
         menor_ganho = None
@@ -118,21 +145,39 @@ class Construcao:
                 elif ganho > maior_ganho:
                     maior_ganho = ganho
 
+        self._menor_ganho_atual = menor_ganho
+        self._maior_ganho_atual = maior_ganho
         # tempo.exibe()
-        return menor_ganho, maior_ganho
 
-    def _obtem_lista_indice_anuncio_candidato(self, limite_inferior):
+    def _atualiza_lista_indice_anuncio_candidato(self):
         tempo = RegistroTempo('Obter candidatos')
         lista_indice = []
+        tamanho_lista = 0
         for i in range(self.quantidade_anuncios):
             anuncio = self.matriz_anuncio[i]
-            if self._lista_disponibilidade_anuncio[i] and anuncio[GANHO] >= limite_inferior:
+            if self._lista_disponibilidade_anuncio[i] and anuncio[GANHO] >= self._limite_inferior_atual:
                 lista_indice.append(i)
+                tamanho_lista = tamanho_lista + 1
+        self._lista_indice_anuncio_candidato_atual = lista_indice
+        self._tamanho_lista_indice_anuncio_candidato_atual = tamanho_lista
         # tempo.exibe(1)
-        return lista_indice
 
-    def _escolhe_candidato(_, lista_indice_anuncio_candidato):
-        return lista_indice_anuncio_candidato[rd.randint(0, len(lista_indice_anuncio_candidato) - 1)]
+    def _escolhe_candidato(self):
+
+        indice_sorteado = rd.randint(0, self._tamanho_lista_indice_anuncio_candidato_atual - 1)
+        indice_candidato = self._lista_indice_anuncio_candidato_atual.pop(indice_sorteado)
+
+        tamanho_candidato = self.matriz_anuncio[indice_candidato][GANHO]
+
+        if tamanho_candidato == self._maior_ganho_atual:
+            self._maior_ganho_atual = None
+
+        if tamanho_candidato == self._menor_ganho_atual:
+            self._menor_ganho_atual = None
+
+        self._tamanho_lista_indice_anuncio_candidato_atual = self._tamanho_lista_indice_anuncio_candidato_atual - 1
+
+        return indice_candidato
 
     def _insere_first_fit(self, indice_candidato, iteracao):
 
@@ -165,7 +210,7 @@ class Construcao:
 
         # tempo.exibe(1)
 
-    def _exibe_iteracao(self, iteracao=None, limite_inferior=None, lista_candidato=None, candidato_selecionado=None):
+    def _exibe_iteracao(self, iteracao=None, candidato_selecionado=None):
         if EXIBE_ITERACAO:
 
             if iteracao != None:
@@ -177,12 +222,12 @@ class Construcao:
             print('\nAnúncios disponíveis C:')
             print(df_anuncio.filter(lista_anuncio_disponivel, axis=0))
 
-            if limite_inferior != None:
-                print(f'\nLimite inferior: {limite_inferior}')
+            if self._limite_inferior_atual != None:
+                print(f'\nLimite inferior: {self._limite_inferior_atual}')
 
-            if lista_candidato != None:
+            if self._lista_indice_anuncio_candidato_atual != None:
                 print(f'\nCandidatos RC:')
-                print(df_anuncio.filter(lista_candidato, axis=0))
+                print(df_anuncio.filter(self._lista_indice_anuncio_candidato_atual, axis=0))
 
             if candidato_selecionado != None:
                 print('\nCandidato selecionado A_j:')
