@@ -3,7 +3,7 @@ from pandas.core.frame import DataFrame
 from estrutura_dados.leitura_entrada import obtem_instancia
 from tempo_execucao import RegistroTempo
 
-from grasp.construcao import constroi
+from grasp.construcao import Construcao
 
 EXIBE_INSTANCIA = 0  # padrão = False
 EXIBE_TEMPO = 1  # padrão = True
@@ -13,7 +13,6 @@ EXIBE_SOLUCAO = 1  # padrão = True
 class Grasp:
 
     alpha = None
-    seed = None
     matriz_anuncio = None
     matriz_conflito = None
     ambiente = None
@@ -25,10 +24,9 @@ class Grasp:
 
     matriz_solucao_construida = None
 
-    def __init__(self, caminho_instancia, alpha, seed=1):
+    def __init__(self, caminho_instancia, alpha):
 
         self.alpha = alpha
-        self.seed = seed
 
         self.tempo_leitura = RegistroTempo('Tempo para ler entrada')
         self.tempo_solucao = RegistroTempo('Tempo para encontrar a solução', inicializa_agora=False)
@@ -43,7 +41,11 @@ class Grasp:
     def soluciona(self):
 
         self.tempo_solucao.inicializa()
-        self.matriz_solucao_construida = constroi(self.matriz_anuncio, self.matriz_conflito, self.ambiente, self.alpha, self.seed)
+
+        construtor = Construcao(self.matriz_anuncio, self.matriz_conflito, self.ambiente)
+
+        self.matriz_solucao_construida = construtor.constroi(self.alpha)
+        
         self.tempo_solucao.finaliza()
 
         self.exibe_solucao()
@@ -51,9 +53,11 @@ class Grasp:
 
     def exibe_tempo(self):
         if EXIBE_TEMPO:
+            print('Quantidade de anúncios:', len(self.matriz_anuncio))
             self.tempo_leitura.exibe(ignora_inativacao=1)
             self.tempo_solucao.exibe(ignora_inativacao=1)
-            self.tempo_exibicao.exibe(nova_linha=1, ignora_inativacao=1)
+            if EXIBE_SOLUCAO:
+                self.tempo_exibicao.exibe(nova_linha=1, ignora_inativacao=1)
             self.tempo_total.exibe(nova_linha=1, ignora_inativacao=1)
 
     def exibe_solucao(self):

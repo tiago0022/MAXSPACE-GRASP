@@ -5,6 +5,7 @@ from modelagem.anuncio import FREQUENCIA, TAMANHO, obtem_anuncio
 from tempo_execucao import RegistroTempo
 
 ATIVA_VALIDACAO = 0  # padrão = False
+EXIBE_TEMPO = 0  # padrão = False
 
 
 def obtem_ambiente(caminho):
@@ -12,7 +13,7 @@ def obtem_ambiente(caminho):
     arquivo = open(caminho, "r")
     matriz = list(csv.reader(arquivo))
     arquivo.close()
-    tempo.exibe()
+    tempo.exibe() if EXIBE_TEMPO else None
     return Ambiente(int(matriz[1][0]), int(matriz[1][1]))
 
 
@@ -22,7 +23,7 @@ def obtem_matriz_anuncio(caminho):
     arquivo_csv = csv.reader(arquivo)
     matriz = [obtem_anuncio(linha) for linha in arquivo_csv if linha]
     arquivo.close()
-    tempo.exibe()
+    tempo.exibe() if EXIBE_TEMPO else None
     return matriz
 
 
@@ -35,7 +36,7 @@ def obtem_matriz_conflito(caminho):
         linha = [True if x == '1' else False for x in linha]
         matriz_conflito.append(linha)
     arquivo.close()
-    tempo.exibe(1)
+    tempo.exibe(1) if EXIBE_TEMPO else None
     return matriz_conflito
 
 
