@@ -194,9 +194,9 @@ class Construcao:
             if pode_ser_inserido(self.matriz_solucao[indice_quadro], candidato, indice_candidato, self.matriz_conflito, self.ambiente.tamanho_quadro):
                 lista_indice_quadro_selecionado[contagem_quadros] = indice_quadro
                 contagem_quadros = contagem_quadros + 1
-            if contagem_quadros == frequencia_anuncio:
-                self._insere_na_solucao(lista_indice_quadro_selecionado, candidato, indice_candidato)
-                break
+                if contagem_quadros == frequencia_anuncio:
+                    self._insere_na_solucao(lista_indice_quadro_selecionado, candidato, indice_candidato)
+                    break
 
         self._tempo_total_first_fit = self._tempo_total_first_fit + tempo.finaliza()
         # tempo.exibe(1)
