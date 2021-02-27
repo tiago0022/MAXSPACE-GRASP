@@ -187,12 +187,12 @@ class Construcao:
         candidato = self.matriz_anuncio[indice_candidato]
         frequencia_anuncio = candidato[FREQUENCIA]
 
-        lista_indice_quadro_selecionado = [-1] * frequencia_anuncio
+        lista_indice_quadro_selecionado = []
         contagem_quadros = 0
 
         for indice_quadro in self._lista_quadro_disponivel:
             if pode_ser_inserido(self.matriz_solucao[indice_quadro], candidato, indice_candidato, self.matriz_conflito, self.ambiente.tamanho_quadro):
-                lista_indice_quadro_selecionado[contagem_quadros] = indice_quadro
+                lista_indice_quadro_selecionado.append(indice_quadro)
                 contagem_quadros = contagem_quadros + 1
                 if contagem_quadros == frequencia_anuncio:
                     self._insere_na_solucao(lista_indice_quadro_selecionado, candidato, indice_candidato)
