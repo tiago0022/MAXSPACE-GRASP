@@ -26,6 +26,7 @@ class Construcao:
         self.quantidade_anuncios = len(matriz_anuncio)
 
         self._lista_disponibilidade_anuncio = None
+        self._lista_quadro_disponivel = None
 
         self._tempo_construcao = None
         self._lista_tempo_total = None
@@ -44,6 +45,7 @@ class Construcao:
         tempo = RegistroTempo('Limpar solução anterior')
         self.matriz_solucao = self._solucao_vazia()
         self._lista_disponibilidade_anuncio = [1] * self.quantidade_anuncios
+        self._lista_quadro_disponivel = list(range(self.ambiente.quantidade_quadros))
         self._limpa_lista_tempo()
         self._limpa_dados_atuais()
         # tempo.exibe(1)
@@ -188,7 +190,7 @@ class Construcao:
         lista_indice_quadro_selecionado = [-1] * frequencia_anuncio
         contagem_quadros = 0
 
-        for indice_quadro in range(self.ambiente.quantidade_quadros):
+        for indice_quadro in self._lista_quadro_disponivel:
             if pode_ser_inserido(self.matriz_solucao[indice_quadro], candidato, indice_candidato, self.matriz_conflito, self.ambiente.tamanho_quadro):
                 lista_indice_quadro_selecionado[contagem_quadros] = indice_quadro
                 contagem_quadros = contagem_quadros + 1
@@ -205,8 +207,11 @@ class Construcao:
         tamanho_anuncio = anuncio[TAMANHO]
 
         for indice_quadro in lista_quadro_selecionado:
-            self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] = self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] + tamanho_anuncio
+            tamanho_atualizado = self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] + tamanho_anuncio
+            self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] = tamanho_atualizado
             self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO].append(indice_anuncio)
+            if tamanho_atualizado == self.ambiente.tamanho_quadro:
+                self._lista_quadro_disponivel.remove(indice_quadro)
 
         # tempo.exibe(1)
 
