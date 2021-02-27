@@ -57,19 +57,11 @@ class Construcao:
 
             tempo_iteracao = RegistroTempo()
 
-            tempo_limites = RegistroTempo()
-            menor_ganho, maior_ganho = self._obtem_menor_e_maior_ganhos_disponiveis()
-            limite_inferior = maior_ganho - aleatoriedade * (maior_ganho - menor_ganho)
-            self._lista_tempo_limites[iteracao] = tempo_limites.finaliza()
+            limite_inferior = self._obtem_limite_inferior(aleatoriedade, iteracao)
 
-            tempo_candidatos = RegistroTempo()
-            lista_indice_candidato = self._obtem_lista_indice_anuncio_candidato(limite_inferior)
-            indice_selecionado = self._escolhe_candidato(lista_indice_candidato)
-            self._lista_tempo_candidato[iteracao] = tempo_candidatos.finaliza()
+            lista_indice_candidato, indice_selecionado = self._obtem_candidato(limite_inferior, iteracao)
 
-            tempo_first_fit = RegistroTempo()
-            self._insere_first_fit(indice_selecionado)
-            self._lista_tempo_first_fit[iteracao] = tempo_first_fit.finaliza()
+            self._insere_first_fit(indice_selecionado, iteracao)
 
             self._exibe_iteracao(iteracao, limite_inferior, lista_indice_candidato, indice_selecionado)
 
@@ -80,6 +72,20 @@ class Construcao:
         self._exibe_dados_tempo()
 
         return self.matriz_solucao
+
+    def _obtem_candidato(self, limite_inferior, iteracao):
+        tempo_candidatos = RegistroTempo()
+        lista_indice_candidato = self._obtem_lista_indice_anuncio_candidato(limite_inferior)
+        indice_selecionado = self._escolhe_candidato(lista_indice_candidato)
+        self._lista_tempo_candidato[iteracao] = tempo_candidatos.finaliza()
+        return lista_indice_candidato, indice_selecionado
+
+    def _obtem_limite_inferior(self, aleatoriedade, iteracao):
+        tempo_limites = RegistroTempo()
+        menor_ganho, maior_ganho = self._obtem_menor_e_maior_ganhos_disponiveis()
+        limite_inferior = maior_ganho - aleatoriedade * (maior_ganho - menor_ganho)
+        self._lista_tempo_limites[iteracao] = tempo_limites.finaliza()
+        return limite_inferior
 
     def _exibe_dados_tempo(self):
         if EXIBE_TEMPO:
@@ -128,7 +134,7 @@ class Construcao:
     def _escolhe_candidato(_, lista_indice_anuncio_candidato):
         return lista_indice_anuncio_candidato[rd.randint(0, len(lista_indice_anuncio_candidato) - 1)]
 
-    def _insere_first_fit(self, indice_candidato):
+    def _insere_first_fit(self, indice_candidato, iteracao):
 
         tempo = RegistroTempo('First Fit')
         candidato = self.matriz_anuncio[indice_candidato]
@@ -145,6 +151,7 @@ class Construcao:
                 self._insere_na_solucao(lista_indice_quadro_selecionado, candidato, indice_candidato)
                 break
 
+        self._lista_tempo_first_fit[iteracao] = tempo.finaliza()
         # tempo.exibe(1)
 
     def _insere_na_solucao(self, lista_quadro_selecionado, anuncio, indice_anuncio):
