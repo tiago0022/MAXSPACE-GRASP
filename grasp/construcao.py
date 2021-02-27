@@ -10,7 +10,7 @@ from pandas import DataFrame
 from tempo_execucao import RegistroTempo
 
 EXIBE_ITERACAO = 0  # Padrão = False
-EXIBE_TEMPO = 0  # Padrão = False
+EXIBE_TEMPO = 1  # Padrão = False
 
 
 class Construcao:
@@ -29,10 +29,10 @@ class Construcao:
         self._lista_quadro_disponivel = None
 
         self._tempo_construcao = None
-        self._lista_tempo_total = None
-        self._lista_tempo_limites = None
-        self._lista_tempo_candidato = None
-        self._lista_tempo_first_fit = None
+        self._lista_tempo_iteracao = None
+        self._tempo_total_limites = None
+        self._tempo_total_candidato = None
+        self._tempo_total_first_fit = None
 
         self._limite_inferior_atual = None
         self._menor_ganho_atual = None
@@ -58,10 +58,10 @@ class Construcao:
         self._tamanho_lista_indice_anuncio_candidato_atual = None
 
     def _limpa_lista_tempo(self):
-        self._lista_tempo_total = [0] * self.quantidade_anuncios
-        self._lista_tempo_limites = [0] * self.quantidade_anuncios
-        self._lista_tempo_candidato = [0] * self.quantidade_anuncios
-        self._lista_tempo_first_fit = [0] * self.quantidade_anuncios
+        self._lista_tempo_iteracao = [0] * self.quantidade_anuncios
+        self._tempo_total_limites = 0
+        self._tempo_total_candidato = 0
+        self._tempo_total_first_fit = 0
 
     def constroi(self, aleatoriedade):
 
@@ -73,23 +73,23 @@ class Construcao:
 
             tempo_iteracao = RegistroTempo()
 
-            self._atualiza_limite_inferior_atual(aleatoriedade, iteracao)
+            self._atualiza_limite_inferior_atual(aleatoriedade)
 
-            indice_selecionado = self._obtem_candidato(iteracao)
+            indice_selecionado = self._obtem_candidato()
 
-            self._insere_first_fit(indice_selecionado, iteracao)
+            self._insere_first_fit(indice_selecionado)
 
             self._exibe_iteracao(iteracao, indice_selecionado)
 
             self._lista_disponibilidade_anuncio[indice_selecionado] = 0
 
-            self._lista_tempo_total[iteracao] = tempo_iteracao.finaliza()
+            self._lista_tempo_iteracao[iteracao] = tempo_iteracao.finaliza()
 
         self._exibe_dados_tempo()
 
         return self.matriz_solucao
 
-    def _obtem_candidato(self, iteracao):
+    def _obtem_candidato(self):
 
         tempo_candidatos = RegistroTempo()
 
@@ -98,11 +98,11 @@ class Construcao:
 
         indice_selecionado = self._escolhe_candidato()
 
-        self._lista_tempo_candidato[iteracao] = tempo_candidatos.finaliza()
+        self._tempo_total_candidato = self._tempo_total_candidato + tempo_candidatos.finaliza()
 
         return indice_selecionado
 
-    def _atualiza_limite_inferior_atual(self, aleatoriedade, iteracao):
+    def _atualiza_limite_inferior_atual(self, aleatoriedade):
 
         tempo_limites = RegistroTempo()
 
@@ -114,19 +114,19 @@ class Construcao:
 
             self._lista_indice_anuncio_candidato_atual = None
 
-        self._lista_tempo_limites[iteracao] = tempo_limites.finaliza()
+        self._tempo_total_limites = self._tempo_total_limites + tempo_limites.finaliza()
 
     def _exibe_dados_tempo(self):
         if EXIBE_TEMPO:
             print(f'\nQuantidade de iterações: {self.quantidade_anuncios}\n')
 
-            print(f'Média por iteração: {round(np.average(self._lista_tempo_total) * 100, 1)} ms')
-            print(f'Iteração mais rápida: {round(np.min(self._lista_tempo_total) * 100, 1)} ms')
-            print(f'Iteração mais lenta: {round(np.max(self._lista_tempo_total) * 100, 1)} ms\n')
+            print(f'Média por iteração: {round(np.average(self._lista_tempo_iteracao) * 100, 1)} ms')
+            print(f'Iteração mais rápida: {round(np.min(self._lista_tempo_iteracao) * 100, 1)} ms')
+            print(f'Iteração mais lenta: {round(np.max(self._lista_tempo_iteracao) * 100, 1)} ms\n')
 
-            print(f'Tempo total limites: {round(np.sum(self._lista_tempo_limites), 2)} s')
-            print(f'Tempo total candidatos: {round(np.sum(self._lista_tempo_candidato), 2)} s')
-            print(f'Tempo total first fit: {round(np.sum(self._lista_tempo_first_fit), 2)} s\n')
+            print(f'Tempo total limites: {round(self._tempo_total_limites, 2)} s')
+            print(f'Tempo total candidatos: {round(self._tempo_total_candidato, 2)} s')
+            print(f'Tempo total first fit: {round(self._tempo_total_first_fit, 2)} s\n')
 
             self._tempo_construcao.exibe(1)
 
@@ -181,7 +181,7 @@ class Construcao:
 
         return indice_candidato
 
-    def _insere_first_fit(self, indice_candidato, iteracao):
+    def _insere_first_fit(self, indice_candidato):
 
         tempo = RegistroTempo('First Fit')
         candidato = self.matriz_anuncio[indice_candidato]
@@ -198,7 +198,7 @@ class Construcao:
                 self._insere_na_solucao(lista_indice_quadro_selecionado, candidato, indice_candidato)
                 break
 
-        self._lista_tempo_first_fit[iteracao] = tempo.finaliza()
+        self._tempo_total_first_fit = self._tempo_total_first_fit + tempo.finaliza()
         # tempo.exibe(1)
 
     def _insere_na_solucao(self, lista_quadro_selecionado, anuncio, indice_anuncio):
