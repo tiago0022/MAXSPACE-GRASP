@@ -15,10 +15,11 @@ EXIBE_TEMPO = 0  # Padrão = False
 
 class Construcao:
 
-    def __init__(self, matriz_anuncio, matriz_conflito, ambiente):
+    # def __init__(self, matriz_anuncio, matriz_conflito, ambiente):
+    def __init__(self, matriz_anuncio, ambiente):
 
         self.matriz_anuncio = matriz_anuncio
-        self.matriz_conflito = matriz_conflito
+        # self.matriz_conflito = matriz_conflito
         self.ambiente: Ambiente = ambiente
 
         self.matriz_solucao = None
@@ -187,7 +188,8 @@ class Construcao:
         contagem_quadros = 0
 
         for indice_quadro in self._lista_quadro_disponivel:
-            if pode_ser_inserido(self.matriz_solucao[indice_quadro], candidato, indice_candidato, self.matriz_conflito, self.ambiente.tamanho_quadro):
+            # if pode_ser_inserido(self.matriz_solucao[indice_quadro], candidato, indice_candidato, self.matriz_conflito, self.ambiente.tamanho_quadro):
+            if pode_ser_inserido(self.matriz_solucao[indice_quadro], candidato, indice_candidato, self.ambiente.tamanho_quadro):
                 lista_indice_quadro_selecionado.append(indice_quadro)
                 contagem_quadros = contagem_quadros + 1
                 if contagem_quadros == frequencia_anuncio:

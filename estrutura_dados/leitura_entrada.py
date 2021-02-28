@@ -44,24 +44,26 @@ def obtem_instancia(caminho_instancia: str):
 
     ambiente = obtem_ambiente(caminho_instancia + 'ambiente.csv')
     matriz_anuncio = obtem_matriz_anuncio(caminho_instancia + 'anuncios.csv')
-    matriz_conflito = obtem_matriz_conflito(caminho_instancia + 'conflitos.csv')
+    # matriz_conflito = obtem_matriz_conflito(caminho_instancia + 'conflitos.csv')
 
-    valida_entrada(ambiente, matriz_anuncio, matriz_conflito)
+    # valida_entrada(ambiente, matriz_anuncio, matriz_conflito)
+    valida_entrada(ambiente, matriz_anuncio)
 
-    return matriz_anuncio, ambiente, matriz_conflito
+    return matriz_anuncio, ambiente # , matriz_conflito
 
 
-def valida_entrada(ambiente, matriz_anuncio, matriz_conflito):
+# def valida_entrada(ambiente, matriz_anuncio, matriz_conflito):
+def valida_entrada(ambiente, matriz_anuncio):
 
     if ATIVA_VALIDACAO:
         tempo = RegistroTempo('Validar entrada')
 
         valida_ambiente(ambiente)
         valida_anuncio(matriz_anuncio)
-        valida_conflito(matriz_conflito)
+        # valida_conflito(matriz_conflito)
 
-        if len(matriz_anuncio) != len(matriz_conflito):
-            raise Exception("Tabela de conflitos está com índices diferentes dos anúncios")
+        # if len(matriz_anuncio) != len(matriz_conflito):
+        #     raise Exception("Tabela de conflitos está com índices diferentes dos anúncios")
 
         tempo.exibe(1)
 

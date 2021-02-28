@@ -7,7 +7,8 @@ ESPACO_OCUPADO = 0
 LISTA_INDICE_ANUNCIO = 1
 
 
-def pode_ser_inserido(quadro, anuncio, indice_anuncio, matriz_conflito, tamanho_quadro) -> bool:
+# def pode_ser_inserido(quadro, anuncio, indice_anuncio, matriz_conflito, tamanho_quadro) -> bool:
+def pode_ser_inserido(quadro, anuncio, indice_anuncio, tamanho_quadro) -> bool:
 
     tempo = RegistroTempo('Verificar se pode inserir')
 
@@ -19,9 +20,9 @@ def pode_ser_inserido(quadro, anuncio, indice_anuncio, matriz_conflito, tamanho_
         # tempo.exibe()
         return False
 
-    if existe_conflito(matriz_conflito, indice_anuncio, lista_indice_anuncio_inserido):
-        # tempo.exibe()
-        return False
+    # if existe_conflito(matriz_conflito, indice_anuncio, lista_indice_anuncio_inserido):
+    #     # tempo.exibe()
+    #     return False
 
     # tempo.exibe()
     return True

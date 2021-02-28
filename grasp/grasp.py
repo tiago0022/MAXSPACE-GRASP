@@ -14,7 +14,7 @@ class Grasp:
 
     alpha = None
     matriz_anuncio = None
-    matriz_conflito = None
+    # matriz_conflito = None
     ambiente = None
 
     tempo_total = None
@@ -33,7 +33,8 @@ class Grasp:
         self.tempo_exibicao = RegistroTempo('Tempo para exibir a solução', inicializa_agora=False)
         self.tempo_total = RegistroTempo('Tempo total de execução')
 
-        self.matriz_anuncio, self.ambiente, self.matriz_conflito = obtem_instancia(caminho_instancia)
+        # self.matriz_anuncio, self.ambiente, self.matriz_conflito = obtem_instancia(caminho_instancia)
+        self.matriz_anuncio, self.ambiente = obtem_instancia(caminho_instancia)
         self.tempo_leitura.finaliza()
 
         self.exibe_instancia()
@@ -42,7 +43,8 @@ class Grasp:
 
         self.tempo_solucao.inicializa()
 
-        construtor = Construcao(self.matriz_anuncio, self.matriz_conflito, self.ambiente)
+        # construtor = Construcao(self.matriz_anuncio, self.matriz_conflito, self.ambiente)
+        construtor = Construcao(self.matriz_anuncio, self.ambiente)
 
         self.matriz_solucao_construida = construtor.constroi(self.alpha)
         
@@ -75,10 +77,10 @@ class Grasp:
             print('Tamanho do quadro L:', self.ambiente.tamanho_quadro)
             print('Quantidade de quadros B:', self.ambiente.quantidade_quadros, '\n')
             print('Anúncios A_i:\n', np.array(self.matriz_anuncio), '\n')
-            print('Conflitos C_ij:')
-            n = len(self.matriz_conflito)
-            for i in range(6 if n > 6 else n):
-                print('', self.matriz_conflito[i])
-            if n > 6:
-                print(' ...')
-            print()
+            # print('Conflitos C_ij:')
+            # n = len(self.matriz_conflito)
+            # for i in range(6 if n > 6 else n):
+            #     print('', self.matriz_conflito[i])
+            # if n > 6:
+            #     print(' ...')
+            # print()
