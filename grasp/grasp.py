@@ -7,7 +7,8 @@ from grasp.construcao import Construcao
 
 EXIBE_INSTANCIA = 0  # padrão = False
 EXIBE_TEMPO = 1  # padrão = True
-EXIBE_SOLUCAO = 1  # padrão = True
+EXIBE_SOLUCAO = 0  # padrão = False
+EXIBE_APROVEITAMENTO = 1  # padrão = True
 
 
 class Grasp:
@@ -47,7 +48,7 @@ class Grasp:
         construtor = Construcao(self.matriz_anuncio, self.ambiente)
 
         self.matriz_solucao_construida = construtor.constroi(self.alpha)
-        
+
         self.tempo_solucao.finaliza()
 
         self.exibe_solucao()
@@ -58,19 +59,22 @@ class Grasp:
             print('Quantidade de anúncios:', len(self.matriz_anuncio))
             self.tempo_leitura.exibe(ignora_inativacao=1)
             self.tempo_solucao.exibe(ignora_inativacao=1)
-            if EXIBE_SOLUCAO:
+            if EXIBE_SOLUCAO or EXIBE_APROVEITAMENTO:
                 self.tempo_exibicao.exibe(nova_linha=1, ignora_inativacao=1)
             self.tempo_total.exibe(nova_linha=1, ignora_inativacao=1)
 
     def exibe_solucao(self):
         self.tempo_exibicao.inicializa()
-        if EXIBE_SOLUCAO:
+        if EXIBE_APROVEITAMENTO or EXIBE_SOLUCAO:
             df_solucao = DataFrame(self.matriz_solucao_construida, columns=['Espaço ocupado', 'Anúncios inseridos'])
+        if EXIBE_SOLUCAO:
+            print(f'\nSolução construída:\n{df_solucao}')
+        if EXIBE_APROVEITAMENTO:
             espaco_ocupado = df_solucao['Espaço ocupado'].sum()
             espaco_disponivel = (self.ambiente.tamanho_quadro * self.ambiente.quantidade_quadros)
             porcentagem_espaco_ocupado = (espaco_ocupado / espaco_disponivel) * 100
-            print(f'\nSolução construída:\n{df_solucao}')
             print(f'\nEspaço ocupado: {round(porcentagem_espaco_ocupado,2)}%\n')
+        self.tempo_exibicao.finaliza()
 
     def exibe_instancia(self):
         if EXIBE_INSTANCIA:
