@@ -10,7 +10,7 @@ from pandas import DataFrame
 from tempo_execucao import RegistroTempo
 
 EXIBE_ITERACAO = 0  # Padrão = False
-EXIBE_TEMPO = 1  # Padrão = False
+EXIBE_TEMPO = 0  # Padrão = False
 
 
 class Construcao:
@@ -25,7 +25,7 @@ class Construcao:
 
         self.quantidade_anuncios = len(matriz_anuncio)
 
-        self._lista_disponibilidade_anuncio = None
+        self._lista_anuncio_disponivel = None
         self._lista_quadro_disponivel = None
 
         self._tempo_construcao = None
@@ -44,7 +44,7 @@ class Construcao:
         self._tempo_construcao = RegistroTempo('Construção')
         tempo = RegistroTempo('Limpar solução anterior')
         self.matriz_solucao = self._solucao_vazia()
-        self._lista_disponibilidade_anuncio = [1] * self.quantidade_anuncios
+        self._lista_anuncio_disponivel = list(range(self.quantidade_anuncios))
         self._lista_quadro_disponivel = list(range(self.ambiente.quantidade_quadros))
         self._limpa_lista_tempo()
         self._limpa_dados_atuais()
@@ -81,7 +81,7 @@ class Construcao:
 
             self._exibe_iteracao(iteracao, indice_selecionado)
 
-            self._lista_disponibilidade_anuncio[indice_selecionado] = 0
+            self._lista_anuncio_disponivel.remove(indice_selecionado)
 
             self._lista_tempo_iteracao[iteracao] = tempo_iteracao.finaliza()
 
@@ -133,19 +133,15 @@ class Construcao:
     def _atualiza_menor_e_maior_ganhos_disponiveis_atuais(self):
 
         tempo = RegistroTempo('Obter limites de ganho')
-        menor_ganho = None
-        maior_ganho = None
+        menor_ganho = self.matriz_anuncio[self._lista_anuncio_disponivel[0]][GANHO]
+        maior_ganho = self.matriz_anuncio[self._lista_anuncio_disponivel[0]][GANHO]
 
-        for i in range(self.quantidade_anuncios):
-            if self._lista_disponibilidade_anuncio[i]:
-                ganho = self.matriz_anuncio[i][GANHO]
-                if menor_ganho is None:
-                    menor_ganho = ganho
-                    maior_ganho = ganho
-                elif ganho < menor_ganho:
-                    menor_ganho = ganho
-                elif ganho > maior_ganho:
-                    maior_ganho = ganho
+        for i in self._lista_anuncio_disponivel[1:]:
+            ganho = self.matriz_anuncio[i][GANHO]
+            if ganho < menor_ganho:
+                menor_ganho = ganho
+            elif ganho > maior_ganho:
+                maior_ganho = ganho
 
         self._menor_ganho_atual = menor_ganho
         self._maior_ganho_atual = maior_ganho
@@ -155,9 +151,9 @@ class Construcao:
         tempo = RegistroTempo('Obter candidatos')
         lista_indice = []
         tamanho_lista = 0
-        for i in range(self.quantidade_anuncios):
+        for i in self._lista_anuncio_disponivel:
             anuncio = self.matriz_anuncio[i]
-            if self._lista_disponibilidade_anuncio[i] and anuncio[GANHO] >= self._limite_inferior_atual:
+            if anuncio[GANHO] >= self._limite_inferior_atual:
                 lista_indice.append(i)
                 tamanho_lista = tamanho_lista + 1
         self._lista_indice_anuncio_candidato_atual = lista_indice
@@ -222,10 +218,9 @@ class Construcao:
                 print(f'\nIteração {iteracao + 1}:')
 
             df_anuncio = DataFrame(self.matriz_anuncio, columns=['Tamanho', 'Frequencia', 'Ganho'])
-            lista_anuncio_disponivel = [i for i, x in enumerate(self._lista_disponibilidade_anuncio) if x == 1]
 
             print('\nAnúncios disponíveis C:')
-            print(df_anuncio.filter(lista_anuncio_disponivel, axis=0))
+            print(df_anuncio.filter(self._lista_anuncio_disponivel, axis=0))
 
             if self._limite_inferior_atual != None:
                 print(f'\nLimite inferior: {self._limite_inferior_atual}')
