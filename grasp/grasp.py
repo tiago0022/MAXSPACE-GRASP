@@ -66,6 +66,7 @@ class Grasp:
     def exibe_solucao(self):
         self.tempo_exibicao.inicializa()
         if EXIBE_APROVEITAMENTO or EXIBE_SOLUCAO:
+            print('\n=== ALGORITMO SEM CONFLITO ===')
             df_solucao = DataFrame(self.matriz_solucao_construida, columns=['Espaço ocupado', 'Anúncios inseridos'])
         if EXIBE_SOLUCAO:
             print(f'\nSolução construída:\n{df_solucao}')
