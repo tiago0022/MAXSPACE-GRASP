@@ -33,7 +33,7 @@ class Grasp:
         self.tempo_exibicao = RegistroTempo('Tempo para exibir a solução', inicializa_agora=False)
         self.tempo_total = RegistroTempo('Tempo total de execução')
 
-        self.matriz_anuncio, self.matriz_conflito, self.ambiente = obtem_instancia(caminho_instancia)
+        self.matriz_anuncio, self.ambiente, self.matriz_conflito = obtem_instancia(caminho_instancia)
         self.tempo_leitura.finaliza()
 
         self.exibe_instancia()

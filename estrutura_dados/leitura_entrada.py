@@ -48,7 +48,7 @@ def obtem_instancia(caminho_instancia: str):
 
     valida_entrada(ambiente, matriz_anuncio, matriz_conflito)
 
-    return matriz_anuncio, matriz_conflito, ambiente
+    return matriz_anuncio, ambiente, matriz_conflito
 
 
 def valida_entrada(ambiente, matriz_anuncio, matriz_conflito):
