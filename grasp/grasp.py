@@ -1,7 +1,6 @@
 import numpy as np
 from estrutura_dados.leitura_entrada import obtem_instancia
-from modelagem.solucao import espaco_total_ocupado, proporcao_espaco_ocupado
-from pandas.core.frame import DataFrame
+from modelagem.solucao import Solucao
 from tempo_execucao import RegistroTempo
 
 from grasp.construcao import Construcao
@@ -26,8 +25,10 @@ class Grasp:
     tempo_solucao = None
     tempo_exibicao = None
 
-    matriz_solucao = None
-    espaco_ocupado = 0
+    construtor = None
+    buscador_local = None
+
+    solucao: Solucao = None
 
     def __init__(self, caminho_instancia, quantidade_iteracoes, alpha):
 
@@ -42,25 +43,27 @@ class Grasp:
         self.matriz_anuncio, self.ambiente, self.matriz_conflito = obtem_instancia(caminho_instancia)
         self.tempo_leitura.finaliza()
 
+        self.construtor = Construcao(self.matriz_anuncio, self.matriz_conflito, self.ambiente)
+        # buscador_local =
+
         self.exibe_instancia()
+
+    def limpa_solucao(self):
+        self.solucao = Solucao([], self.ambiente)
 
     def soluciona(self):
 
         self.tempo_solucao.inicializa()
-
-        construcao = Construcao(self.matriz_anuncio, self.matriz_conflito, self.ambiente)
-        # busca_local = 
+        self.limpa_solucao()
 
         for _ in range(self.quantidade_iteracoes):
 
-            solucao_construida = construcao.constroi(self.alpha)
+            solucao_construida = self.construtor.constroi(self.alpha)
 
             solucao_atual = solucao_construida
-            espaco_ocupado_atual = espaco_total_ocupado(solucao_construida)
 
-            if espaco_ocupado_atual > self.espaco_ocupado:
-                self.espaco_ocupado = espaco_ocupado_atual
-                self.matriz_solucao = solucao_atual
+            if solucao_atual.espaco_total_ocupado() > self.solucao.espaco_total_ocupado():
+                self.solucao = solucao_atual
 
         self.tempo_solucao.finaliza()
 
@@ -79,11 +82,9 @@ class Grasp:
     def exibe_solucao(self):
         self.tempo_exibicao.inicializa()
         if EXIBE_SOLUCAO:
-            df_solucao = DataFrame(self.matriz_solucao, columns=['Espaço ocupado', 'Anúncios inseridos'])
-            print(f'\nSolução construída:\n{df_solucao}')
+            print(f'\nSolução construída:\n{self.solucao}')
         if EXIBE_APROVEITAMENTO:
-            porcentagem_espaco_ocupado = proporcao_espaco_ocupado(self.matriz_solucao, self.ambiente) * 100
-            print(f'\nEspaço ocupado: {round(porcentagem_espaco_ocupado,2)}%\n')
+            print(f'\nEspaço ocupado: {round(self.solucao.proporcao_espaco_ocupado() * 100, 2)}%\n')
         self.tempo_exibicao.finaliza()
 
     def exibe_instancia(self):

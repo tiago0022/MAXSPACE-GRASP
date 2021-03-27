@@ -30,6 +30,7 @@ class RegistroTempo:
 
     def inicializa(self):
         self.inicio = time.time()
+        self.fim = None
 
     def finaliza(self):
         self.fim = time.time()

@@ -1,4 +1,5 @@
 
+from modelagem.solucao import Solucao
 import random as rd
 
 import numpy as np
@@ -63,7 +64,7 @@ class Construcao:
         self._tempo_total_candidato = 0
         self._tempo_total_first_fit = 0
 
-    def constroi(self, aleatoriedade):
+    def constroi(self, aleatoriedade) -> Solucao:
 
         self._limpa_construcao()
 
@@ -87,7 +88,7 @@ class Construcao:
 
         self._exibe_dados_tempo()
 
-        return self.matriz_solucao
+        return Solucao(self.matriz_solucao, self.ambiente)
 
     def _obtem_candidato(self):
 
