@@ -45,7 +45,7 @@ class Grasp:
         self.tempo_leitura.finaliza()
 
         self.construtor = Construcao(self.matriz_anuncio, self.matriz_conflito, self.ambiente)
-        self.buscador_local = BuscaLocal(self.matriz_anuncio)
+        self.buscador_local = BuscaLocal(self.ambiente)
 
         self.exibe_instancia()
 
