@@ -3,6 +3,7 @@ from estrutura_dados.leitura_entrada import obtem_instancia
 from modelagem.solucao import Solucao
 from tempo_execucao import RegistroTempo
 
+from grasp.busca_local import BuscaLocal
 from grasp.construcao import Construcao
 
 EXIBE_INSTANCIA = 0  # padrão = False
@@ -44,12 +45,12 @@ class Grasp:
         self.tempo_leitura.finaliza()
 
         self.construtor = Construcao(self.matriz_anuncio, self.matriz_conflito, self.ambiente)
-        # buscador_local =
+        self.buscador_local = BuscaLocal(self.matriz_anuncio)
 
         self.exibe_instancia()
 
     def limpa_solucao(self):
-        self.solucao = Solucao([], self.ambiente)
+        self.solucao = Solucao(self.ambiente)
 
     def soluciona(self):
 
@@ -59,8 +60,7 @@ class Grasp:
         for _ in range(self.quantidade_iteracoes):
 
             solucao_construida = self.construtor.constroi(self.alpha)
-
-            solucao_atual = solucao_construida
+            solucao_atual = self.buscador_local.busca(solucao_construida)
 
             if solucao_atual.espaco_total_ocupado() > self.solucao.espaco_total_ocupado():
                 self.solucao = solucao_atual

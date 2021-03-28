@@ -5,7 +5,7 @@ from modelagem.ambiente import Ambiente
 
 class Solucao:
 
-    def __init__(self, matriz_solucao, ambiente: Ambiente):
+    def __init__(self, ambiente: Ambiente, matriz_solucao=[]):
         self.ambiente = ambiente
         self.matriz_solucao = matriz_solucao
         self._espaco_total_ocupado = None

@@ -1,40 +1,47 @@
-from modelagem.solucao import espaco_total_ocupado
+from modelagem.solucao import Solucao
+
+# Classe incompleta
 
 
 class BuscaLocal:
 
-    def __init__(self):
-        pass
+    def busca(self, solucao_inicial: Solucao) -> Solucao:
 
-    def busca(self, matriz_solucao_inicial):
-
-        melhor_solucao = matriz_solucao_inicial
-        melhor_espaco_ocupado = 0
-
-        solucao_atual = matriz_solucao_inicial
-        avaliacao_atual = 0
+        melhor_solucao = solucao_inicial
 
         while True:
 
-            vizinho, avaliacao_vizinho, espaco_ocupado_vizinho = self.obtem_melhor_vizinho(solucao_atual)
+            vizinho = self._obtem_melhor_vizinho(melhor_solucao)
 
-            if avaliacao_vizinho >= avaliacao_atual:
-                avaliacao_atual = avaliacao_vizinho
-                solucao_atual = vizinho
+            if vizinho.ehMelhor(melhor_solucao):
+                melhor_solucao = vizinho
             else:
                 return melhor_solucao
 
-            if espaco_ocupado_vizinho > melhor_espaco_ocupado:
-                melhor_espaco_ocupado = espaco_ocupado_vizinho
-                melhor_solucao = vizinho
+    def _obtem_melhor_vizinho(self, solucao: Solucao):
 
-    def metrica_para_avaliar_solucao(self, solucao):
+        melhor_vizinho = Solucao(ambiente)
 
-        # L = tamanho_quadro
-        # B = quantidade_quadros
-        # beta = 0.9  # parâmetro configurável
+        for anuncio_i in matriz_anuncio:
 
-        # EO = beta * (solucao.espaco_ocupado / (L * B))  # Termo que representa o espaço ocupado
-        # QQC = (1 - beta) * (solucao.quantidade_quadros_completos / B)  # Termo que representa a quantidade de quados completos
+            solucao_adiciona = solucao.adiciona(anuncio_i)
+            if solucao_adiciona.ehMelhor(melhor_vizinho):
+                melhor_vizinho = solucao_adiciona
 
-        # return EO + QQC
+            for anuncio_j in matriz_anuncio:
+
+                solucao_troca = solucao.troca(anuncio_i, anuncio_j)
+                if solucao_troca.ehMelhor(melhor_vizinho):
+                    melhor_vizinho = solucao_troca
+
+                solucao_remaneja = solucao.remaneja(anuncio_i, anuncio_j)
+                if solucao_remaneja.ehMelhor(melhor_vizinho):
+                    melhor_vizinho = solucao_remaneja
+
+            for quadro in lista_quadro_disponiveis:
+
+                solucao_move = solucao.move(anuncio_i, quadro)
+                if solucao_move.ehMelhor(melhor_vizinho):
+                    melhor_vizinho = solucao_move
+
+        return melhor_vizinho

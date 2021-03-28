@@ -1,5 +1,4 @@
 
-from modelagem.solucao import Solucao
 import random as rd
 
 import numpy as np
@@ -7,6 +6,7 @@ from modelagem.ambiente import Ambiente
 from modelagem.anuncio import FREQUENCIA, GANHO, TAMANHO
 from modelagem.quadro import (ESPACO_OCUPADO, LISTA_INDICE_ANUNCIO,
                               pode_ser_inserido)
+from modelagem.solucao import Solucao
 from pandas import DataFrame
 from tempo_execucao import RegistroTempo
 
@@ -88,7 +88,7 @@ class Construcao:
 
         self._exibe_dados_tempo()
 
-        return Solucao(self.matriz_solucao, self.ambiente)
+        return Solucao(self.ambiente, self.matriz_solucao)
 
     def _obtem_candidato(self):
 
