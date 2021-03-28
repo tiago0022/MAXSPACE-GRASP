@@ -34,9 +34,12 @@ def exibe_parametros():
     print('-h: Ajuda')
 
 
+def executa():
+    rd.seed(seed)
+    Grasp(caminho_instancia, quantidade_iteracoes, alpha).soluciona()
+
+
 if apenas_exibe_ajuda:
     exibe_parametros()
 else:
-    rd.seed(seed)
-
-    Grasp(caminho_instancia, quantidade_iteracoes, alpha).soluciona()
+    executa()
