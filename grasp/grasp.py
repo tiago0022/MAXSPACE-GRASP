@@ -45,12 +45,12 @@ class Grasp:
         self.tempo_leitura.finaliza()
 
         self.construtor = Construcao(self.matriz_anuncio, self.matriz_conflito, self.ambiente)
-        self.buscador_local = BuscaLocal(self.ambiente)
+        self.buscador_local = BuscaLocal(self.matriz_anuncio, self.ambiente)
 
         self.exibe_instancia()
 
     def limpa_solucao(self):
-        self.solucao = Solucao(self.ambiente)
+        self.solucao = Solucao(self.ambiente, self.matriz_conflito)
 
     def soluciona(self):
 

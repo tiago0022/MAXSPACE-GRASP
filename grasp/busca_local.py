@@ -1,14 +1,14 @@
 from modelagem.solucao import Solucao
 
-# Classe incompleta
-
 
 class BuscaLocal:
 
-    ambiente = None
+    _matriz_anuncio = None
+    _ambiente = None
 
-    def __init__(self, ambiente):
-        self.ambiente = ambiente
+    def __init__(self, matriz_anuncio, ambiente):
+        self._matriz_anuncio = matriz_anuncio
+        self._ambiente = ambiente
 
     def busca(self, solucao_inicial: Solucao) -> Solucao:
 
@@ -25,13 +25,13 @@ class BuscaLocal:
 
     def _obtem_melhor_vizinho(self, solucao: Solucao) -> Solucao:
 
-        melhor_vizinho = Solucao(self.ambiente)
+        melhor_vizinho = solucao.copia()
 
-        # for anuncio_i in matriz_anuncio:
+        for indice_anuncio_i, anuncio_i in enumerate(self._matriz_anuncio):
 
-        #     solucao_adiciona = solucao.adiciona(anuncio_i)
-        #     if solucao_adiciona.ehMelhor(melhor_vizinho):
-        #         melhor_vizinho = solucao_adiciona
+            solucao_adiciona = solucao.adiciona_ff(anuncio_i, indice_anuncio_i)
+            if solucao_adiciona != None and solucao_adiciona.ehMelhor(melhor_vizinho):
+                melhor_vizinho = solucao_adiciona
 
         #     for anuncio_j in matriz_anuncio:
 
@@ -43,7 +43,7 @@ class BuscaLocal:
         #         if solucao_remaneja.ehMelhor(melhor_vizinho):
         #             melhor_vizinho = solucao_remaneja
 
-        #     for quadro in lista_quadro_disponiveis:
+        #    for quadro in lista_quadro_disponivel:
 
         #         solucao_move = solucao.move(anuncio_i, quadro)
         #         if solucao_move.ehMelhor(melhor_vizinho):

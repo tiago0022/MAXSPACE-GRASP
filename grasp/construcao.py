@@ -27,6 +27,7 @@ class Construcao:
         self.quantidade_anuncios = len(matriz_anuncio)
 
         self._lista_anuncio_disponivel = None
+        self._lista_anuncio_adicionado = None
         self._lista_quadro_disponivel = None
 
         self._tempo_construcao = None
@@ -46,6 +47,7 @@ class Construcao:
         tempo = RegistroTempo('Limpar solução anterior')
         self.matriz_solucao = self._solucao_vazia()
         self._lista_anuncio_disponivel = list(range(self.quantidade_anuncios))
+        self._lista_anuncio_adicionado = []
         self._lista_quadro_disponivel = list(range(self.ambiente.quantidade_quadros))
         self._limpa_lista_tempo()
         self._limpa_dados_atuais()
@@ -88,7 +90,7 @@ class Construcao:
 
         self._exibe_dados_tempo()
 
-        return Solucao(self.ambiente, self.matriz_solucao)
+        return Solucao(self.ambiente, self.matriz_conflito, self.matriz_solucao, self._lista_quadro_disponivel, self._lista_anuncio_adicionado)
 
     def _obtem_candidato(self):
 
@@ -210,6 +212,7 @@ class Construcao:
             if tamanho_atualizado == self.ambiente.tamanho_quadro:
                 self._lista_quadro_disponivel.remove(indice_quadro)
 
+        self._lista_anuncio_adicionado.append(indice_anuncio)
         # tempo.exibe(1)
 
     def _exibe_iteracao(self, iteracao=None, candidato_selecionado=None):
