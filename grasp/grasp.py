@@ -57,13 +57,15 @@ class Grasp:
         self.tempo_solucao.inicializa()
         self.limpa_solucao()
 
-        for _ in range(self.quantidade_iteracoes):
+        for iteracao in range(self.quantidade_iteracoes):
 
             solucao_construida = self.construtor.constroi(self.alpha)
             solucao_atual = self.buscador_local.busca(solucao_construida)
 
             if solucao_atual.espaco_total_ocupado() > self.solucao.espaco_total_ocupado():
                 self.solucao = solucao_atual
+
+            print(np.round(100 * (iteracao + 1) / self.quantidade_iteracoes, 2), '%')
 
         self.tempo_solucao.finaliza()
 

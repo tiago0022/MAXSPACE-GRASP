@@ -113,7 +113,7 @@ class Solucao:
 
         for indice_quadro in self.ambiente.lista_quadro():
             espaco_liberado = 0
-            if contagem_quadros_i > 0 and self._esta_no_quadro(i, indice_quadro):
+            if contagem_quadros_i > 0 and self.anuncio_no_quadro(i, indice_quadro):
                 # print('Remover de', indice_quadro, self.matriz_solucao[indice_quadro])
                 lista_indice_quadro_selecionado_i.append(indice_quadro)
                 contagem_quadros_i -= 1
@@ -134,7 +134,30 @@ class Solucao:
         # print('\nNão é possível fazer a alteração\n\n===================\n\n')
         return None
 
-    def _esta_no_quadro(self, indice_anuncio, indice_quadro):
+    def remaneja(self, anuncio_i, i, quadro_i, anuncio_j, j, quadro_j):
+
+        if quadro_i == quadro_j or i == j:
+            return None
+
+        tamanho_i = anuncio_i[TAMANHO]
+        tamanho_j = anuncio_j[TAMANHO]
+        novo_espaco_quadro_i = self.matriz_solucao[quadro_i][ESPACO_OCUPADO] - tamanho_i
+        novo_espaco_quadro_j = self.matriz_solucao[quadro_j][ESPACO_OCUPADO] - tamanho_j
+
+        if novo_espaco_quadro_i < tamanho_j or novo_espaco_quadro_j < tamanho_i:
+            return None
+
+        nova_solucao = self.copia()
+
+        nova_solucao._remove_copia(i, tamanho_i, quadro_i)
+        nova_solucao._remove_copia(j, tamanho_j, quadro_j)
+
+        nova_solucao._insere_copia(i, tamanho_i, quadro_j)
+        nova_solucao._insere_copia(j, tamanho_j, quadro_i)
+
+        return nova_solucao
+
+    def anuncio_no_quadro(self, indice_anuncio, indice_quadro):
         lista_indice_anuncio = self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO]
         return indice_anuncio in lista_indice_anuncio
 
@@ -143,23 +166,29 @@ class Solucao:
         tamanho_anuncio = anuncio[TAMANHO]
 
         for indice_quadro in lista_quadro_selecionado:
-            tamanho_atualizado = self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] + tamanho_anuncio
-            self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] = tamanho_atualizado
-            self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO].append(indice_anuncio)
-            if tamanho_atualizado == self.ambiente.tamanho_quadro:
-                self._lista_quadro_disponivel.remove(indice_quadro)
+            self._insere_copia(indice_anuncio, tamanho_anuncio, indice_quadro)
 
         self.lista_anuncio_adicionado.append(indice_anuncio)
+
+    def _insere_copia(self, indice_anuncio, tamanho_anuncio, indice_quadro):
+        tamanho_atualizado = self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] + tamanho_anuncio
+        self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] = tamanho_atualizado
+        self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO].append(indice_anuncio)
+        if tamanho_atualizado == self.ambiente.tamanho_quadro:
+            self._lista_quadro_disponivel.remove(indice_quadro)
 
     def _remove(self, lista_quadro_selecionado, anuncio, indice_anuncio):
 
         tamanho_anuncio = anuncio[TAMANHO]
 
         for indice_quadro in lista_quadro_selecionado:
-            tamanho_atualizado = self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] - tamanho_anuncio
-            self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] = tamanho_atualizado
-            self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO].remove(indice_anuncio)
-            if tamanho_atualizado == self.ambiente.tamanho_quadro - tamanho_anuncio:
-                self._lista_quadro_disponivel.append(indice_quadro)
+            self._remove_copia(indice_anuncio, tamanho_anuncio, indice_quadro)
 
         self.lista_anuncio_adicionado.remove(indice_anuncio)
+
+    def _remove_copia(self, indice_anuncio, tamanho_anuncio, indice_quadro):
+        tamanho_atualizado = self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] - tamanho_anuncio
+        self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] = tamanho_atualizado
+        self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO].remove(indice_anuncio)
+        if tamanho_atualizado == self.ambiente.tamanho_quadro - tamanho_anuncio:
+            self._lista_quadro_disponivel.append(indice_quadro)
