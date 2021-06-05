@@ -27,17 +27,19 @@ class BuscaLocal:
 
         melhor_vizinho = solucao.copia()
 
-        for indice_anuncio_i, anuncio_i in enumerate(self._matriz_anuncio):
+        for i, anuncio_i in enumerate(self._matriz_anuncio):
 
-            solucao_adiciona = solucao.adiciona_ff(anuncio_i, indice_anuncio_i)
-            if solucao_adiciona != None and solucao_adiciona.ehMelhor(melhor_vizinho):
+            solucao_adiciona = solucao.adiciona_ff(anuncio_i, i)
+            if solucao_adiciona is not None and solucao_adiciona.ehMelhor(melhor_vizinho):
+                # print(i, 'adicionado')
                 melhor_vizinho = solucao_adiciona
 
-        #     for anuncio_j in matriz_anuncio:
+            for j, anuncio_j in enumerate(self._matriz_anuncio):
 
-        #         solucao_troca = solucao.troca(anuncio_i, anuncio_j)
-        #         if solucao_troca.ehMelhor(melhor_vizinho):
-        #             melhor_vizinho = solucao_troca
+                solucao_troca = solucao.substitui(anuncio_i, i, anuncio_j, j)
+                if solucao_troca is not None and solucao_troca.ehMelhor(melhor_vizinho):
+                    # print(i, 'removido e', j, 'adicionado')
+                    melhor_vizinho = solucao_troca
 
         #         solucao_remaneja = solucao.remaneja(anuncio_i, anuncio_j)
         #         if solucao_remaneja.ehMelhor(melhor_vizinho):

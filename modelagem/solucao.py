@@ -69,7 +69,7 @@ class Solucao:
         df_solucao = DataFrame(self.matriz_solucao, columns=['Espaço ocupado', 'Anúncios inseridos'])
         return df_solucao.__str__()
 
-    def adiciona_ff(self, anuncio, indice_anuncio):
+    def adiciona_ff(self, anuncio, indice_anuncio) -> Solucao:
         if(indice_anuncio in self.lista_anuncio_adicionado):
             # print(indice_anuncio, 'já adicionado')
             return None
@@ -85,14 +85,60 @@ class Solucao:
                 contagem_quadros = contagem_quadros + 1
                 if contagem_quadros == frequencia_anuncio:
                     nova_solucao = self.copia()
-                    nova_solucao.insere_na_solucao(lista_indice_quadro_selecionado, anuncio, indice_anuncio)
+                    nova_solucao._insere(lista_indice_quadro_selecionado, anuncio, indice_anuncio)
                     # print(indice_anuncio, 'adicionado')
                     return nova_solucao
 
         # print(indice_anuncio, 'não cabe')
         return None
 
-    def insere_na_solucao(self, lista_quadro_selecionado, anuncio, indice_anuncio):
+    def substitui(self, anuncio_i, i, anuncio_j, j) -> Solucao:
+        if i not in self.lista_anuncio_adicionado or j in self.lista_anuncio_adicionado:
+            return None
+
+        frequencia_i = anuncio_i[FREQUENCIA]
+        frequencia_j = anuncio_j[FREQUENCIA]
+
+        lista_indice_quadro_selecionado_i = []
+        lista_indice_quadro_selecionado_j = []
+
+        contagem_quadros_i = frequencia_i
+        contagem_quadros_j = 0
+
+        # print('Início tentativa: remover ', i, 'e adicionar', j)
+        # print('Tamanho quadro:', self.ambiente.tamanho_quadro)
+        # print(i, ': tamanho', anuncio_i[TAMANHO], '/ frequência', anuncio_i[FREQUENCIA])
+        # print(j, ': tamanho', anuncio_j[TAMANHO], '/ frequência', anuncio_j[FREQUENCIA])
+        # print()
+
+        for indice_quadro in self.ambiente.lista_quadro():
+            espaco_liberado = 0
+            if contagem_quadros_i > 0 and self._esta_no_quadro(i, indice_quadro):
+                # print('Remover de', indice_quadro, self.matriz_solucao[indice_quadro])
+                lista_indice_quadro_selecionado_i.append(indice_quadro)
+                contagem_quadros_i -= 1
+                espaco_liberado = anuncio_i[TAMANHO]
+
+            if contagem_quadros_j < frequencia_j and pode_ser_inserido(self.matriz_solucao[indice_quadro], anuncio_j, j, self._matriz_conflito, self.ambiente.tamanho_quadro, espaco_liberado, i):
+                # print('Adicionar em', indice_quadro, self.matriz_solucao[indice_quadro])
+                lista_indice_quadro_selecionado_j.append(indice_quadro)
+                contagem_quadros_j += 1
+
+            if contagem_quadros_j == frequencia_j and contagem_quadros_i == 0:
+                # print('\nÉ possível fazer a alteração\n\n===================\n\n')
+                nova_solucao = self.copia()
+                nova_solucao._remove(lista_indice_quadro_selecionado_i, anuncio_i, i)
+                nova_solucao._insere(lista_indice_quadro_selecionado_j, anuncio_j, j)
+                return nova_solucao
+
+        # print('\nNão é possível fazer a alteração\n\n===================\n\n')
+        return None
+
+    def _esta_no_quadro(self, indice_anuncio, indice_quadro):
+        lista_indice_anuncio = self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO]
+        return indice_anuncio in lista_indice_anuncio
+
+    def _insere(self, lista_quadro_selecionado, anuncio, indice_anuncio):
 
         tamanho_anuncio = anuncio[TAMANHO]
 
@@ -104,3 +150,16 @@ class Solucao:
                 self._lista_quadro_disponivel.remove(indice_quadro)
 
         self.lista_anuncio_adicionado.append(indice_anuncio)
+
+    def _remove(self, lista_quadro_selecionado, anuncio, indice_anuncio):
+
+        tamanho_anuncio = anuncio[TAMANHO]
+
+        for indice_quadro in lista_quadro_selecionado:
+            tamanho_atualizado = self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] - tamanho_anuncio
+            self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] = tamanho_atualizado
+            self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO].remove(indice_anuncio)
+            if tamanho_atualizado == self.ambiente.tamanho_quadro - tamanho_anuncio:
+                self._lista_quadro_disponivel.append(indice_quadro)
+
+        self.lista_anuncio_adicionado.remove(indice_anuncio)
