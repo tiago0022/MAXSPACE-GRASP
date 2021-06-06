@@ -14,8 +14,14 @@ class BuscaLocal:
     def busca(self, solucao_inicial: Solucao) -> Solucao:
 
         melhor_solucao = solucao_inicial
+        iteracao = 1
 
         while True:
+
+            print(iteracao, '- solução encontrada:')
+            print('Espaço ocupado:', melhor_solucao.proporcao_espaco_ocupado())
+            print('Critério de desempate:', melhor_solucao.criterio_desempate())
+            print()
 
             vizinho = self._obtem_melhor_vizinho(melhor_solucao)
 
@@ -46,12 +52,12 @@ class BuscaLocal:
                     print(i, 'removido e', j, 'adicionado')
                     melhor_vizinho = solucao_troca
 
-                for quadro_k in self._ambiente.lista_quadro():
+                for quadro_l in self._ambiente.lista_quadro():
 
-                    if solucao.anuncio_no_quadro(i, quadro_k):
-                        lista_quadro_i.append(quadro_k)
-                    if solucao.anuncio_no_quadro(j, quadro_k):
-                        lista_quadro_j.append(quadro_k)
+                    if solucao.anuncio_no_quadro(i, quadro_l):
+                        lista_quadro_i.append(quadro_l)
+                    if solucao.anuncio_no_quadro(j, quadro_l):
+                        lista_quadro_j.append(quadro_l)
 
                 for quadro_i in lista_quadro_i:
                     for quadro_j in lista_quadro_j:
@@ -60,10 +66,10 @@ class BuscaLocal:
                             print(i, 'no quadro', quadro_i, 'trocado com', j, 'do quadro', quadro_j)
                             melhor_vizinho = solucao_remaneja
 
-        #    for quadro in lista_quadro_disponivel:
-
-        #         solucao_move = solucao.move(anuncio_i, quadro)
-        #         if solucao_move.ehMelhor(melhor_vizinho):
-        #             melhor_vizinho = solucao_move
+                    for quadro_l in solucao.lista_quadro_disponivel:
+                        solucao_move = solucao.move(anuncio_i, i, quadro_i, quadro_l)
+                        if solucao_move is not None and solucao_move.ehMelhor(melhor_vizinho):
+                            print(i, 'no quadro', quadro_i, 'movido para o quadro', quadro_l)
+                            melhor_vizinho = solucao_move
 
         return melhor_vizinho
