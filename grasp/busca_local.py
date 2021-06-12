@@ -38,7 +38,7 @@ class BuscaLocal:
 
             lista_quadro_i = []
 
-            solucao_adiciona = solucao.adiciona_ff(anuncio_i, i)
+            solucao_adiciona = solucao.adiciona_ff(i)
             if solucao_adiciona is not None and solucao_adiciona.ehMelhor(melhor_vizinho):
                 print(i, 'adicionado')
                 melhor_vizinho = solucao_adiciona
@@ -47,7 +47,7 @@ class BuscaLocal:
 
                 lista_quadro_j = []
 
-                solucao_troca = solucao.substitui(anuncio_i, i, anuncio_j, j)
+                solucao_troca = solucao.substitui(i, j)
                 if solucao_troca is not None and solucao_troca.ehMelhor(melhor_vizinho):
                     print(i, 'removido e', j, 'adicionado')
                     melhor_vizinho = solucao_troca
@@ -61,13 +61,13 @@ class BuscaLocal:
 
                 for quadro_i in lista_quadro_i:
                     for quadro_j in lista_quadro_j:
-                        solucao_remaneja = solucao.remaneja(anuncio_i, i, quadro_i, anuncio_j, j, quadro_j)
+                        solucao_remaneja = solucao.remaneja(i, quadro_i, j, quadro_j)
                         if solucao_remaneja is not None and solucao_remaneja.ehMelhor(melhor_vizinho):
                             print(i, 'no quadro', quadro_i, 'trocado com', j, 'do quadro', quadro_j)
                             melhor_vizinho = solucao_remaneja
 
                     for quadro_l in solucao.lista_quadro_disponivel:
-                        solucao_move = solucao.move(anuncio_i, i, quadro_i, quadro_l)
+                        solucao_move = solucao.move(i, quadro_i, quadro_l)
                         if solucao_move is not None and solucao_move.ehMelhor(melhor_vizinho):
                             print(i, 'no quadro', quadro_i, 'movido para o quadro', quadro_l)
                             melhor_vizinho = solucao_move

@@ -42,7 +42,7 @@ class Construcao:
     def _limpa_construcao(self):
         self._tempo_construcao = RegistroTempo('Construção')
         tempo = RegistroTempo('Limpar solução anterior')
-        self.solucao = Solucao(self.ambiente, self.matriz_conflito)
+        self.solucao = Solucao(self.ambiente, self.matriz_conflito, self.matriz_anuncio)
         self._lista_anuncio_disponivel = list(range(self.quantidade_anuncios))
         self._limpa_lista_tempo()
         self._limpa_dados_atuais()
@@ -189,7 +189,7 @@ class Construcao:
                 lista_indice_quadro_selecionado.append(indice_quadro)
                 contagem_quadros = contagem_quadros + 1
                 if contagem_quadros == frequencia_anuncio:
-                    self.solucao.insere(lista_indice_quadro_selecionado, candidato, indice_candidato)
+                    self.solucao.insere(lista_indice_quadro_selecionado, indice_candidato)
                     break
 
         self._tempo_total_first_fit = self._tempo_total_first_fit + tempo.finaliza()

@@ -50,7 +50,7 @@ class Grasp:
         self.exibe_instancia()
 
     def limpa_solucao(self):
-        self.solucao = Solucao(self.ambiente, self.matriz_conflito)
+        self.solucao = Solucao(self.ambiente, self.matriz_conflito, self.matriz_anuncio)
 
     def soluciona(self):
 

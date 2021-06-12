@@ -34,4 +34,6 @@ def existe_conflito(matriz_conflito, indice_anuncio, lista_indice_anuncio_inseri
                 return True
         elif matriz_conflito[indice_anuncio][indice_anuncio_inserido] and indice_anuncio_inserido != anuncio_liberado:
             return True
+        elif indice_anuncio == indice_anuncio_inserido:
+            return True
     return False
