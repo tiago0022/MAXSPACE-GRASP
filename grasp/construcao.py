@@ -22,13 +22,10 @@ class Construcao:
         self.matriz_conflito = matriz_conflito
         self.ambiente: Ambiente = ambiente
 
-        self.matriz_solucao = None
+        self.solucao = None
 
         self.quantidade_anuncios = len(matriz_anuncio)
-
         self._lista_anuncio_disponivel = None
-        self._lista_anuncio_adicionado = None
-        self._lista_quadro_disponivel = None
 
         self._tempo_construcao = None
         self._lista_tempo_iteracao = None
@@ -45,10 +42,8 @@ class Construcao:
     def _limpa_construcao(self):
         self._tempo_construcao = RegistroTempo('Construção')
         tempo = RegistroTempo('Limpar solução anterior')
-        self.matriz_solucao = self._solucao_vazia()
+        self.solucao = Solucao(self.ambiente, self.matriz_conflito)
         self._lista_anuncio_disponivel = list(range(self.quantidade_anuncios))
-        self._lista_anuncio_adicionado = []
-        self._lista_quadro_disponivel = list(range(self.ambiente.quantidade_quadros))
         self._limpa_lista_tempo()
         self._limpa_dados_atuais()
         # tempo.exibe(1)
@@ -90,7 +85,7 @@ class Construcao:
 
         self._exibe_dados_tempo()
 
-        return Solucao(self.ambiente, self.matriz_conflito, self.matriz_solucao, self._lista_quadro_disponivel, self._lista_anuncio_adicionado)
+        return self.solucao
 
     def _obtem_candidato(self):
 
@@ -189,30 +184,15 @@ class Construcao:
         lista_indice_quadro_selecionado = []
         contagem_quadros = 0
 
-        for indice_quadro in self._lista_quadro_disponivel:
-            if pode_ser_inserido(self.matriz_solucao[indice_quadro], candidato, indice_candidato, self.matriz_conflito, self.ambiente.tamanho_quadro):
+        for indice_quadro in self.solucao.lista_quadro_disponivel:
+            if pode_ser_inserido(self.solucao.quadro(indice_quadro), candidato, indice_candidato, self.matriz_conflito, self.ambiente.tamanho_quadro):
                 lista_indice_quadro_selecionado.append(indice_quadro)
                 contagem_quadros = contagem_quadros + 1
                 if contagem_quadros == frequencia_anuncio:
-                    self._insere_na_solucao(lista_indice_quadro_selecionado, candidato, indice_candidato)
+                    self.solucao.insere(lista_indice_quadro_selecionado, candidato, indice_candidato)
                     break
 
         self._tempo_total_first_fit = self._tempo_total_first_fit + tempo.finaliza()
-        # tempo.exibe(1)
-
-    def _insere_na_solucao(self, lista_quadro_selecionado, anuncio, indice_anuncio):
-
-        tempo = RegistroTempo('Inserir na solução')
-        tamanho_anuncio = anuncio[TAMANHO]
-
-        for indice_quadro in lista_quadro_selecionado:
-            tamanho_atualizado = self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] + tamanho_anuncio
-            self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] = tamanho_atualizado
-            self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO].append(indice_anuncio)
-            if tamanho_atualizado == self.ambiente.tamanho_quadro:
-                self._lista_quadro_disponivel.remove(indice_quadro)
-
-        self._lista_anuncio_adicionado.append(indice_anuncio)
         # tempo.exibe(1)
 
     def _exibe_iteracao(self, iteracao=None, candidato_selecionado=None):
@@ -238,12 +218,6 @@ class Construcao:
                 print(df_anuncio.filter([candidato_selecionado], axis=0))
 
             print('\nSolução parcial S:')
-            print(DataFrame(self.matriz_solucao, columns=['Espaço ocupado', 'Anúncios inseridos']))
+            print(DataFrame(self.solucao.matriz_solucao, columns=['Espaço ocupado', 'Anúncios inseridos']))
 
             print('\n==================================\n')
-
-    def _solucao_vazia(self):
-        matriz_solucao = []
-        for _ in range(self.ambiente.quantidade_quadros):
-            matriz_solucao.append([0, []])
-        return matriz_solucao

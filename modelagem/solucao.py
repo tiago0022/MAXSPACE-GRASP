@@ -9,17 +9,38 @@ from modelagem.ambiente import Ambiente
 
 class Solucao:
 
-    def __init__(self, ambiente: Ambiente, matriz_conflito, matriz_solucao=[], lista_quadro_disponivel=[], lista_anuncio_adicionado=[]):
+    matriz_solucao = None
+
+    lista_anuncio_adicionado = None
+    lista_quadro_disponivel = None
+
+    ambiente = None
+    _matriz_conflito = None
+
+    _espaco_total_ocupado = None
+    _proporcao_espaco_ocupado = None
+    _quantidade_quadros_completos = None
+    _soma_quadrado_espaco_livre = None
+    _criterio_desempate = None
+
+    def __init__(self, ambiente: Ambiente, matriz_conflito):
+
         self.ambiente = ambiente
-        self.matriz_solucao = matriz_solucao
-        self.lista_anuncio_adicionado = lista_anuncio_adicionado
         self._matriz_conflito = matriz_conflito
-        self.lista_quadro_disponivel = lista_quadro_disponivel
-        self._espaco_total_ocupado = None
-        self._proporcao_espaco_ocupado = None
-        self._quantidade_quadros_completos = None
-        self._soma_quadrado_espaco_livre = None
-        self._criterio_desempate = None
+
+        self.matriz_solucao = self._solucao_vazia()
+
+        self.lista_anuncio_adicionado = []
+        self.lista_quadro_disponivel = list(range(self.ambiente.quantidade_quadros))
+
+    def _solucao_vazia(self):
+        matriz_solucao = []
+        for _ in range(self.ambiente.quantidade_quadros):
+            matriz_solucao.append([0, []])
+        return matriz_solucao
+
+    def quadro(self, quadro):
+        return self.matriz_solucao[quadro]
 
     def _calcula_parametros_solucao(self):
         self._espaco_total_ocupado = 0
@@ -94,7 +115,7 @@ class Solucao:
                 contagem_quadros = contagem_quadros + 1
                 if contagem_quadros == frequencia_anuncio:
                     nova_solucao = self.copia()
-                    nova_solucao._insere(lista_indice_quadro_selecionado, anuncio, indice_anuncio)
+                    nova_solucao.insere(lista_indice_quadro_selecionado, anuncio, indice_anuncio)
                     # print(indice_anuncio, 'adicionado')
                     return nova_solucao
 
@@ -137,7 +158,7 @@ class Solucao:
                 # print('\nÉ possível fazer a alteração\n\n===================\n\n')
                 nova_solucao = self.copia()
                 nova_solucao._remove(lista_indice_quadro_selecionado_i, anuncio_i, i)
-                nova_solucao._insere(lista_indice_quadro_selecionado_j, anuncio_j, j)
+                nova_solucao.insere(lista_indice_quadro_selecionado_j, anuncio_j, j)
                 return nova_solucao
 
         # print('\nNão é possível fazer a alteração\n\n===================\n\n')
@@ -181,7 +202,7 @@ class Solucao:
 
         return None
 
-    def _insere(self, lista_quadro_selecionado, anuncio, indice_anuncio):
+    def insere(self, lista_quadro_selecionado, anuncio, indice_anuncio):
 
         tamanho_anuncio = anuncio[TAMANHO]
 
