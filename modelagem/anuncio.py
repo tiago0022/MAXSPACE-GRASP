@@ -9,3 +9,7 @@ def obtem_anuncio(lista_parametro):
     frequencia = int(lista_parametro[1])
     ganho = tamanho * frequencia
     return [tamanho, frequencia, ganho]
+
+
+def exibe_anuncio(indice, anuncio):
+    print(indice, ': tamanho', anuncio[TAMANHO], '/ frequência', anuncio[FREQUENCIA])

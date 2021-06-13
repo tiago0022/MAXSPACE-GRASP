@@ -4,9 +4,9 @@ import copy
 
 from pandas.core.frame import DataFrame
 
-from modelagem.ambiente import Ambiente
-from modelagem.anuncio import FREQUENCIA, GANHO, TAMANHO
-from modelagem.quadro import ESPACO_OCUPADO, LISTA_INDICE_ANUNCIO
+from modelagem.ambiente import Ambiente, exibe_tamanho_quadro
+from modelagem.anuncio import FREQUENCIA, GANHO, TAMANHO, exibe_anuncio
+from modelagem.quadro import ESPACO_OCUPADO, LISTA_INDICE_ANUNCIO, exibe_quadro
 
 
 class Solucao:
@@ -57,12 +57,10 @@ class Solucao:
         copia.lista_anuncio_disponivel = copy.deepcopy(self.lista_anuncio_disponivel)
         copia.matriz_anuncio_quadro = copy.deepcopy(self.matriz_anuncio_quadro)
 
-        copia._espaco_total_ocupado = self._espaco_total_ocupado
-        copia._proporcao_espaco_ocupado = self._proporcao_espaco_ocupado
-        copia._quantidade_quadros_completos = self._quantidade_quadros_completos
-        copia._soma_quadrado_espaco_livre = self._soma_quadrado_espaco_livre
-
         return copia
+
+    def criterio_desempate(self):
+        return self.soma_quadrado_espaco_livre()
 
     def _matriz_anuncio_quadro_vazia(self):
         matriz_anuncio_quadro = []
@@ -109,9 +107,6 @@ class Solucao:
             self._proporcao_espaco_ocupado = self.espaco_total_ocupado() / self._ambiente.espaco_total
         return self._proporcao_espaco_ocupado
 
-    def criterio_desempate(self):
-        return self.quantidade_quadros_completos()
-
     def ehMelhor(self, solucao: Solucao) -> bool:
         if self.espaco_total_ocupado() > solucao.espaco_total_ocupado():
             return True
@@ -154,14 +149,14 @@ class Solucao:
         anuncio_i = self._matriz_anuncio[i]
         anuncio_j = self._matriz_anuncio[j]
 
-        # print('Início tentativa: remover ', i, 'e adicionar', j)
-        # print('Tamanho quadro:', self._ambiente.tamanho_quadro)
-        # print(i, ': tamanho', anuncio_i[TAMANHO], '/ frequência', anuncio_i[FREQUENCIA])
-        # print(j, ': tamanho', anuncio_j[TAMANHO], '/ frequência', anuncio_j[FREQUENCIA])
+        # print('Início tentativa: remover', i, 'e adicionar', j)
+        # exibe_tamanho_quadro(self._ambiente)
+        # exibe_anuncio(i, anuncio_i)
+        # exibe_anuncio(j, anuncio_j)
         # print()
 
         if anuncio_j[GANHO] < anuncio_i[GANHO]:
-            # print(f'O ganho de {j} ({anuncio_j[GANHO]}) é menor que o ganho de {i} ({anuncio_i[GANHO]})')
+            # print(f'O ganho de {j} ({anuncio_j[GANHO]}) é menor que o ganho de {i} ({anuncio_i[GANHO]})\n\n===================\n')
             return None
 
         frequencia_i = anuncio_i[FREQUENCIA]
@@ -182,19 +177,18 @@ class Solucao:
                 espaco_liberado = anuncio_i[TAMANHO]
 
             if contagem_quadros_j < frequencia_j and self.copia_pode_ser_inserida(j, indice_quadro, espaco_liberado, i):
-                # print('Adicionar em', indice_quadro, self.matriz_solucao[indice_quadro])
                 lista_indice_quadro_selecionado_j.append(indice_quadro)
                 contagem_quadros_j += 1
+                # print('Adicionar em', indice_quadro, self.matriz_solucao[indice_quadro], f'({contagem_quadros_j} adicionados)')
 
-            # print(f'Quadros liberados: {contagem_quadros_j}, quadros necessários: {frequencia_j}')
             if contagem_quadros_j == frequencia_j and contagem_quadros_i == 0:
-                # print('\nÉ possível fazer a alteração\n\n===================\n\n')
+                # print('\nÉ possível fazer a alteração\n\n===================\n')
                 nova_solucao = self.copia()
                 nova_solucao._remove(lista_indice_quadro_selecionado_i, i)
                 nova_solucao.insere(lista_indice_quadro_selecionado_j, j)
                 return nova_solucao
 
-        # print('\nNão é possível fazer a alteração\n\n===================\n\n')
+        # print('\nNão é possível fazer a alteração\n\n===================\n')
         return None
 
     # i e j devem estar na solução, nos respectivos quadros i e j
@@ -228,16 +222,28 @@ class Solucao:
         lista_indice_anuncio = self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO]
         return indice_anuncio in lista_indice_anuncio
 
-    # i deve estar na solução, no quadro i
+    # i deve estar na solução, no quadro i, k deve estar disponível
     def move(self, i, quadro_i, quadro_k) -> Solucao:
+
+        # print('Início tentativa: mover cópia de', i, 'do quadro', quadro_i, 'para o quadro', quadro_k)
+        # exibe_tamanho_quadro(self._ambiente)
+        # exibe_anuncio(i, self._matriz_anuncio[i])
+        # exibe_quadro(quadro_i, self.matriz_solucao[quadro_i])
+        # exibe_quadro(quadro_k, self.matriz_solucao[quadro_k])
+        # print()
+
         if quadro_i == quadro_k or self.anuncio_no_quadro(i, quadro_k):
+            # print(i, 'já está no quadro', quadro_k, '\n\n===================\n')
             return None
 
         if self.copia_pode_ser_inserida(i, quadro_k):
+            # print(i, 'movido de', quadro_i, 'para', quadro_k, '\n\n===================\n')
             nova_solucao = self.copia()
             nova_solucao._remove_copia(i, quadro_i)
             nova_solucao._insere_copia(i, quadro_k)
+            return nova_solucao
 
+        # print('Não é possível fazer a alteração \n\n===================\n')
         return None
 
     def insere(self, lista_quadro_selecionado, indice_anuncio):

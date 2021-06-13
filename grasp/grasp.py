@@ -57,7 +57,7 @@ class Grasp:
         self.tempo_solucao.inicializa()
         self.limpa_solucao()
 
-        print('0%')
+        print('\n0%\n')
         for iteracao in range(self.quantidade_iteracoes):
 
             solucao_construida = self.construtor.constroi(self.alpha)
@@ -67,6 +67,7 @@ class Grasp:
                 self.solucao = solucao_atual
 
             print(np.round(100 * (iteracao + 1) / self.quantidade_iteracoes, 2), '%')
+            print('\n===================\n\n')
 
         self.tempo_solucao.finaliza()
 

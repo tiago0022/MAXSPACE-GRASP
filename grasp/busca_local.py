@@ -28,6 +28,8 @@ class BuscaLocal:
             else:
                 return melhor_solucao
 
+            iteracao += 1
+
     def _obtem_melhor_vizinho(self, solucao: Solucao) -> Solucao:
 
         solucao_adiciona = self._melhor_vizinho_adiciona(solucao)
@@ -54,7 +56,7 @@ class BuscaLocal:
         for i in solucao.lista_anuncio_disponivel:
             solucao_adiciona = solucao.adiciona(i)
             if solucao_adiciona != None and solucao_adiciona.ehMelhor(melhor):
-                print(i, 'adicionado')
+                print(i, 'adicionado\n')
                 melhor = solucao_adiciona
                 melhor_encontrado = True
         return melhor if melhor_encontrado else None
@@ -66,7 +68,7 @@ class BuscaLocal:
             for j in solucao.lista_anuncio_disponivel:
                 solucao_substitui = solucao.substitui(i, j)
                 if solucao_substitui != None and solucao_substitui.ehMelhor(melhor):
-                    print(i, 'removido e', j, 'adicionado')
+                    print(i, 'removido e', j, 'adicionado\n')
                     melhor = solucao_substitui
                     melhor_encontrado = True
         return melhor if melhor_encontrado else None
@@ -79,7 +81,7 @@ class BuscaLocal:
                 for quadro_k in solucao.lista_quadro_disponivel:
                     solucao_move = solucao.move(i, quadro_i, quadro_k)
                     if solucao_move != None and solucao_move.ehMelhor(melhor):
-                        print(i, 'no quadro', quadro_i, 'movido para o quadro', quadro_k)
+                        print(i, 'no quadro', quadro_i, 'movido para o quadro', quadro_k, '\n')
                         melhor = solucao_move
                         melhor_encontrado = True
         return melhor if melhor_encontrado else None
@@ -93,7 +95,7 @@ class BuscaLocal:
                     for quadro_j in solucao.matriz_anuncio_quadro[j]:
                         solucao_remaneja = solucao.remaneja(i, quadro_i, j, quadro_j)
                         if solucao_remaneja != None and solucao_remaneja.ehMelhor(melhor):
-                            print(i, 'no quadro', quadro_i, 'trocado com', j, 'do quadro', quadro_j)
+                            print(i, 'no quadro', quadro_i, 'trocado com', j, 'do quadro', quadro_j, '\n')
                             melhor = solucao_remaneja
                             melhor_encontrado = True
         return melhor if melhor_encontrado else None

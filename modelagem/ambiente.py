@@ -10,3 +10,7 @@ class Ambiente:
         if self._lista_quadro is None:
             self._lista_quadro = range(self.quantidade_quadros)
         return self._lista_quadro
+
+
+def exibe_tamanho_quadro(ambiente: Ambiente):
+    print('Tamanho quadro:', ambiente.tamanho_quadro)
