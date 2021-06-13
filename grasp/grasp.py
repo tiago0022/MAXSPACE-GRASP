@@ -66,8 +66,8 @@ class Grasp:
             if solucao_atual.espaco_total_ocupado() > self.solucao.espaco_total_ocupado():
                 self.solucao = solucao_atual
 
+            print('===================\n')
             print(np.round(100 * (iteracao + 1) / self.quantidade_iteracoes, 2), '%')
-            print('\n===================\n\n')
 
         self.tempo_solucao.finaliza()
 

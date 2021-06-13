@@ -194,29 +194,33 @@ class Solucao:
     # i e j devem estar na solução, nos respectivos quadros i e j
     def remaneja(self, i, quadro_i, j, quadro_j) -> Solucao:
 
+        # print('Início tentativa: trocar a cópia de', i, 'no quadro', quadro_i, 'pela cópia de', j, 'no quadro', quadro_j)
+        # exibe_tamanho_quadro(self._ambiente)
+        # exibe_anuncio(i, self._matriz_anuncio[i])
+        # exibe_anuncio(j, self._matriz_anuncio[j])
+        # exibe_quadro(quadro_i, self.matriz_solucao[quadro_i])
+        # exibe_quadro(quadro_j, self.matriz_solucao[quadro_j])
+        # print()
+
         if quadro_i == quadro_j or i == j:
+            # print('Alteração redundante\n\n===================\n')
             return None
 
         tamanho_i = self._matriz_anuncio[i][TAMANHO]
         tamanho_j = self._matriz_anuncio[j][TAMANHO]
-        novo_espaco_quadro_i = self.matriz_solucao[quadro_i][ESPACO_OCUPADO] - tamanho_i
-        novo_espaco_quadro_j = self.matriz_solucao[quadro_j][ESPACO_OCUPADO] - tamanho_j
 
-        if novo_espaco_quadro_i < tamanho_j or novo_espaco_quadro_j < tamanho_i:
-            return None
+        if self.copia_pode_ser_inserida(i, quadro_j, tamanho_j, j) and self.copia_pode_ser_inserida(j, quadro_i, tamanho_i, i):
+            # print('\nÉ possível fazer a alteração\n\n===================\n')
+            nova_solucao = self.copia()
 
-        if self.anuncio_no_quadro(i, quadro_j) or self.anuncio_no_quadro(j, quadro_i):
-            return None
+            nova_solucao._remove_copia(i, quadro_i)
+            nova_solucao._remove_copia(j, quadro_j)
 
-        nova_solucao = self.copia()
+            nova_solucao._insere_copia(i, quadro_j)
+            nova_solucao._insere_copia(j, quadro_i)
 
-        nova_solucao._remove_copia(i, quadro_i)
-        nova_solucao._remove_copia(j, quadro_j)
-
-        nova_solucao._insere_copia(i, quadro_j)
-        nova_solucao._insere_copia(j, quadro_i)
-
-        return nova_solucao
+        # print('\nNão é possível fazer a alteração\n\n===================\n')
+        return None
 
     def anuncio_no_quadro(self, indice_anuncio, indice_quadro):
         lista_indice_anuncio = self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO]
