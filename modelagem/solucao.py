@@ -19,6 +19,8 @@ class Solucao:
     lista_anuncio_adicionado = None
     lista_anuncio_disponivel = None
     lista_quadro_disponivel = None
+    matriz_anuncio_quadro = None
+    quantidade_anuncios = None
 
     # Dados do problema
     _ambiente = None
@@ -37,13 +39,39 @@ class Solucao:
         self._matriz_conflito = matriz_conflito
         self._matriz_anuncio = matriz_anuncio
 
-        self.matriz_solucao = self._solucao_vazia()
+        self.matriz_solucao = self._matriz_solucao_vazia()
 
+        self.quantidade_anuncios = len(matriz_anuncio)
         self.lista_anuncio_adicionado = []
-        self.lista_anuncio_disponivel = list(range(len(matriz_anuncio)))
+        self.lista_anuncio_disponivel = list(range(self.quantidade_anuncios))
         self.lista_quadro_disponivel = list(range(self._ambiente.quantidade_quadros))
+        self.matriz_anuncio_quadro = self._matriz_anuncio_quadro_vazia()
 
-    def _solucao_vazia(self):
+    def copia(self) -> Solucao:
+        copia = Solucao(self._ambiente, self._matriz_conflito, self._matriz_anuncio)
+
+        copia.matriz_solucao = copy.deepcopy(self.matriz_solucao)
+
+        copia.quantidade_anuncios = self.quantidade_anuncios
+        copia.lista_anuncio_adicionado = copy.deepcopy(self.lista_anuncio_adicionado)
+        copia.lista_quadro_disponivel = copy.deepcopy(self.lista_quadro_disponivel)
+        copia.lista_anuncio_disponivel = copy.deepcopy(self.lista_anuncio_disponivel)
+        copia.matriz_anuncio_quadro = copy.deepcopy(self.matriz_anuncio_quadro)
+
+        copia._espaco_total_ocupado = self._espaco_total_ocupado
+        copia._proporcao_espaco_ocupado = self._proporcao_espaco_ocupado
+        copia._quantidade_quadros_completos = self._quantidade_quadros_completos
+        copia._soma_quadrado_espaco_livre = self._soma_quadrado_espaco_livre
+
+        return copia
+
+    def _matriz_anuncio_quadro_vazia(self):
+        matriz_anuncio_quadro = []
+        for _ in range(self.quantidade_anuncios):
+            matriz_anuncio_quadro.append([])
+        return matriz_anuncio_quadro
+
+    def _matriz_solucao_vazia(self):
         matriz_solucao = []
         for _ in range(self._ambiente.quantidade_quadros):
             matriz_solucao.append([0, []])
@@ -91,22 +119,6 @@ class Solucao:
         if self.espaco_total_ocupado() < solucao.espaco_total_ocupado():
             return False
         return self.criterio_desempate() > solucao.criterio_desempate()
-
-    def copia(self) -> Solucao:
-        copia = Solucao(self._ambiente, self._matriz_conflito, self._matriz_anuncio)
-
-        copia.matriz_solucao = copy.deepcopy(self.matriz_solucao)
-
-        copia.lista_anuncio_adicionado = copy.deepcopy(self.lista_anuncio_adicionado)
-        copia.lista_quadro_disponivel = copy.deepcopy(self.lista_quadro_disponivel)
-        copia.lista_anuncio_disponivel = copy.deepcopy(self.lista_anuncio_disponivel)
-
-        copia._espaco_total_ocupado = self._espaco_total_ocupado
-        copia._proporcao_espaco_ocupado = self._proporcao_espaco_ocupado
-        copia._quantidade_quadros_completos = self._quantidade_quadros_completos
-        copia._soma_quadrado_espaco_livre = self._soma_quadrado_espaco_livre
-
-        return copia
 
     def __str__(self):
         df_solucao = DataFrame(self.matriz_solucao, columns=['Espaço ocupado', 'Anúncios inseridos'])
@@ -181,6 +193,7 @@ class Solucao:
         # print('\nNão é possível fazer a alteração\n\n===================\n\n')
         return None
 
+    # i e j devem estar na solução
     def remaneja(self, i, quadro_i, j, quadro_j) -> Solucao:
 
         if quadro_i == quadro_j or i == j:
@@ -233,10 +246,15 @@ class Solucao:
         self.lista_anuncio_disponivel.remove(indice_anuncio)
 
     def _insere_copia(self, indice_anuncio, indice_quadro):
+
         tamanho_anuncio = self._matriz_anuncio[indice_anuncio][TAMANHO]
         tamanho_atualizado = self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] + tamanho_anuncio
+
         self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] = tamanho_atualizado
         self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO].append(indice_anuncio)
+
+        self.matriz_anuncio_quadro[indice_anuncio].append(indice_quadro)
+
         if tamanho_atualizado == self._ambiente.tamanho_quadro:
             self.lista_quadro_disponivel.remove(indice_quadro)
 
@@ -249,9 +267,14 @@ class Solucao:
         self.lista_anuncio_disponivel.append(indice_anuncio)
 
     def _remove_copia(self, indice_anuncio, indice_quadro):
+
         tamanho_anuncio = self._matriz_anuncio[indice_anuncio][TAMANHO]
         tamanho_atualizado = self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] - tamanho_anuncio
+
         self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] = tamanho_atualizado
         self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO].remove(indice_anuncio)
+
+        self.matriz_anuncio_quadro[indice_anuncio].remove(indice_quadro)
+
         if tamanho_atualizado == (self._ambiente.tamanho_quadro - tamanho_anuncio):
             self.lista_quadro_disponivel.append(indice_quadro)
