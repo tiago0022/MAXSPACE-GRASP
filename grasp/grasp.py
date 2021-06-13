@@ -57,6 +57,7 @@ class Grasp:
         self.tempo_solucao.inicializa()
         self.limpa_solucao()
 
+        print('0%')
         for iteracao in range(self.quantidade_iteracoes):
 
             solucao_construida = self.construtor.constroi(self.alpha)

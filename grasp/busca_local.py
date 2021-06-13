@@ -44,33 +44,19 @@ class BuscaLocal:
                     return solucao_substitui
 
         for i in solucao.lista_anuncio_adicionado:
-            for j in solucao.lista_anuncio_adicionado:
-                for quadro_i in solucao.matriz_anuncio_quadro[i]:
+            for quadro_i in solucao.matriz_anuncio_quadro[i]:
+
+                for quadro_k in solucao.lista_quadro_disponivel:
+                    solucao_move = solucao.move(i, quadro_i, quadro_k)
+                    if solucao_move != None and solucao_move.ehMelhor(solucao):
+                        print(i, 'no quadro', quadro_i, 'movido para o quadro', quadro_k)
+                        return solucao_move
+
+                for j in solucao.lista_anuncio_adicionado:
                     for quadro_j in solucao.matriz_anuncio_quadro[j]:
                         solucao_remaneja = solucao.remaneja(i, quadro_i, j, quadro_j)
                         if solucao_remaneja != None and solucao_remaneja.ehMelhor(solucao):
                             print(i, 'no quadro', quadro_i, 'trocado com', j, 'do quadro', quadro_j)
                             return solucao_remaneja
-
-        # for i, _ in enumerate(self._matriz_anuncio):
-
-        #     lista_quadro_i = []
-
-        #     for j, anuncio_j in enumerate(self._matriz_anuncio):
-
-        #         lista_quadro_j = []
-
-        #         for quadro_l in self._ambiente.lista_quadro():
-
-        #             if solucao.anuncio_no_quadro(i, quadro_l):
-        #                 lista_quadro_i.append(quadro_l)
-        #             if solucao.anuncio_no_quadro(j, quadro_l):
-        #                 lista_quadro_j.append(quadro_l)
-
-        #             for quadro_l in solucao.lista_quadro_disponivel:
-        #                 solucao_move = solucao.move(i, quadro_i, quadro_l)
-        #                 if solucao_move != None and solucao_move.ehMelhor(melhor_vizinho):
-        #                     print(i, 'no quadro', quadro_i, 'movido para o quadro', quadro_l)
-        #                     melhor_vizinho = solucao_move
 
         return None

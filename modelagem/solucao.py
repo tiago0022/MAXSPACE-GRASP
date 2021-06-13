@@ -197,7 +197,7 @@ class Solucao:
         # print('\nNão é possível fazer a alteração\n\n===================\n\n')
         return None
 
-    # i e j devem estar na solução
+    # i e j devem estar na solução, nos respectivos quadros i e j
     def remaneja(self, i, quadro_i, j, quadro_j) -> Solucao:
 
         if quadro_i == quadro_j or i == j:
@@ -228,16 +228,15 @@ class Solucao:
         lista_indice_anuncio = self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO]
         return indice_anuncio in lista_indice_anuncio
 
-    def move(self, i, quadro_i, quadro_l) -> Solucao:
-        if quadro_i == quadro_l:
+    # i deve estar na solução, no quadro i
+    def move(self, i, quadro_i, quadro_k) -> Solucao:
+        if quadro_i == quadro_k or self.anuncio_no_quadro(i, quadro_k):
             return None
 
-        anuncio_i = self._matriz_anuncio[i]
-
-        if self.copia_pode_ser_inserida(i, quadro_l):
+        if self.copia_pode_ser_inserida(i, quadro_k):
             nova_solucao = self.copia()
             nova_solucao._remove_copia(i, quadro_i)
-            nova_solucao._insere_copia(i, quadro_l)
+            nova_solucao._insere_copia(i, quadro_k)
 
         return None
 
@@ -308,8 +307,5 @@ class Solucao:
 
     def _existe_conflito(self, i, j):
         if i < j:
-            if self._matriz_conflito[j][i]:
-                return True
-        elif self._matriz_conflito[i][j]:
-            return True
-        return False
+            return self._matriz_conflito[j][i]
+        return self._matriz_conflito[i][j]
