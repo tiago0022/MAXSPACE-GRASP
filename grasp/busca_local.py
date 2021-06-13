@@ -34,11 +34,18 @@ class BuscaLocal:
 
         melhor_vizinho = solucao.copia()
 
-        for i in solucao.lista_anuncio_disponivel:
-            solucao_adiciona = solucao.adiciona(i)
-            if solucao_adiciona is not None and solucao_adiciona.ehMelhor(melhor_vizinho):
-                print(i, 'adicionado')
+        for disponivel in solucao.lista_anuncio_disponivel:
+
+            solucao_adiciona = solucao.adiciona(disponivel)
+            if solucao_adiciona is not None:
+                print(disponivel, 'adicionado')
                 return solucao_adiciona
+
+            for adicionado in solucao.lista_anuncio_adicionado:
+                solucao_substitui = solucao.substitui(adicionado, disponivel)
+                if solucao_substitui is not None and solucao_substitui.ehMelhor(solucao):
+                    print(adicionado, 'removido e', disponivel, 'adicionado')
+                    return solucao_substitui
 
         for i, _ in enumerate(self._matriz_anuncio):
 
@@ -47,11 +54,6 @@ class BuscaLocal:
             for j, anuncio_j in enumerate(self._matriz_anuncio):
 
                 lista_quadro_j = []
-
-                solucao_troca = solucao.substitui(i, j)
-                if solucao_troca is not None and solucao_troca.ehMelhor(melhor_vizinho):
-                    print(i, 'removido e', j, 'adicionado')
-                    melhor_vizinho = solucao_troca
 
                 for quadro_l in self._ambiente.lista_quadro():
 

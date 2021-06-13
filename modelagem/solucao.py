@@ -1,10 +1,13 @@
 from __future__ import annotations
-from modelagem.quadro import ESPACO_OCUPADO, LISTA_INDICE_ANUNCIO, pode_ser_inserido
-from modelagem.anuncio import FREQUENCIA, TAMANHO
+
+import copy
 
 from pandas.core.frame import DataFrame
-import copy
+
 from modelagem.ambiente import Ambiente
+from modelagem.anuncio import FREQUENCIA, GANHO, TAMANHO
+from modelagem.quadro import (ESPACO_OCUPADO, LISTA_INDICE_ANUNCIO,
+                              pode_ser_inserido)
 
 
 class Solucao:
@@ -109,7 +112,7 @@ class Solucao:
         df_solucao = DataFrame(self.matriz_solucao, columns=['Espaço ocupado', 'Anúncios inseridos'])
         return df_solucao.__str__()
 
-    # Deve receber um anúncio que não está na solução
+    # i deve estar fora da solução
     def adiciona(self, i) -> Solucao:
 
         anuncio = self._matriz_anuncio[i]
@@ -131,12 +134,14 @@ class Solucao:
         # print(i, 'não cabe')
         return None
 
+    # i deve estar na solução, j deve estar fora da solução
     def substitui(self, i, j) -> Solucao:
-        if i not in self.lista_anuncio_adicionado or j in self.lista_anuncio_adicionado:
-            return None
 
         anuncio_i = self._matriz_anuncio[i]
         anuncio_j = self._matriz_anuncio[j]
+
+        if anuncio_j[GANHO] < anuncio_i[GANHO]:
+            return None
 
         frequencia_i = anuncio_i[FREQUENCIA]
         frequencia_j = anuncio_j[FREQUENCIA]
