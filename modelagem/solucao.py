@@ -6,8 +6,7 @@ from pandas.core.frame import DataFrame
 
 from modelagem.ambiente import Ambiente
 from modelagem.anuncio import FREQUENCIA, GANHO, TAMANHO
-from modelagem.quadro import (ESPACO_OCUPADO, LISTA_INDICE_ANUNCIO,
-                              pode_ser_inserido)
+from modelagem.quadro import ESPACO_OCUPADO, LISTA_INDICE_ANUNCIO
 
 
 class Solucao:
@@ -122,7 +121,10 @@ class Solucao:
 
     def __str__(self):
         df_solucao = DataFrame(self.matriz_solucao, columns=['Espaço ocupado', 'Anúncios inseridos'])
-        return df_solucao.__str__()
+        return df_solucao.__str__() + f'\n\n{self.metricas()}'
+
+    def metricas(self) -> str:
+        return f'Espaço ocupado: {self.proporcao_espaco_ocupado()}\nCritério de desempate: {self.criterio_desempate()} \n'
 
     # i deve estar fora da solução
     def adiciona(self, i) -> Solucao:
@@ -134,7 +136,7 @@ class Solucao:
         contagem_quadros = 0
 
         for indice_quadro in self.lista_quadro_disponivel:
-            if pode_ser_inserido(self.matriz_solucao[indice_quadro], anuncio, i, self._matriz_conflito, self._ambiente.tamanho_quadro):
+            if self.copia_pode_ser_inserida(i, indice_quadro):
                 lista_indice_quadro_selecionado.append(indice_quadro)
                 contagem_quadros = contagem_quadros + 1
                 if contagem_quadros == frequencia_anuncio:
@@ -152,7 +154,14 @@ class Solucao:
         anuncio_i = self._matriz_anuncio[i]
         anuncio_j = self._matriz_anuncio[j]
 
+        # print('Início tentativa: remover ', i, 'e adicionar', j)
+        # print('Tamanho quadro:', self._ambiente.tamanho_quadro)
+        # print(i, ': tamanho', anuncio_i[TAMANHO], '/ frequência', anuncio_i[FREQUENCIA])
+        # print(j, ': tamanho', anuncio_j[TAMANHO], '/ frequência', anuncio_j[FREQUENCIA])
+        # print()
+
         if anuncio_j[GANHO] < anuncio_i[GANHO]:
+            # print(f'O ganho de {j} ({anuncio_j[GANHO]}) é menor que o ganho de {i} ({anuncio_i[GANHO]})')
             return None
 
         frequencia_i = anuncio_i[FREQUENCIA]
@@ -164,12 +173,6 @@ class Solucao:
         contagem_quadros_i = frequencia_i
         contagem_quadros_j = 0
 
-        # print('Início tentativa: remover ', i, 'e adicionar', j)
-        # print('Tamanho quadro:', self.ambiente.tamanho_quadro)
-        # print(i, ': tamanho', anuncio_i[TAMANHO], '/ frequência', anuncio_i[FREQUENCIA])
-        # print(j, ': tamanho', anuncio_j[TAMANHO], '/ frequência', anuncio_j[FREQUENCIA])
-        # print()
-
         for indice_quadro in self._ambiente.lista_quadro():
             espaco_liberado = 0
             if contagem_quadros_i > 0 and self.anuncio_no_quadro(i, indice_quadro):
@@ -178,11 +181,12 @@ class Solucao:
                 contagem_quadros_i -= 1
                 espaco_liberado = anuncio_i[TAMANHO]
 
-            if contagem_quadros_j < frequencia_j and pode_ser_inserido(self.matriz_solucao[indice_quadro], anuncio_j, j, self._matriz_conflito, self._ambiente.tamanho_quadro, espaco_liberado, i):
+            if contagem_quadros_j < frequencia_j and self.copia_pode_ser_inserida(j, indice_quadro, espaco_liberado, i):
                 # print('Adicionar em', indice_quadro, self.matriz_solucao[indice_quadro])
                 lista_indice_quadro_selecionado_j.append(indice_quadro)
                 contagem_quadros_j += 1
 
+            # print(f'Quadros liberados: {contagem_quadros_j}, quadros necessários: {frequencia_j}')
             if contagem_quadros_j == frequencia_j and contagem_quadros_i == 0:
                 # print('\nÉ possível fazer a alteração\n\n===================\n\n')
                 nova_solucao = self.copia()
@@ -230,7 +234,7 @@ class Solucao:
 
         anuncio_i = self._matriz_anuncio[i]
 
-        if pode_ser_inserido(self.matriz_solucao[quadro_l], anuncio_i, i, self._matriz_conflito, self._ambiente.tamanho_quadro):
+        if self.copia_pode_ser_inserida(i, quadro_l):
             nova_solucao = self.copia()
             nova_solucao._remove_copia(i, quadro_i)
             nova_solucao._insere_copia(i, quadro_l)
@@ -278,3 +282,34 @@ class Solucao:
 
         if tamanho_atualizado == (self._ambiente.tamanho_quadro - tamanho_anuncio):
             self.lista_quadro_disponivel.append(indice_quadro)
+
+    def copia_pode_ser_inserida(self, indice_anuncio, indice_quadro, espaco_liberado=0, anuncio_liberado=None) -> bool:
+
+        anuncio = self._matriz_anuncio[indice_anuncio]
+        quadro = self.matriz_solucao[indice_quadro]
+
+        tamanho_anuncio = anuncio[TAMANHO]
+        espaco_ocupado = quadro[ESPACO_OCUPADO] - espaco_liberado
+        lista_anuncio_ja_inserido = quadro[LISTA_INDICE_ANUNCIO]
+
+        if espaco_ocupado + tamanho_anuncio > self._ambiente.tamanho_quadro:
+            return False
+
+        for anuncio_ja_inserido in lista_anuncio_ja_inserido:
+            if anuncio_ja_inserido == anuncio_liberado:
+                continue
+            if self._existe_conflito(indice_anuncio, anuncio_ja_inserido):
+                return False
+            if indice_anuncio == anuncio_ja_inserido:
+                return False
+
+        # tempo.exibe()
+        return True
+
+    def _existe_conflito(self, i, j):
+        if i < j:
+            if self._matriz_conflito[j][i]:
+                return True
+        elif self._matriz_conflito[i][j]:
+            return True
+        return False

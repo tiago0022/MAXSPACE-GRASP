@@ -3,9 +3,7 @@ import random as rd
 
 import numpy as np
 from modelagem.ambiente import Ambiente
-from modelagem.anuncio import FREQUENCIA, GANHO, TAMANHO
-from modelagem.quadro import (ESPACO_OCUPADO, LISTA_INDICE_ANUNCIO,
-                              pode_ser_inserido)
+from modelagem.anuncio import FREQUENCIA, GANHO
 from modelagem.solucao import Solucao
 from pandas import DataFrame
 from tempo_execucao import RegistroTempo
@@ -185,7 +183,7 @@ class Construcao:
         contagem_quadros = 0
 
         for indice_quadro in self.solucao.lista_quadro_disponivel:
-            if pode_ser_inserido(self.solucao.quadro(indice_quadro), candidato, indice_candidato, self.matriz_conflito, self.ambiente.tamanho_quadro):
+            if self.solucao.copia_pode_ser_inserida(indice_candidato, indice_quadro):
                 lista_indice_quadro_selecionado.append(indice_quadro)
                 contagem_quadros = contagem_quadros + 1
                 if contagem_quadros == frequencia_anuncio:

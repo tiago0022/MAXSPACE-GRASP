@@ -18,14 +18,12 @@ class BuscaLocal:
 
         while True:
 
-            print(iteracao, '- solução encontrada:')
-            print('Espaço ocupado:', melhor_solucao.proporcao_espaco_ocupado())
-            print('Critério de desempate:', melhor_solucao.criterio_desempate())
-            print()
+            print(iteracao, '- solução:')
+            print(melhor_solucao.metricas())
 
             vizinho = self._obtem_melhor_vizinho(melhor_solucao)
 
-            if vizinho is not None:
+            if vizinho != None:
                 melhor_solucao = vizinho
             else:
                 return melhor_solucao
@@ -35,13 +33,13 @@ class BuscaLocal:
         for disponivel in solucao.lista_anuncio_disponivel:
 
             solucao_adiciona = solucao.adiciona(disponivel)
-            if solucao_adiciona is not None:
+            if solucao_adiciona != None:
                 print(disponivel, 'adicionado')
                 return solucao_adiciona
 
             for adicionado in solucao.lista_anuncio_adicionado:
                 solucao_substitui = solucao.substitui(adicionado, disponivel)
-                if solucao_substitui is not None and solucao_substitui.ehMelhor(solucao):
+                if solucao_substitui != None and solucao_substitui.ehMelhor(solucao):
                     print(adicionado, 'removido e', disponivel, 'adicionado')
                     return solucao_substitui
 
@@ -50,7 +48,7 @@ class BuscaLocal:
                 for quadro_i in solucao.matriz_anuncio_quadro[i]:
                     for quadro_j in solucao.matriz_anuncio_quadro[j]:
                         solucao_remaneja = solucao.remaneja(i, quadro_i, j, quadro_j)
-                        if solucao_remaneja is not None and solucao_remaneja.ehMelhor(solucao):
+                        if solucao_remaneja != None and solucao_remaneja.ehMelhor(solucao):
                             print(i, 'no quadro', quadro_i, 'trocado com', j, 'do quadro', quadro_j)
                             return solucao_remaneja
 
@@ -71,7 +69,7 @@ class BuscaLocal:
 
         #             for quadro_l in solucao.lista_quadro_disponivel:
         #                 solucao_move = solucao.move(i, quadro_i, quadro_l)
-        #                 if solucao_move is not None and solucao_move.ehMelhor(melhor_vizinho):
+        #                 if solucao_move != None and solucao_move.ehMelhor(melhor_vizinho):
         #                     print(i, 'no quadro', quadro_i, 'movido para o quadro', quadro_l)
         #                     melhor_vizinho = solucao_move
 
