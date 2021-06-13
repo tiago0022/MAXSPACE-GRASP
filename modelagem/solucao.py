@@ -111,7 +111,7 @@ class Solucao:
         return self._proporcao_espaco_ocupado
 
     def criterio_desempate(self):
-        return self.soma_quadrado_espaco_livre()
+        return self.quantidade_quadros_completos()
 
     def ehMelhor(self, solucao: Solucao) -> bool:
         if self.espaco_total_ocupado() > solucao.espaco_total_ocupado():

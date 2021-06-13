@@ -25,14 +25,12 @@ class BuscaLocal:
 
             vizinho = self._obtem_melhor_vizinho(melhor_solucao)
 
-            if vizinho.ehMelhor(melhor_solucao):
+            if vizinho is not None:
                 melhor_solucao = vizinho
             else:
                 return melhor_solucao
 
     def _obtem_melhor_vizinho(self, solucao: Solucao) -> Solucao:
-
-        melhor_vizinho = solucao.copia()
 
         for disponivel in solucao.lista_anuncio_disponivel:
 
@@ -77,4 +75,4 @@ class BuscaLocal:
         #                     print(i, 'no quadro', quadro_i, 'movido para o quadro', quadro_l)
         #                     melhor_vizinho = solucao_move
 
-        return melhor_vizinho
+        return None
