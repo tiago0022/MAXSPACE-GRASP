@@ -14,6 +14,7 @@ class Solucao:
 
     # Indexação para otimizar
     lista_anuncio_adicionado = None
+    lista_anuncio_disponivel = None
     lista_quadro_disponivel = None
 
     # Dados do problema
@@ -36,6 +37,7 @@ class Solucao:
         self.matriz_solucao = self._solucao_vazia()
 
         self.lista_anuncio_adicionado = []
+        self.lista_anuncio_disponivel = list(range(len(matriz_anuncio)))
         self.lista_quadro_disponivel = list(range(self._ambiente.quantidade_quadros))
 
     def _solucao_vazia(self):
@@ -89,26 +91,28 @@ class Solucao:
 
     def copia(self) -> Solucao:
         copia = Solucao(self._ambiente, self._matriz_conflito, self._matriz_anuncio)
+
         copia.matriz_solucao = copy.deepcopy(self.matriz_solucao)
+
         copia.lista_anuncio_adicionado = copy.deepcopy(self.lista_anuncio_adicionado)
         copia.lista_quadro_disponivel = copy.deepcopy(self.lista_quadro_disponivel)
+        copia.lista_anuncio_disponivel = copy.deepcopy(self.lista_anuncio_disponivel)
+
         copia._espaco_total_ocupado = self._espaco_total_ocupado
         copia._proporcao_espaco_ocupado = self._proporcao_espaco_ocupado
         copia._quantidade_quadros_completos = self._quantidade_quadros_completos
         copia._soma_quadrado_espaco_livre = self._soma_quadrado_espaco_livre
+
         return copia
 
     def __str__(self):
         df_solucao = DataFrame(self.matriz_solucao, columns=['Espaço ocupado', 'Anúncios inseridos'])
         return df_solucao.__str__()
 
-    def adiciona_ff(self, i) -> Solucao:
-        if(i in self.lista_anuncio_adicionado):
-            # print(i, 'já adicionado')
-            return None
+    # Deve receber um anúncio que não está na solução
+    def adiciona(self, i) -> Solucao:
 
         anuncio = self._matriz_anuncio[i]
-
         frequencia_anuncio = anuncio[FREQUENCIA]
 
         lista_indice_quadro_selecionado = []
@@ -221,6 +225,7 @@ class Solucao:
             self._insere_copia(indice_anuncio, indice_quadro)
 
         self.lista_anuncio_adicionado.append(indice_anuncio)
+        self.lista_anuncio_disponivel.remove(indice_anuncio)
 
     def _insere_copia(self, indice_anuncio, indice_quadro):
         tamanho_anuncio = self._matriz_anuncio[indice_anuncio][TAMANHO]
@@ -236,6 +241,7 @@ class Solucao:
             self._remove_copia(indice_anuncio, indice_quadro)
 
         self.lista_anuncio_adicionado.remove(indice_anuncio)
+        self.lista_anuncio_disponivel.append(indice_anuncio)
 
     def _remove_copia(self, indice_anuncio, indice_quadro):
         tamanho_anuncio = self._matriz_anuncio[indice_anuncio][TAMANHO]

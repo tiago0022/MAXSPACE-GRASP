@@ -34,14 +34,15 @@ class BuscaLocal:
 
         melhor_vizinho = solucao.copia()
 
-        for i, anuncio_i in enumerate(self._matriz_anuncio):
-
-            lista_quadro_i = []
-
-            solucao_adiciona = solucao.adiciona_ff(i)
+        for i in solucao.lista_anuncio_disponivel:
+            solucao_adiciona = solucao.adiciona(i)
             if solucao_adiciona is not None and solucao_adiciona.ehMelhor(melhor_vizinho):
                 print(i, 'adicionado')
-                melhor_vizinho = solucao_adiciona
+                return solucao_adiciona
+
+        for i, _ in enumerate(self._matriz_anuncio):
+
+            lista_quadro_i = []
 
             for j, anuncio_j in enumerate(self._matriz_anuncio):
 
