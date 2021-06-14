@@ -120,8 +120,13 @@ class Solucao:
         return df_solucao.__str__() + f'\n\n{self.metricas()}'
 
     def metricas(self) -> str:
-        porcentagem = np.round(self.proporcao_espaco_ocupado() * 100, 2)
-        return f'Espaço ocupado: {porcentagem}%\nCritério de desempate: {self.criterio_desempate()} \n'
+        return f'Espaço ocupado: {self.porcentagem_espaco_ocupado()}%\nCritério de desempate: {self.criterio_desempate()} \n'
+
+    def porcentagem_espaco_ocupado(self):
+        return np.round(self.proporcao_espaco_ocupado() * 100, 2)
+
+    def avaliacao(self) -> str:
+        return f'\nEspaço ocupado: {self.espaco_total_ocupado()}/{self._ambiente.espaco_total} ({self.porcentagem_espaco_ocupado()}%)\n'
 
     # i deve estar fora da solução
     def adiciona(self, i) -> Solucao:

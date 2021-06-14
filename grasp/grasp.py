@@ -91,7 +91,7 @@ class Grasp:
         if EXIBE_SOLUCAO:
             print(f'\nSolução construída:\n{self.solucao}')
         if EXIBE_APROVEITAMENTO:
-            print(f'\nEspaço ocupado: {round(self.solucao.proporcao_espaco_ocupado() * 100, 2)}%\n')
+            print(self.solucao.avaliacao())
         self.tempo_exibicao.finaliza()
 
     def exibe_instancia(self):
