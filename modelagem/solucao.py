@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 
+import numpy as np
 from pandas.core.frame import DataFrame
 
 from modelagem.ambiente import Ambiente, exibe_tamanho_quadro
@@ -119,7 +120,8 @@ class Solucao:
         return df_solucao.__str__() + f'\n\n{self.metricas()}'
 
     def metricas(self) -> str:
-        return f'Espaço ocupado: {self.proporcao_espaco_ocupado()}\nCritério de desempate: {self.criterio_desempate()} \n'
+        porcentagem = np.round(self.proporcao_espaco_ocupado() * 100, 2)
+        return f'Espaço ocupado: {porcentagem}%\nCritério de desempate: {self.criterio_desempate()} \n'
 
     # i deve estar fora da solução
     def adiciona(self, i) -> Solucao:

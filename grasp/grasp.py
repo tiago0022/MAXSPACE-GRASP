@@ -57,7 +57,7 @@ class Grasp:
         self.tempo_solucao.inicializa()
         self.limpa_solucao()
 
-        print('\n0%\n')
+        print('\n0%')
         for iteracao in range(self.quantidade_iteracoes):
 
             solucao_construida = self.construtor.constroi(self.alpha)
@@ -66,8 +66,11 @@ class Grasp:
             if solucao_atual.espaco_total_ocupado() > self.solucao.espaco_total_ocupado():
                 self.solucao = solucao_atual
 
-            print('===================\n')
-            print(np.round(100 * (iteracao + 1) / self.quantidade_iteracoes, 2), '%')
+            # print(f'\n{iteracao + 1}', '- solução:')
+            # print(solucao_atual.metricas())
+
+            # print('===================\n')
+            print(np.round(100 * (iteracao + 1) / self.quantidade_iteracoes), '%')
 
         self.tempo_solucao.finaliza()
 
@@ -78,8 +81,8 @@ class Grasp:
         if EXIBE_TEMPO:
             print('Quantidade de anúncios:', len(self.matriz_anuncio))
             self.tempo_leitura.exibe(ignora_inativacao=1)
-            self.tempo_solucao.exibe(ignora_inativacao=1)
-            if EXIBE_SOLUCAO or EXIBE_APROVEITAMENTO:
+            self.tempo_solucao.exibe(ignora_inativacao=1, nova_linha=(not EXIBE_SOLUCAO))
+            if EXIBE_SOLUCAO:
                 self.tempo_exibicao.exibe(nova_linha=1, ignora_inativacao=1)
             self.tempo_total.exibe(nova_linha=1, ignora_inativacao=1)
 
