@@ -29,8 +29,7 @@ class Solucao:
 
     # Métricas de avaliação
     espaco_total_ocupado = None
-    _proporcao_espaco_ocupado = None
-    _quantidade_quadros_completos = None
+    quantidade_quadros_completos = None
     _soma_quadrado_espaco_livre = None
 
     def __init__(self, ambiente: Ambiente, matriz_conflito, matriz_anuncio):
@@ -52,6 +51,7 @@ class Solucao:
 
         # Métricas de avaliação
         self.espaco_total_ocupado = 0
+        self.quantidade_quadros_completos = 0
 
     def copia(self) -> Solucao:
 
@@ -69,6 +69,7 @@ class Solucao:
 
         # Métricas de avaliação
         copia.espaco_total_ocupado = self.espaco_total_ocupado
+        copia.quantidade_quadros_completos = self.quantidade_quadros_completos
 
         return copia
 
@@ -91,17 +92,10 @@ class Solucao:
         return self.matriz_solucao[quadro]
 
     def _calcula_parametros_solucao(self):
-        self._quantidade_quadros_completos = 0
         self._soma_quadrado_espaco_livre = 0
         for quadro in self.matriz_solucao:
             espaco_ocupado = quadro[0]
-            self._quantidade_quadros_completos += int(quadro[0] == self._ambiente.tamanho_quadro)
             self._soma_quadrado_espaco_livre += ((self._ambiente.tamanho_quadro - espaco_ocupado) ** 2)
-
-    def quantidade_quadros_completos(self):
-        if self._quantidade_quadros_completos == None:
-            self._calcula_parametros_solucao()
-        return self._quantidade_quadros_completos
 
     def soma_quadrado_espaco_livre(self):
         if self._soma_quadrado_espaco_livre == None:
@@ -109,9 +103,7 @@ class Solucao:
         return self._soma_quadrado_espaco_livre
 
     def proporcao_espaco_ocupado(self):
-        if self._proporcao_espaco_ocupado == None:
-            self._proporcao_espaco_ocupado = self.espaco_total_ocupado / self._ambiente.espaco_total
-        return self._proporcao_espaco_ocupado
+        return self.espaco_total_ocupado / self._ambiente.espaco_total
 
     def ehMelhor(self, solucao: Solucao) -> bool:
         if self.espaco_total_ocupado > solucao.espaco_total_ocupado:
@@ -287,7 +279,7 @@ class Solucao:
 
         if espaco_ocupado_atualizado == self._ambiente.tamanho_quadro:
             self.lista_quadro_disponivel.remove(indice_quadro)
-            # self._quantidade_quadros_completos += 1
+            self.quantidade_quadros_completos += 1
 
         self.espaco_total_ocupado = self.espaco_total_ocupado + tamanho_anuncio
         # termo_atualizacao_soma_quadrados = - 2 * espaco_livre_anterior * tamanho_anuncio + tamanho_anuncio ** 2
@@ -318,7 +310,7 @@ class Solucao:
 
         if espaco_ocupado_anterior == self._ambiente.tamanho_quadro:
             self.lista_quadro_disponivel.append(indice_quadro)
-            # self._quantidade_quadros_completos -= 1
+            self.quantidade_quadros_completos -= 1
 
         self.espaco_total_ocupado = self.espaco_total_ocupado - tamanho_anuncio
         # termo_atualizacao_soma_quadrados = 2 * espaco_livre_anterior * tamanho_anuncio + tamanho_anuncio ** 2
