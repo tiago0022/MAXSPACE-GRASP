@@ -63,7 +63,7 @@ class Grasp:
             solucao_construida = self.construtor.constroi(self.alpha)
             solucao_atual = self.buscador_local.busca(solucao_construida)
 
-            if solucao_atual.espaco_total_ocupado() > self.solucao.espaco_total_ocupado():
+            if solucao_atual.espaco_total_ocupado > self.solucao.espaco_total_ocupado:
                 self.solucao = solucao_atual
 
             # print(f'\n{iteracao + 1}', '- solução:')
