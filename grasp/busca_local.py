@@ -84,6 +84,7 @@ class BuscaLocal:
                         # print(i, 'no quadro', quadro_i, 'movido para o quadro', quadro_k)
                         melhor = solucao_move
                         melhor_encontrado = True
+                        return melhor
         return melhor if melhor_encontrado else None
 
     def _melhor_vizinho_remaneja(self, solucao: Solucao) -> Solucao:
@@ -98,4 +99,5 @@ class BuscaLocal:
                             # print(i, 'no quadro', quadro_i, 'trocado com', j, 'do quadro', quadro_j)
                             melhor = solucao_remaneja
                             melhor_encontrado = True
+                            return melhor
         return melhor if melhor_encontrado else None

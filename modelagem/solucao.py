@@ -30,32 +30,35 @@ class Solucao:
     # Métricas de avaliação
     espaco_total_ocupado = None
     quantidade_quadros_completos = None
-    _soma_quadrado_espaco_livre = None
+    soma_quadrado_espaco_livre = None
 
-    def __init__(self, ambiente: Ambiente, matriz_conflito, matriz_anuncio):
+    def __init__(self, ambiente: Ambiente, matriz_conflito, matriz_anuncio, inicializa=True):
 
         # Dados do problema
         self._ambiente = ambiente
         self._matriz_conflito = matriz_conflito
         self._matriz_anuncio = matriz_anuncio
 
-        # Solução
-        self.matriz_solucao = self._matriz_solucao_vazia()
+        if inicializa:
 
-        # Indexação para otimizar
-        self.quantidade_anuncios = len(matriz_anuncio)
-        self.lista_anuncio_adicionado = []
-        self.lista_anuncio_disponivel = list(range(self.quantidade_anuncios))
-        self.lista_quadro_disponivel = list(range(self._ambiente.quantidade_quadros))
-        self.matriz_anuncio_quadro = self._matriz_anuncio_quadro_vazia()
+            # Solução
+            self.matriz_solucao = self._matriz_solucao_vazia()
 
-        # Métricas de avaliação
-        self.espaco_total_ocupado = 0
-        self.quantidade_quadros_completos = 0
+            # Indexação para otimizar
+            self.quantidade_anuncios = len(matriz_anuncio)
+            self.lista_anuncio_adicionado = []
+            self.lista_anuncio_disponivel = list(range(self.quantidade_anuncios))
+            self.lista_quadro_disponivel = list(range(self._ambiente.quantidade_quadros))
+            self.matriz_anuncio_quadro = self._matriz_anuncio_quadro_vazia()
+
+            # Métricas de avaliação
+            self.espaco_total_ocupado = 0
+            self.quantidade_quadros_completos = 0
+            self.soma_quadrado_espaco_livre = (self._ambiente.tamanho_quadro ** 2) * self._ambiente.quantidade_quadros
 
     def copia(self) -> Solucao:
 
-        copia = Solucao(self._ambiente, self._matriz_conflito, self._matriz_anuncio)
+        copia = Solucao(self._ambiente, self._matriz_conflito, self._matriz_anuncio, False)
 
         # Solução
         copia.matriz_solucao = copy.deepcopy(self.matriz_solucao)
@@ -70,11 +73,12 @@ class Solucao:
         # Métricas de avaliação
         copia.espaco_total_ocupado = self.espaco_total_ocupado
         copia.quantidade_quadros_completos = self.quantidade_quadros_completos
+        copia.soma_quadrado_espaco_livre = self.soma_quadrado_espaco_livre
 
         return copia
 
     def criterio_desempate(self):
-        return self.soma_quadrado_espaco_livre()
+        return self.soma_quadrado_espaco_livre
 
     def _matriz_anuncio_quadro_vazia(self):
         matriz_anuncio_quadro = []
@@ -90,17 +94,6 @@ class Solucao:
 
     def quadro(self, quadro):
         return self.matriz_solucao[quadro]
-
-    def _calcula_parametros_solucao(self):
-        self._soma_quadrado_espaco_livre = 0
-        for quadro in self.matriz_solucao:
-            espaco_ocupado = quadro[0]
-            self._soma_quadrado_espaco_livre += ((self._ambiente.tamanho_quadro - espaco_ocupado) ** 2)
-
-    def soma_quadrado_espaco_livre(self):
-        if self._soma_quadrado_espaco_livre == None:
-            self._calcula_parametros_solucao()
-        return self._soma_quadrado_espaco_livre
 
     def proporcao_espaco_ocupado(self):
         return self.espaco_total_ocupado / self._ambiente.espaco_total
@@ -282,8 +275,8 @@ class Solucao:
             self.quantidade_quadros_completos += 1
 
         self.espaco_total_ocupado = self.espaco_total_ocupado + tamanho_anuncio
-        # termo_atualizacao_soma_quadrados = - 2 * espaco_livre_anterior * tamanho_anuncio + tamanho_anuncio ** 2
-        # self._soma_quadrado_espaco_livre = self._soma_quadrado_espaco_livre + termo_atualizacao_soma_quadrados
+        termo_atualizacao_soma_quadrados = - 2 * espaco_livre_anterior * tamanho_anuncio + tamanho_anuncio ** 2
+        self.soma_quadrado_espaco_livre = self.soma_quadrado_espaco_livre + termo_atualizacao_soma_quadrados
 
     def _remove(self, lista_quadro_selecionado, indice_anuncio):
 
@@ -313,8 +306,8 @@ class Solucao:
             self.quantidade_quadros_completos -= 1
 
         self.espaco_total_ocupado = self.espaco_total_ocupado - tamanho_anuncio
-        # termo_atualizacao_soma_quadrados = 2 * espaco_livre_anterior * tamanho_anuncio + tamanho_anuncio ** 2
-        # self._soma_quadrado_espaco_livre = self._soma_quadrado_espaco_livre + termo_atualizacao_soma_quadrados
+        termo_atualizacao_soma_quadrados = 2 * espaco_livre_anterior * tamanho_anuncio + tamanho_anuncio ** 2
+        self.soma_quadrado_espaco_livre = self.soma_quadrado_espaco_livre + termo_atualizacao_soma_quadrados
 
     def copia_pode_ser_inserida(self, indice_anuncio, indice_quadro, espaco_liberado=0, anuncio_liberado=None) -> bool:
 
