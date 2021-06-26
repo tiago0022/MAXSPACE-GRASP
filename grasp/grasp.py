@@ -8,7 +8,9 @@ from grasp.construcao import Construcao
 
 EXIBE_INSTANCIA = 0  # padrão = False
 EXIBE_TEMPO = 1  # padrão = True
+EXIBE_TEMPO_DETALHE = 0  # padrão = False
 EXIBE_SOLUCAO = 0  # padrão = False
+EXIBE_SOLUCAO_DETALHE = 0  # padrão = False
 EXIBE_APROVEITAMENTO = 1  # padrão = True
 
 
@@ -25,6 +27,8 @@ class Grasp:
     tempo_leitura = None
     tempo_solucao = None
     tempo_exibicao = None
+    lista_tempo_construcao = None
+    lista_tempo_busca_local = None
 
     construtor = None
     buscador_local = None
@@ -54,22 +58,28 @@ class Grasp:
 
     def soluciona(self):
 
-        self.tempo_solucao.inicializa()
+        self.inicializa_tempo()
         self.limpa_solucao()
 
         print('\n0%')
         for iteracao in range(self.quantidade_iteracoes):
 
+            tempo_construcao = RegistroTempo()
             solucao_construida = self.construtor.constroi(self.alpha)
+            self.lista_tempo_construcao.append(tempo_construcao.finaliza())
+
+            tempo_busca_local = RegistroTempo()
             solucao_atual = self.buscador_local.busca(solucao_construida)
+            self.lista_tempo_busca_local.append(tempo_busca_local.finaliza())
 
             if solucao_atual.espaco_total_ocupado > self.solucao.espaco_total_ocupado:
                 self.solucao = solucao_atual
 
-            print(f'\n{iteracao + 1}', '- solução:')
-            print(solucao_atual.metricas())
+            if EXIBE_SOLUCAO_DETALHE:
+                print(f'\n{iteracao + 1}', '- solução:')
+                print(solucao_atual.metricas())
 
-            print('===================\n')
+                print('===================\n')
             print(np.round(100 * (iteracao + 1) / self.quantidade_iteracoes), '%')
 
         self.tempo_solucao.finaliza()
@@ -77,11 +87,24 @@ class Grasp:
         self.exibe_solucao()
         self.exibe_tempo()
 
+    def inicializa_tempo(self):
+        self.tempo_solucao.inicializa()
+        self.lista_tempo_construcao = []
+        self.lista_tempo_busca_local = []
+
     def exibe_tempo(self):
         if EXIBE_TEMPO:
             print('Quantidade de anúncios:', len(self.matriz_anuncio))
+
+            if EXIBE_TEMPO_DETALHE:
+                print()
+                self.buscador_local.exibe_tempo()
+                RegistroTempo.exibe_soma(self.lista_tempo_construcao, 'Total Construção')
+                RegistroTempo.exibe_soma(self.lista_tempo_busca_local, 'Total Busca local', nova_linha=True)
+
             self.tempo_leitura.exibe(ignora_inativacao=1)
             self.tempo_solucao.exibe(ignora_inativacao=1, nova_linha=(not EXIBE_SOLUCAO))
+
             if EXIBE_SOLUCAO:
                 self.tempo_exibicao.exibe(nova_linha=1, ignora_inativacao=1)
             self.tempo_total.exibe(nova_linha=1, ignora_inativacao=1)
