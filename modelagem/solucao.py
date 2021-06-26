@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+from tempo_execucao import RegistroTempo
 
 import numpy as np
 from pandas.core.frame import DataFrame
@@ -215,6 +216,8 @@ class Solucao:
 
             nova_solucao._insere_copia(i, quadro_j)
             nova_solucao._insere_copia(j, quadro_i)
+
+            return nova_solucao
 
         # print('\nNão é possível fazer a alteração\n\n===================\n')
         return None
