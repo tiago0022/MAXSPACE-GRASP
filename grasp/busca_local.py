@@ -44,15 +44,13 @@ class BuscaLocal:
         self._lista_tempo_substitui = []
         self._lista_tempo_move = []
         self._lista_tempo_remaneja = []
-        # self._lista_tempo_move_remaneja = []
 
     def exibe_tempo(self):
         if EXIBE_TEMPO:
             RegistroTempo.exibe_soma(self._lista_tempo_adiciona, 'Adiciona')
             RegistroTempo.exibe_soma(self._lista_tempo_substitui, 'Substitui')
             RegistroTempo.exibe_soma(self._lista_tempo_move, 'Move')
-            RegistroTempo.exibe_soma(self._lista_tempo_remaneja, 'Remaneja')
-            # RegistroTempo.exibe_soma(self._lista_tempo_move_remaneja, 'Move/Remaneja', nova_linha=True)
+            RegistroTempo.exibe_soma(self._lista_tempo_remaneja, 'Remaneja', nova_linha=True)
 
     def _obtem_melhor_vizinho(self, solucao: Solucao) -> Solucao:
 
@@ -79,12 +77,6 @@ class BuscaLocal:
         self._lista_tempo_remaneja.append(tempo.finaliza())
         if solucao_remaneja != None:
             return solucao_remaneja
-
-        # tempo = RegistroTempo()
-        # solucao_move_remaneja = self._melhor_vizinho_move_remaneja(solucao)
-        # self._lista_tempo_move_remaneja.append(tempo.finaliza())
-        # if solucao_move_remaneja != None:
-        #     return solucao_move_remaneja
 
         return None
 
@@ -130,28 +122,6 @@ class BuscaLocal:
         melhor_encontrado = False
         for i in solucao.lista_anuncio_adicionado:
             for quadro_i in solucao.matriz_anuncio_quadro[i]:
-                for j in solucao.lista_anuncio_adicionado:
-                    for quadro_j in solucao.matriz_anuncio_quadro[j]:
-                        solucao_remaneja = solucao.remaneja(i, quadro_i, j, quadro_j)
-                        if solucao_remaneja != None and solucao_remaneja.ehMelhor(melhor):
-                            # print(i, 'no quadro', quadro_i, 'trocado com', j, 'do quadro', quadro_j)
-                            melhor = solucao_remaneja
-                            melhor_encontrado = True
-                            return melhor
-        return melhor if melhor_encontrado else None
-
-    def _melhor_vizinho_move_remaneja(self, solucao: Solucao) -> Solucao:
-        melhor = solucao
-        melhor_encontrado = False
-        for i in solucao.lista_anuncio_adicionado:
-            for quadro_i in solucao.matriz_anuncio_quadro[i]:
-                for quadro_k in solucao.lista_quadro_disponivel:
-                    solucao_move = solucao.move(i, quadro_i, quadro_k)
-                    if solucao_move != None and solucao_move.ehMelhor(melhor):
-                        # print(i, 'no quadro', quadro_i, 'movido para o quadro', quadro_k)
-                        melhor = solucao_move
-                        melhor_encontrado = True
-                        return melhor
                 for j in solucao.lista_anuncio_adicionado:
                     for quadro_j in solucao.matriz_anuncio_quadro[j]:
                         solucao_remaneja = solucao.remaneja(i, quadro_i, j, quadro_j)
