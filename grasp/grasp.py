@@ -74,6 +74,8 @@ class Grasp:
 
             if solucao_atual.espaco_total_ocupado > self.solucao.espaco_total_ocupado:
                 self.solucao = solucao_atual
+                if self.solucao.eh_otimo():
+                    return self.solucao
 
             if EXIBE_SOLUCAO_DETALHE:
                 print(f'\n{iteracao + 1}', '- solução:')
@@ -86,6 +88,8 @@ class Grasp:
 
         self.exibe_solucao()
         self.exibe_tempo()
+
+        return self.solucao
 
     def inicializa_tempo(self):
         self.tempo_solucao.inicializa()

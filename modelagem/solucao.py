@@ -99,12 +99,15 @@ class Solucao:
     def proporcao_espaco_ocupado(self):
         return self.espaco_total_ocupado / self._ambiente.espaco_total
 
-    def ehMelhor(self, solucao: Solucao) -> bool:
+    def eh_melhor(self, solucao: Solucao) -> bool:
         if self.espaco_total_ocupado > solucao.espaco_total_ocupado:
             return True
         if self.espaco_total_ocupado < solucao.espaco_total_ocupado:
             return False
         return self.criterio_desempate() > solucao.criterio_desempate()
+
+    def eh_otimo(self):
+        return self.espaco_total_ocupado == self._ambiente.espaco_total
 
     def __str__(self):
         df_solucao = DataFrame(self.matriz_solucao, columns=['Espaço ocupado', 'Anúncios inseridos'])
@@ -236,7 +239,7 @@ class Solucao:
         # exibe_quadro(quadro_k, self.matriz_solucao[quadro_k])
         # print()
 
-        if quadro_i == quadro_k or self.anuncio_no_quadro(i, quadro_k):
+        if self.anuncio_no_quadro(i, quadro_k):
             # print(i, 'já está no quadro', quadro_k, '\n\n===================\n')
             return None
 
