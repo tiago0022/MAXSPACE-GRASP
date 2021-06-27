@@ -91,7 +91,7 @@ class Solucao:
         return matriz_anuncio_quadro
 
     def _dicionario_espaco_quadro_vazio(self):
-        dicionario_espaco_quadro = {self._ambiente.tamanho_quadro: range(self._ambiente.quantidade_quadros)}
+        dicionario_espaco_quadro = {self._ambiente.tamanho_quadro: list(range(self._ambiente.quantidade_quadros))}
         for tamanho in range(self._ambiente.tamanho_quadro):
             dicionario_espaco_quadro[tamanho] = []
         return dicionario_espaco_quadro
