@@ -1,6 +1,7 @@
-from tempo_execucao import RegistroTempo
 from modelagem.ambiente import Ambiente
+from modelagem.anuncio import TAMANHO
 from modelagem.solucao import Solucao
+from tempo_execucao import RegistroTempo
 
 EXIBE_TEMPO = 0  # padrão = False
 
@@ -110,12 +111,15 @@ class BuscaLocal:
         melhor_encontrado = False
         for i in solucao.lista_anuncio_adicionado:
             for quadro_i in solucao.matriz_anuncio_quadro[i]:
-                for quadro_k in solucao.lista_quadro_disponivel:
-                    solucao_move = solucao.move(i, quadro_i, quadro_k)
-                    if solucao_move != None and solucao_move.eh_melhor(melhor):
-                        # print(i, 'no quadro', quadro_i, 'movido para o quadro', quadro_k)
-                        melhor = solucao_move
-                        melhor_encontrado = True
+                espaco_livre_k = self._matriz_anuncio[i][TAMANHO]
+                while espaco_livre_k <= self._ambiente.tamanho_quadro:
+                    for quadro_k in solucao.dicionario_espaco_quadro[espaco_livre_k]:
+                        solucao_move = solucao.move(i, quadro_i, quadro_k)
+                        if solucao_move != None and solucao_move.eh_melhor(melhor):
+                            # print(i, 'no quadro', quadro_i, 'movido para o quadro', quadro_k)
+                            melhor = solucao_move
+                            melhor_encontrado = True
+                    espaco_livre_k += 1
         return melhor if melhor_encontrado else None
 
     def _melhor_vizinho_remaneja(self, solucao: Solucao) -> Solucao:

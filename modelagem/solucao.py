@@ -92,6 +92,8 @@ class Solucao:
 
     def _dicionario_espaco_quadro_vazio(self):
         dicionario_espaco_quadro = {self._ambiente.tamanho_quadro: range(self._ambiente.quantidade_quadros)}
+        for tamanho in range(self._ambiente.tamanho_quadro):
+            dicionario_espaco_quadro[tamanho] = []
         return dicionario_espaco_quadro
 
     def _matriz_solucao_vazia(self):
@@ -310,8 +312,9 @@ class Solucao:
         # Variáveis
         tamanho_anuncio = self._matriz_anuncio[indice_anuncio][TAMANHO]
         espaco_ocupado_anterior = self.matriz_solucao[indice_quadro][ESPACO_OCUPADO]
-        espaco_livre_anterior = self._espaco_livre(indice_quadro)
         espaco_ocupado_atualizado = espaco_ocupado_anterior + tamanho_anuncio
+        espaco_livre_anterior = self._espaco_livre(indice_quadro)
+        espaco_livre_atualizado = self._ambiente.tamanho_quadro - espaco_ocupado_atualizado
 
         # Atualização dos dados
         self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] = espaco_ocupado_atualizado
@@ -326,6 +329,8 @@ class Solucao:
 
         self.espaco_total_ocupado = self.espaco_total_ocupado + tamanho_anuncio
         self.soma_quadrado_espaco_livre = self.soma_quadrado_espaco_livre + self.termo_insere_copia(tamanho_anuncio, espaco_livre_anterior)
+        self.dicionario_espaco_quadro[espaco_livre_anterior].remove(indice_quadro)
+        self.dicionario_espaco_quadro[espaco_livre_atualizado].append(indice_quadro)
 
     def termo_insere_copia(self, tamanho_anuncio, espaco_livre_anterior):
         return - 2 * espaco_livre_anterior * tamanho_anuncio + tamanho_anuncio ** 2
@@ -343,8 +348,9 @@ class Solucao:
         # Variáveis
         tamanho_anuncio = self._matriz_anuncio[indice_anuncio][TAMANHO]
         espaco_ocupado_anterior = self.matriz_solucao[indice_quadro][ESPACO_OCUPADO]
-        espaco_livre_anterior = self._espaco_livre(indice_quadro)
         espaco_ocupado_atualizado = espaco_ocupado_anterior - tamanho_anuncio
+        espaco_livre_anterior = self._espaco_livre(indice_quadro)
+        espaco_livre_atualizado = self._ambiente.tamanho_quadro - espaco_ocupado_atualizado
 
         # Atualização dos dados
         self.matriz_solucao[indice_quadro][ESPACO_OCUPADO] = espaco_ocupado_atualizado
@@ -359,6 +365,8 @@ class Solucao:
 
         self.espaco_total_ocupado = self.espaco_total_ocupado - tamanho_anuncio
         self.soma_quadrado_espaco_livre = self.soma_quadrado_espaco_livre + self.termo_remove_copia(tamanho_anuncio, espaco_livre_anterior)
+        self.dicionario_espaco_quadro[espaco_livre_anterior].remove(indice_quadro)
+        self.dicionario_espaco_quadro[espaco_livre_atualizado].append(indice_quadro)
 
     def termo_remove_copia(self, tamanho_anuncio, espaco_livre_anterior):
         return 2 * espaco_livre_anterior * tamanho_anuncio + tamanho_anuncio ** 2
