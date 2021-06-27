@@ -47,10 +47,10 @@ class BuscaLocal:
 
     def exibe_tempo(self):
         if EXIBE_TEMPO:
-            RegistroTempo.exibe_soma(self._lista_tempo_adiciona, 'Adiciona')
-            RegistroTempo.exibe_soma(self._lista_tempo_substitui, 'Substitui')
-            RegistroTempo.exibe_soma(self._lista_tempo_move, 'Move')
-            RegistroTempo.exibe_soma(self._lista_tempo_remaneja, 'Remaneja', nova_linha=True)
+            RegistroTempo.exibe_soma(self._lista_tempo_adiciona, 'Total adiciona')
+            RegistroTempo.exibe_soma(self._lista_tempo_substitui, 'Total substitui')
+            RegistroTempo.exibe_soma(self._lista_tempo_move, 'Total move')
+            RegistroTempo.exibe_soma(self._lista_tempo_remaneja, 'Total remaneja', nova_linha=True)
 
     def _obtem_melhor_vizinho(self, solucao: Solucao) -> Solucao:
 
@@ -114,7 +114,6 @@ class BuscaLocal:
                         # print(i, 'no quadro', quadro_i, 'movido para o quadro', quadro_k)
                         melhor = solucao_move
                         melhor_encontrado = True
-                        return melhor
         return melhor if melhor_encontrado else None
 
     def _melhor_vizinho_remaneja(self, solucao: Solucao) -> Solucao:
@@ -129,5 +128,4 @@ class BuscaLocal:
                             # print(i, 'no quadro', quadro_i, 'trocado com', j, 'do quadro', quadro_j)
                             melhor = solucao_remaneja
                             melhor_encontrado = True
-                            return melhor
         return melhor if melhor_encontrado else None

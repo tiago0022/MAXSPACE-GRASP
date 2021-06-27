@@ -43,6 +43,34 @@ class RegistroTempo:
 
             return tempo
 
+    def exibe_media(lista_tempo, descricao, nova_linha=False, ignora_inativacao=False):
+        if EXIBE_TEMPO or ignora_inativacao:
+            texto = descricao + '..'
+            while len(texto) < 35:
+                texto = texto + '.'
+
+            tempo = np.average(lista_tempo)
+            print(f'{texto}{round(tempo, 3)} s')
+
+            if nova_linha:
+                print()
+
+            return tempo
+
+    def exibe_quantidade(lista_tempo, descricao, nova_linha=False, ignora_inativacao=False):
+        if EXIBE_TEMPO or ignora_inativacao:
+            texto = descricao + '..'
+            while len(texto) < 35:
+                texto = texto + '.'
+
+            tempo = len(lista_tempo)
+            print(f'{texto}{round(tempo, 3)} iterações')
+
+            if nova_linha:
+                print()
+
+            return tempo
+
     def inicializa(self):
         self.inicio = time.time()
         self.fim = None
