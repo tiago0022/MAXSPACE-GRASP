@@ -27,6 +27,7 @@ class Solucao:
     lista_quadro_disponivel = None
     matriz_anuncio_quadro = None
     quantidade_anuncios = None
+    dicionario_espaco_quadro = None
 
     # Métricas de avaliação
     espaco_total_ocupado = None
@@ -51,6 +52,7 @@ class Solucao:
             self.lista_anuncio_disponivel = list(range(self.quantidade_anuncios))
             self.lista_quadro_disponivel = list(range(self._ambiente.quantidade_quadros))
             self.matriz_anuncio_quadro = self._matriz_anuncio_quadro_vazia()
+            self.dicionario_espaco_quadro = self._dicionario_espaco_quadro_vazio()
 
             # Métricas de avaliação
             self.espaco_total_ocupado = 0
@@ -70,6 +72,7 @@ class Solucao:
         copia.lista_quadro_disponivel = copy.deepcopy(self.lista_quadro_disponivel)
         copia.lista_anuncio_disponivel = copy.deepcopy(self.lista_anuncio_disponivel)
         copia.matriz_anuncio_quadro = copy.deepcopy(self.matriz_anuncio_quadro)
+        copia.dicionario_espaco_quadro = copy.deepcopy(self.dicionario_espaco_quadro)
 
         # Métricas de avaliação
         copia.espaco_total_ocupado = self.espaco_total_ocupado
@@ -86,6 +89,10 @@ class Solucao:
         for _ in range(self.quantidade_anuncios):
             matriz_anuncio_quadro.append([])
         return matriz_anuncio_quadro
+
+    def _dicionario_espaco_quadro_vazio(self):
+        dicionario_espaco_quadro = {self._ambiente.tamanho_quadro: range(self._ambiente.quantidade_quadros)}
+        return dicionario_espaco_quadro
 
     def _matriz_solucao_vazia(self):
         matriz_solucao = []
@@ -211,7 +218,13 @@ class Solucao:
         tamanho_j = self._matriz_anuncio[j][TAMANHO]
 
         if self.copia_pode_ser_inserida(i, quadro_j, tamanho_j, j) and self.copia_pode_ser_inserida(j, quadro_i, tamanho_i, i):
-            # print('\nÉ possível fazer a alteração\n\n===================\n')
+            # print('\nÉ possível fazer a alteração')
+
+            if not self._remaneja_gera_melhora(quadro_i, quadro_j, tamanho_i, tamanho_j):
+                # print('\nAlteração não compensa\n\n===================\n')
+                return None
+
+            # print('\nAlteração realizada\n\n===================\n')
             nova_solucao = self.copia()
 
             nova_solucao._remove_copia(i, quadro_i)
@@ -224,6 +237,18 @@ class Solucao:
 
         # print('\nNão é possível fazer a alteração\n\n===================\n')
         return None
+
+    def _remaneja_gera_melhora(self, quadro_i, quadro_j, tamanho_i, tamanho_j):
+
+        espaco_livre_i = self._espaco_livre(quadro_i)
+        espaco_livre_j = self._espaco_livre(quadro_j)
+
+        termo_remove_i = self.termo_remove_copia(tamanho_i, espaco_livre_i)
+        termo_remove_j = self.termo_remove_copia(tamanho_j, espaco_livre_j)
+        termo_insere_i = self.termo_insere_copia(tamanho_i, espaco_livre_j)
+        termo_insere_j = self.termo_insere_copia(tamanho_j, espaco_livre_i)
+
+        return (termo_remove_i + termo_remove_j + termo_insere_i + termo_insere_j) > 0
 
     def anuncio_no_quadro(self, indice_anuncio, indice_quadro):
         lista_indice_anuncio = self.matriz_solucao[indice_quadro][LISTA_INDICE_ANUNCIO]
@@ -244,6 +269,12 @@ class Solucao:
             return None
 
         if self.copia_pode_ser_inserida(i, quadro_k):
+            # print('Alteração é possível')
+
+            if not self._move_gera_melhora(i, quadro_i, quadro_k):
+                # print('Alteração não compensa\n\n===================\n')
+                return None
+
             # print(i, 'movido de', quadro_i, 'para', quadro_k, '\n\n===================\n')
             nova_solucao = self.copia()
             nova_solucao._remove_copia(i, quadro_i)
@@ -252,6 +283,19 @@ class Solucao:
 
         # print('Não é possível fazer a alteração \n\n===================\n')
         return None
+
+    def _move_gera_melhora(self, tamanho_i, quadro_i, quadro_k):
+
+        espaco_livre_i = self._espaco_livre(quadro_i)
+        espaco_livre_k = self._espaco_livre(quadro_k)
+
+        termo_remove_i = self.termo_remove_copia(tamanho_i, espaco_livre_i)
+        termo_insere_k = self.termo_insere_copia(tamanho_i, espaco_livre_k)
+
+        return (termo_remove_i + termo_insere_k) > 0
+
+    def _espaco_livre(self, quadro):
+        return self._ambiente.tamanho_quadro - self.matriz_solucao[quadro][ESPACO_OCUPADO]
 
     def insere(self, lista_quadro_selecionado, indice_anuncio):
 
@@ -266,7 +310,7 @@ class Solucao:
         # Variáveis
         tamanho_anuncio = self._matriz_anuncio[indice_anuncio][TAMANHO]
         espaco_ocupado_anterior = self.matriz_solucao[indice_quadro][ESPACO_OCUPADO]
-        espaco_livre_anterior = self._ambiente.tamanho_quadro - espaco_ocupado_anterior
+        espaco_livre_anterior = self._espaco_livre(indice_quadro)
         espaco_ocupado_atualizado = espaco_ocupado_anterior + tamanho_anuncio
 
         # Atualização dos dados
@@ -281,8 +325,10 @@ class Solucao:
             self.quantidade_quadros_completos += 1
 
         self.espaco_total_ocupado = self.espaco_total_ocupado + tamanho_anuncio
-        termo_atualizacao_soma_quadrados = - 2 * espaco_livre_anterior * tamanho_anuncio + tamanho_anuncio ** 2
-        self.soma_quadrado_espaco_livre = self.soma_quadrado_espaco_livre + termo_atualizacao_soma_quadrados
+        self.soma_quadrado_espaco_livre = self.soma_quadrado_espaco_livre + self.termo_insere_copia(tamanho_anuncio, espaco_livre_anterior)
+
+    def termo_insere_copia(self, tamanho_anuncio, espaco_livre_anterior):
+        return - 2 * espaco_livre_anterior * tamanho_anuncio + tamanho_anuncio ** 2
 
     def _remove(self, lista_quadro_selecionado, indice_anuncio):
 
@@ -297,7 +343,7 @@ class Solucao:
         # Variáveis
         tamanho_anuncio = self._matriz_anuncio[indice_anuncio][TAMANHO]
         espaco_ocupado_anterior = self.matriz_solucao[indice_quadro][ESPACO_OCUPADO]
-        espaco_livre_anterior = self._ambiente.tamanho_quadro - espaco_ocupado_anterior
+        espaco_livre_anterior = self._espaco_livre(indice_quadro)
         espaco_ocupado_atualizado = espaco_ocupado_anterior - tamanho_anuncio
 
         # Atualização dos dados
@@ -312,8 +358,10 @@ class Solucao:
             self.quantidade_quadros_completos -= 1
 
         self.espaco_total_ocupado = self.espaco_total_ocupado - tamanho_anuncio
-        termo_atualizacao_soma_quadrados = 2 * espaco_livre_anterior * tamanho_anuncio + tamanho_anuncio ** 2
-        self.soma_quadrado_espaco_livre = self.soma_quadrado_espaco_livre + termo_atualizacao_soma_quadrados
+        self.soma_quadrado_espaco_livre = self.soma_quadrado_espaco_livre + self.termo_remove_copia(tamanho_anuncio, espaco_livre_anterior)
+
+    def termo_remove_copia(self, tamanho_anuncio, espaco_livre_anterior):
+        return 2 * espaco_livre_anterior * tamanho_anuncio + tamanho_anuncio ** 2
 
     def copia_pode_ser_inserida(self, indice_anuncio, indice_quadro, espaco_liberado=0, anuncio_liberado=None) -> bool:
 
