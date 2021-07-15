@@ -101,7 +101,7 @@ def gera_basico_medio(indice='00', seed=1):
 def gera_basico_grande(indice='00', seed=1):
     A = 1000
     K = 500
-    L = 250
+    L = 200
     W = 30
     C = 0.4
     gera_instancia(f'aleatorio_grande_{indice}',
@@ -117,7 +117,7 @@ def gera_basico_grande(indice='00', seed=1):
 
 
 def gera_basico_gigante(indice='00', seed=1):
-    A = 10000
+    A = 5000
     K = 500
     L = 200
     W = 30
@@ -136,28 +136,28 @@ def gera_basico_gigante(indice='00', seed=1):
 
 def gera_grupo_aleatorio_pequeno(quantidade=20):
     for i in range(quantidade):
-        print('\nInstancia', i)
+        print('\nInstancia pequeno', i)
         indice = str(i).zfill(2)
         gera_basico_pequeno(indice, seed=i)
 
 
 def gera_grupo_aleatorio_medio(quantidade=20):
     for i in range(quantidade):
-        print('\nInstancia', i)
+        print('\nInstancia medio', i)
         indice = str(i).zfill(2)
         gera_basico_medio(indice, seed=i)
 
 
 def gera_grupo_aleatorio_grande(quantidade=20):
     for i in range(quantidade):
-        print('\nInstancia', i)
+        print('\nInstancia grande', i)
         indice = str(i).zfill(2)
         gera_basico_grande(indice, seed=i)
 
 
 def gera_grupo_aleatorio_gigante(quantidade=20):
     for i in range(quantidade):
-        print('\nInstancia', i)
+        print('\nInstancia gigante', i)
         indice = str(i).zfill(2)
         gera_basico_gigante(indice, seed=i)
 
@@ -169,4 +169,4 @@ def gera_todas_instancias(quantidade=20):
     gera_grupo_aleatorio_gigante(quantidade)
 
 
-# gera_todas_instancias()
+gera_todas_instancias()

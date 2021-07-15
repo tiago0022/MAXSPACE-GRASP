@@ -50,6 +50,13 @@ class BuscaLocal:
 
     def exibe_tempo(self):
         if EXIBE_TEMPO:
+
+            print('Entrei em cada vizinhança:')
+            print('Adiciona:', len(self._lista_tempo_adiciona), 'vezes')
+            print('Substitui:', len(self._lista_tempo_substitui), 'vezes')
+            print('Move:', len(self._lista_tempo_move), 'vezes')
+            print('Remaneja:', len(self._lista_tempo_remaneja), 'vezes\n')
+
             RegistroTempo.exibe_soma(self._lista_tempo_adiciona, 'Total adiciona')
             RegistroTempo.exibe_soma(self._lista_tempo_substitui, 'Total substitui')
             RegistroTempo.exibe_soma(self._lista_tempo_move, 'Total move')
@@ -111,15 +118,15 @@ class BuscaLocal:
         melhor_encontrado = False
         for i in solucao.lista_anuncio_adicionado:
             for quadro_i in solucao.matriz_anuncio_quadro[i]:
-                espaco_livre_k = self._matriz_anuncio[i][TAMANHO]
-                while espaco_livre_k <= self._ambiente.tamanho_quadro:
-                    for quadro_k in solucao.dicionario_espaco_quadro[espaco_livre_k]:
+                espaco_livre_suficiente_k = self._matriz_anuncio[i][TAMANHO]
+                while espaco_livre_suficiente_k <= self._ambiente.tamanho_quadro:
+                    for quadro_k in solucao.dicionario_espaco_quadro[espaco_livre_suficiente_k]:
                         solucao_move = solucao.move(i, quadro_i, quadro_k)
                         if solucao_move != None and solucao_move.eh_melhor(melhor):
                             # print(i, 'no quadro', quadro_i, 'movido para o quadro', quadro_k)
                             melhor = solucao_move
                             melhor_encontrado = True
-                    espaco_livre_k += 1
+                    espaco_livre_suficiente_k += 1
         return melhor if melhor_encontrado else None
 
     def _melhor_vizinho_remaneja(self, solucao: Solucao) -> Solucao:

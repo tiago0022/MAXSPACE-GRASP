@@ -333,7 +333,7 @@ class Solucao:
         self.dicionario_espaco_quadro[espaco_livre_atualizado].append(indice_quadro)
 
     def termo_insere_copia(self, tamanho_anuncio, espaco_livre_anterior):
-        return - 2 * espaco_livre_anterior * tamanho_anuncio + tamanho_anuncio ** 2
+        return (- 2 * espaco_livre_anterior * tamanho_anuncio) + (tamanho_anuncio ** 2)
 
     def _remove(self, lista_quadro_selecionado, indice_anuncio):
 
@@ -369,7 +369,7 @@ class Solucao:
         self.dicionario_espaco_quadro[espaco_livre_atualizado].append(indice_quadro)
 
     def termo_remove_copia(self, tamanho_anuncio, espaco_livre_anterior):
-        return 2 * espaco_livre_anterior * tamanho_anuncio + tamanho_anuncio ** 2
+        return (2 * espaco_livre_anterior * tamanho_anuncio) + (tamanho_anuncio ** 2)
 
     def copia_pode_ser_inserida(self, indice_anuncio, indice_quadro, espaco_liberado=0, anuncio_liberado=None) -> bool:
 
