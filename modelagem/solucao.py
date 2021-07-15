@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import copy
-from tempo_execucao import RegistroTempo
 
 import numpy as np
 from pandas.core.frame import DataFrame
+from tempo_execucao import RegistroTempo
 
 from modelagem.ambiente import Ambiente, exibe_tamanho_quadro
 from modelagem.anuncio import FREQUENCIA, GANHO, TAMANHO, exibe_anuncio
@@ -123,7 +123,7 @@ class Solucao:
         return df_solucao.__str__() + f'\n\n{self.metricas()}'
 
     def metricas(self) -> str:
-        return f'Espaço ocupado: {self.porcentagem_espaco_ocupado()}%\nCritério de desempate: {self.criterio_desempate()} \n'
+        return f'Espaço ocupado: {self.espaco_total_ocupado} ({self.porcentagem_espaco_ocupado()}%)\nCritério de desempate: {self.criterio_desempate()} \n'
 
     def porcentagem_espaco_ocupado(self):
         return np.round(self.proporcao_espaco_ocupado() * 100, 2)
@@ -169,34 +169,35 @@ class Solucao:
             # print(f'O ganho de {j} ({anuncio_j[GANHO]}) é menor que o ganho de {i} ({anuncio_i[GANHO]})\n\n===================\n')
             return None
 
-        frequencia_i = anuncio_i[FREQUENCIA]
-        frequencia_j = anuncio_j[FREQUENCIA]
-
-        lista_indice_quadro_selecionado_i = []
-        lista_indice_quadro_selecionado_j = []
-
-        contagem_quadros_i = frequencia_i
         contagem_quadros_j = 0
+        frequencia_j = anuncio_j[FREQUENCIA]
+        lista_indice_quadro_possivel_j = []
 
-        for indice_quadro in self._ambiente.lista_quadro():
-            espaco_liberado = 0
-            if contagem_quadros_i > 0 and self.anuncio_no_quadro(i, indice_quadro):
+        espaco_liberado = anuncio_i[TAMANHO]
+
+        for indice_quadro in self.matriz_anuncio_quadro[i]:
+            if self.copia_pode_ser_inserida(j, indice_quadro, espaco_liberado, i):
+                lista_indice_quadro_possivel_j.append(indice_quadro)
+                contagem_quadros_j += 1
                 # print('Remover de', indice_quadro, self.matriz_solucao[indice_quadro])
-                lista_indice_quadro_selecionado_i.append(indice_quadro)
-                contagem_quadros_i -= 1
-                espaco_liberado = anuncio_i[TAMANHO]
+                # print('Adicionar em', indice_quadro, self.matriz_solucao[indice_quadro], f'({contagem_quadros_j} adicionados)')
 
-            if contagem_quadros_j < frequencia_j and self.copia_pode_ser_inserida(j, indice_quadro, espaco_liberado, i):
-                lista_indice_quadro_selecionado_j.append(indice_quadro)
+        for indice_quadro in self.lista_quadro_disponivel:
+            if self.copia_pode_ser_inserida(j, indice_quadro) and indice_quadro not in lista_indice_quadro_possivel_j:
+                lista_indice_quadro_possivel_j.append(indice_quadro)
                 contagem_quadros_j += 1
                 # print('Adicionar em', indice_quadro, self.matriz_solucao[indice_quadro], f'({contagem_quadros_j} adicionados)')
 
-            if contagem_quadros_j == frequencia_j and contagem_quadros_i == 0:
-                # print('\nÉ possível fazer a alteração\n\n===================\n')
-                nova_solucao = self.copia()
-                nova_solucao._remove(lista_indice_quadro_selecionado_i, i)
-                nova_solucao.insere(lista_indice_quadro_selecionado_j, j)
-                return nova_solucao
+        if contagem_quadros_j >= frequencia_j:
+            # print('\nÉ possível fazer a alteração\n\n===================\n')
+
+            lista_indice_quadro_possivel_j.sort()
+            lista_quadro_selecionado_j = lista_indice_quadro_possivel_j[:frequencia_j]
+
+            nova_solucao = self.copia()
+            nova_solucao._remove(self.matriz_anuncio_quadro[i], i)
+            nova_solucao.insere(lista_quadro_selecionado_j, j)
+            return nova_solucao
 
         # print('\nNão é possível fazer a alteração\n\n===================\n')
         return None
@@ -286,7 +287,9 @@ class Solucao:
         # print('Não é possível fazer a alteração \n\n===================\n')
         return None
 
-    def _move_gera_melhora(self, tamanho_i, quadro_i, quadro_k):
+    def _move_gera_melhora(self, i, quadro_i, quadro_k):
+
+        tamanho_i = self._matriz_anuncio[i][TAMANHO]
 
         espaco_livre_i = self._espaco_livre(quadro_i)
         espaco_livre_k = self._espaco_livre(quadro_k)

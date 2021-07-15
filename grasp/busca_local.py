@@ -68,25 +68,33 @@ class BuscaLocal:
         solucao_adiciona = self._melhor_vizinho_adiciona(solucao)
         self._lista_tempo_adiciona.append(tempo.finaliza())
         if solucao_adiciona != None:
+            # print('Adicionou\n')
             return solucao_adiciona
+        # print('Não adicionou\n')
 
         tempo = RegistroTempo()
         solucao_substitui = self._melhor_vizinho_substitui(solucao)
         self._lista_tempo_substitui.append(tempo.finaliza())
         if solucao_substitui != None:
+            # print('Substituiu\n')
             return solucao_substitui
+        # print('Não substituiu\n')
 
         tempo = RegistroTempo()
         solucao_move = self._melhor_vizinho_move(solucao)
         self._lista_tempo_move.append(tempo.finaliza())
         if solucao_move != None:
+            # print('Moveu\n')
             return solucao_move
+        # print('Não moveu\n')
 
         tempo = RegistroTempo()
         solucao_remaneja = self._melhor_vizinho_remaneja(solucao)
         self._lista_tempo_remaneja.append(tempo.finaliza())
         if solucao_remaneja != None:
+            # print('Remanejou\n')
             return solucao_remaneja
+        # print('Não remanejou\n')
 
         return None
 
