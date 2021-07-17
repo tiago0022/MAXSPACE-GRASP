@@ -6,7 +6,7 @@ from grasp.grasp import Grasp
 
 # Parâmetros padrão
 caminho_instancia = 'instancias/basico/'
-quantidade_iteracoes = 30
+quantidade_iteracoes = 100
 seed = int(time.time())
 apenas_exibe_ajuda = False
 

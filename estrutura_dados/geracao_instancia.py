@@ -118,7 +118,7 @@ def gera_basico_grande(indice='00', seed=1):
 
 def gera_basico_gigante(indice='00', seed=1):
     A = 5000
-    K = 500
+    K = 600
     L = 200
     W = 30
     C = 0.4
