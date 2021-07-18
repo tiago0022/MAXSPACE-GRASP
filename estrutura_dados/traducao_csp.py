@@ -112,7 +112,7 @@ def gera_conflito_csp(local, matriz):
 def gera_todos_falkenauer_t(seed=1):
     lista_grupo = ['60', '120', '249', '501']
     for grupo in lista_grupo:
-        for i in range(20):
+        for i in range(5):
             indice = str(i).zfill(2)
             nome_arquivo = f'Falkenauer_t{grupo}_{indice}.txt'
             gera_instancia_falkenauer_t(nome_arquivo, seed=seed)
@@ -123,7 +123,7 @@ def gera_todos_falkenauer_t(seed=1):
 def gera_todos_falkenauer_u(seed=1):
     lista_grupo = ['120', '250', '500', '1000']
     for grupo in lista_grupo:
-        for i in range(20):
+        for i in range(5):
             indice = str(i).zfill(2)
             nome_arquivo = f'Falkenauer_u{grupo}_{indice}.txt'
             gera_instancia_falkenauer_u(nome_arquivo, seed=seed)
@@ -136,4 +136,4 @@ def gera_todos_falkenauer(seed=1):
     gera_todos_falkenauer_u(seed)
 
 
-# gera_todos_falkenauer()
+gera_todos_falkenauer()

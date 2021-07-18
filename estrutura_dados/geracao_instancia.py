@@ -103,7 +103,7 @@ def gera_basico_grande(indice='00', seed=1):
     K = 500
     L = 200
     W = 30
-    C = 0.4
+    C = 0.3
     gera_instancia(f'aleatorio_grande_{indice}',
                    tamanho_quadro=L,
                    quantidade_quadros=K,
@@ -121,7 +121,7 @@ def gera_basico_gigante(indice='00', seed=1):
     K = 600
     L = 200
     W = 30
-    C = 0.4
+    C = 0.3
     gera_instancia(f'aleatorio_gigante_{indice}',
                    tamanho_quadro=L,
                    quantidade_quadros=K,
@@ -169,4 +169,4 @@ def gera_todas_instancias(quantidade=20):
     gera_grupo_aleatorio_gigante(quantidade)
 
 
-gera_todas_instancias()
+gera_todas_instancias(5)

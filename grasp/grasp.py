@@ -35,7 +35,7 @@ class Grasp:
 
     solucao: Solucao = None
 
-    def __init__(self, caminho_instancia, quantidade_iteracoes, alpha):
+    def __init__(self, caminho_instancia, quantidade_iteracoes, alpha, ignora_conflitos=False):
 
         self.quantidade_iteracoes = quantidade_iteracoes
         self.alpha = alpha
@@ -46,12 +46,21 @@ class Grasp:
         self.tempo_total = RegistroTempo('Tempo total de execução')
 
         self.matriz_anuncio, self.ambiente, self.matriz_conflito = obtem_instancia(caminho_instancia)
+
+        if ignora_conflitos:
+            self.esvazia_conflito()
+
         self.tempo_leitura.finaliza()
 
         self.construtor = Construcao(self.matriz_anuncio, self.matriz_conflito, self.ambiente)
         self.buscador_local = BuscaLocal(self.matriz_anuncio, self.ambiente)
 
         self.exibe_instancia()
+
+    def esvazia_conflito(self):
+        for linha in self.matriz_conflito:
+            for i in range(len(linha)):
+                linha[i] = False
 
     def limpa_solucao(self):
         self.solucao = Solucao(self.ambiente, self.matriz_conflito, self.matriz_anuncio)
@@ -75,7 +84,7 @@ class Grasp:
             if solucao_atual.espaco_total_ocupado > self.solucao.espaco_total_ocupado:
                 self.solucao = solucao_atual
                 if self.solucao.eh_otimo():
-                    return self.solucao
+                    break
 
             if EXIBE_SOLUCAO_DETALHE:
                 print(f'\n{iteracao + 1}', '- solução:')
