@@ -1,13 +1,13 @@
 Instância,Com conflitos,Conflitos,Ordem,Executou,Anúncios,Quadros,Tamanho quadro,Espaço ocupado,Métrica,Tempo,Melhor iteração,Solução
 instancias/basico/,N,0,1,S,7.0,4.0,6.0,24.0,0.0,0.001275777816772461,0.0,resultados/solucoes/instancias/basico_N_solucao_1.csv
 instancias/basico/,S,30,1,S,7.0,4.0,6.0,24.0,0.0,0.0012669563293457031,0.0,resultados/solucoes/instancias/basico_S_solucao_1.csv
-instancias/Multiconflito/multiconflito_10/,N,0,1,,,,,,,,,
-instancias/Multiconflito/multiconflito_10/,N,0,2,,,,,,,,,
-instancias/Multiconflito/multiconflito_10/,N,0,3,,,,,,,,,
-instancias/Multiconflito/multiconflito_10/,N,0,4,,,,,,,,,
-instancias/Multiconflito/multiconflito_10/,N,0,5,,,,,,,,,
-instancias/Multiconflito/multiconflito_10/,N,0,6,,,,,,,,,
-instancias/Multiconflito/multiconflito_10/,N,0,7,,,,,,,,,
+instancias/Multiconflito/multiconflito_10/,N,0,1,S,500.0,250.0,100.0,25000.0,0.0,5377.50075674057,33.0,resultados/solucoes/instancias/Multiconflito/multiconflito_10_N_solucao_1.csv
+instancias/Multiconflito/multiconflito_10/,N,0,2,S,500.0,250.0,100.0,25000.0,0.0,288.7252206802368,5.0,resultados/solucoes/instancias/Multiconflito/multiconflito_10_N_solucao_2.csv
+instancias/Multiconflito/multiconflito_10/,N,0,3,S,500.0,250.0,100.0,25000.0,0.0,5122.359269618988,50.0,resultados/solucoes/instancias/Multiconflito/multiconflito_10_N_solucao_3.csv
+instancias/Multiconflito/multiconflito_10/,N,0,4,S,500.0,250.0,100.0,25000.0,0.0,142.01840615272522,2.0,resultados/solucoes/instancias/Multiconflito/multiconflito_10_N_solucao_4.csv
+instancias/Multiconflito/multiconflito_10/,N,0,5,S,500.0,250.0,100.0,25000.0,0.0,115.57257723808289,1.0,resultados/solucoes/instancias/Multiconflito/multiconflito_10_N_solucao_5.csv
+instancias/Multiconflito/multiconflito_10/,N,0,6,S,500.0,250.0,100.0,25000.0,0.0,75.86537146568298,2.0,resultados/solucoes/instancias/Multiconflito/multiconflito_10_N_solucao_6.csv
+instancias/Multiconflito/multiconflito_10/,N,0,7,S,500.0,250.0,100.0,25000.0,0.0,1536.792171239853,20.0,resultados/solucoes/instancias/Multiconflito/multiconflito_10_N_solucao_7.csv
 instancias/Multiconflito/multiconflito_10/,N,0,8,,,,,,,,,
 instancias/Multiconflito/multiconflito_10/,N,0,9,,,,,,,,,
 instancias/Multiconflito/multiconflito_10/,N,0,10,,,,,,,,,
