@@ -78,3 +78,6 @@ class RegistroTempo:
     def finaliza(self):
         self.fim = time.time()
         return self.fim - self.inicio
+
+    def tempo(self):
+        return self.fim - self.inicio

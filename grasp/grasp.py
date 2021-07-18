@@ -1,3 +1,5 @@
+import csv
+
 import numpy as np
 from estrutura_dados.leitura_entrada import obtem_instancia
 from modelagem.solucao import Solucao
@@ -30,6 +32,8 @@ class Grasp:
     lista_tempo_construcao = None
     lista_tempo_busca_local = None
 
+    melhor_iteracao = None
+
     construtor = None
     buscador_local = None
 
@@ -55,6 +59,7 @@ class Grasp:
         self.construtor = Construcao(self.matriz_anuncio, self.matriz_conflito, self.ambiente)
         self.buscador_local = BuscaLocal(self.matriz_anuncio, self.ambiente)
 
+        print(f'\n{caminho_instancia}')
         self.exibe_instancia()
 
     def esvazia_conflito(self):
@@ -83,6 +88,7 @@ class Grasp:
 
             if solucao_atual.espaco_total_ocupado > self.solucao.espaco_total_ocupado:
                 self.solucao = solucao_atual
+                self.melhor_iteracao = iteracao
                 if self.solucao.eh_otimo():
                     break
 
@@ -142,3 +148,10 @@ class Grasp:
             if n > 6:
                 print(' ...')
             print()
+
+    def salva_solucao(self, local):
+        arquivo = open(local, 'w+')
+        arquivo_csv = csv.writer(arquivo)
+        for quadro in self.solucao.matriz_solucao:
+            arquivo_csv.writerow(quadro)
+        arquivo.close()

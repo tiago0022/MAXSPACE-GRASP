@@ -1,5 +1,6 @@
-import pandas as pd
 import random as rd
+
+import pandas as pd
 
 from grasp.grasp import Grasp
 
@@ -19,12 +20,12 @@ TEMPO = 'Tempo'
 MELHOR_ITERACAO = 'Melhor iteração'
 SOLUCAO = 'Solução'
 
-quantidade_iteracoes = 1
+quantidade_iteracoes = 100
 alpha = 0.25
 
 rd.seed(1)
 
-df = pd.read_csv(nome_arquivo, dtype={EXECUTOU: str})
+df = pd.read_csv(nome_arquivo, dtype={EXECUTOU: str, SOLUCAO: str})
 
 for i, linha in df.iterrows():
 
@@ -42,11 +43,13 @@ for i, linha in df.iterrows():
     df.at[i, TAMANHO_QUADRO] = solucao._ambiente.tamanho_quadro
     df.at[i, ESPACO_OCUPADO] = solucao.espaco_total_ocupado
     df.at[i, METRICA] = solucao.criterio_desempate()
-    df.at[i, TEMPO] = grasp.tempo_total
-    df.at[i, MELHOR_ITERACAO] = 'TODO'
-    df.at[i, SOLUCAO] = 'TODO'
-    
+    df.at[i, TEMPO] = grasp.tempo_total.tempo()
+    df.at[i, MELHOR_ITERACAO] = grasp.melhor_iteracao
+
+    local_solucao = f'resultados/solucoes/{caminho_instancia[:-1]}_{linha[COM_CONFLITOS]}_solucao_{linha[ORDEM]}.csv'
+    grasp.salva_solucao(local_solucao)
+    df.at[i, SOLUCAO] = local_solucao
+
     df.at[i, EXECUTOU] = 'S'
 
-    if i % 10 == 0:
-        df.to_csv(nome_arquivo, index=False)
+    df.to_csv(nome_arquivo, index=False)

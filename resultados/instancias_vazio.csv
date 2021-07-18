@@ -1,4 +1,6 @@
 Instância,Com conflitos,Conflitos,Ordem,Executou,Anúncios,Quadros,Tamanho quadro,Espaço ocupado,Métrica,Tempo,Melhor iteração,Solução
+instancias/basico/,N,0,1
+instancias/basico/,S,30,1
 instancias/Multiconflito/multiconflito_10/,N,0,1
 instancias/Multiconflito/multiconflito_10/,N,0,2
 instancias/Multiconflito/multiconflito_10/,N,0,3
