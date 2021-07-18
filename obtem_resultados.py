@@ -1,4 +1,5 @@
 import random as rd
+import time
 
 import pandas as pd
 
@@ -23,7 +24,7 @@ SOLUCAO = 'Solução'
 quantidade_iteracoes = 100
 alpha = 0.25
 
-rd.seed(1)
+rd.seed(int(time.time()))
 
 df = pd.read_csv(nome_arquivo, dtype={EXECUTOU: str, SOLUCAO: str})
 
