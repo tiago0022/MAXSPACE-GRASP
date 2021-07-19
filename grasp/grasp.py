@@ -33,6 +33,7 @@ class Grasp:
     lista_tempo_busca_local = None
 
     melhor_iteracao = None
+    lista_iteracao = None
 
     construtor = None
     buscador_local = None
@@ -69,6 +70,7 @@ class Grasp:
 
     def limpa_solucao(self):
         self.solucao = Solucao(self.ambiente, self.matriz_conflito, self.matriz_anuncio)
+        self.lista_iteracao = []
 
     def soluciona(self):
 
@@ -90,7 +92,10 @@ class Grasp:
                 self.solucao = solucao_atual
                 self.melhor_iteracao = iteracao
                 if self.solucao.eh_otimo():
+                    self.registra_iteracao(iteracao, solucao_construida, solucao_atual)
                     break
+
+            self.registra_iteracao(iteracao, solucao_construida, solucao_atual)
 
             if EXIBE_SOLUCAO_DETALHE:
                 print(f'\n{iteracao + 1}', '- solução:')
@@ -110,6 +115,10 @@ class Grasp:
         self.tempo_solucao.inicializa()
         self.lista_tempo_construcao = []
         self.lista_tempo_busca_local = []
+
+    def registra_iteracao(self, iteracao, solucao_construcao: Solucao, solucao_busca_local: Solucao):
+        linha_iteracao = [iteracao, solucao_construcao.espaco_total_ocupado, solucao_busca_local.espaco_total_ocupado, self.solucao.espaco_total_ocupado]
+        self.lista_iteracao.append(linha_iteracao)
 
     def exibe_tempo(self):
         if EXIBE_TEMPO:
@@ -154,4 +163,11 @@ class Grasp:
         arquivo_csv = csv.writer(arquivo)
         for quadro in self.solucao.matriz_solucao:
             arquivo_csv.writerow(quadro)
+        arquivo.close()
+
+    def salva_lista_iteracao(self, local):
+        arquivo = open(local, 'w+')
+        arquivo_csv = csv.writer(arquivo)
+        for iteracao in self.lista_iteracao:
+            arquivo_csv.writerow(iteracao)
         arquivo.close()

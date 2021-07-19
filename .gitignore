@@ -130,6 +130,8 @@ dmypy.json
 
 \.~lock*
 out*.txt
+instancias (copy *)\.csv
+instancias (copy **)\.csv
 
 # Ignora todas as instâncias...
 instancias*/*
@@ -140,3 +142,4 @@ instancias*/*
 !instancias/Aleatorio/aleatorio_grande_00
 
 resultados/solucoes/
+resultados/iteracoes/

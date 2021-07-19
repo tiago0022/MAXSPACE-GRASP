@@ -20,6 +20,7 @@ METRICA = 'Métrica'
 TEMPO = 'Tempo'
 MELHOR_ITERACAO = 'Melhor iteração'
 SOLUCAO = 'Solução'
+ITERACOES = 'Iterações'
 
 quantidade_iteracoes = 100
 alpha = 0.25
@@ -50,6 +51,10 @@ for i, linha in df.iterrows():
     local_solucao = f'resultados/solucoes/{caminho_instancia[:-1]}_{linha[COM_CONFLITOS]}_solucao_{linha[ORDEM]}.csv'
     grasp.salva_solucao(local_solucao)
     df.at[i, SOLUCAO] = local_solucao
+
+    local_lista_iteracao = f'resultados/iteracoes/{caminho_instancia[:-1]}_{linha[COM_CONFLITOS]}_iteracoes_{linha[ORDEM]}.csv'
+    grasp.salva_lista_iteracao(local_lista_iteracao)
+    df.at[i, ITERACOES] = local_lista_iteracao
 
     df.at[i, EXECUTOU] = 'S'
 

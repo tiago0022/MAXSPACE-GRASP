@@ -18,7 +18,7 @@ lista_instancia_multiconflito = [10, 30, 50, 70]
 
 arquivo = open(f'resultados/instancias_vazio.csv', 'w+')
 arquivo_csv = csv.writer(arquivo)
-arquivo_csv.writerow(['Instância', 'Com conflitos', 'Conflitos', 'Ordem', 'Executou', 'Anúncios', 'Quadros', 'Tamanho quadro', 'Espaço ocupado', 'Métrica', 'Tempo', 'Melhor iteração', 'Solução'])
+arquivo_csv.writerow(['Instância', 'Com conflitos', 'Conflitos', 'Ordem', 'Executou', 'Anúncios', 'Quadros', 'Tamanho quadro', 'Espaço ocupado', 'Métrica', 'Tempo', 'Melhor iteração', 'Solução', 'Iterações'])
 
 arquivo_csv.writerow([f'instancias/basico/', 'N', 0, 1])
 arquivo_csv.writerow([f'instancias/basico/', 'S', 30, 1])
