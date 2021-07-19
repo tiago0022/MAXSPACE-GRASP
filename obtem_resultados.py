@@ -27,7 +27,7 @@ alpha = 0.25
 
 rd.seed(int(time.time()))
 
-df = pd.read_csv(nome_arquivo, dtype={EXECUTOU: str, SOLUCAO: str})
+df = pd.read_csv(nome_arquivo, dtype={EXECUTOU: str, SOLUCAO: str, ITERACOES: str})
 
 for i, linha in df.iterrows():
 
