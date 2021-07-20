@@ -276,7 +276,7 @@ instancias/Aleatorio/aleatorio_medio_04/,S,30,8,,,,,,,,,,
 instancias/Aleatorio/aleatorio_medio_04/,S,30,9,,,,,,,,,,
 instancias/Aleatorio/aleatorio_medio_04/,S,30,10,,,,,,,,,,
 instancias/Aleatorio/aleatorio_medio_04/,S,30,11,,,,,,,,,,
-instancias/Aleatorio/aleatorio_grande_00/,N,0,1,,,,,,,,,,
+instancias/Aleatorio/aleatorio_grande_00/,N,0,1,S,1000.0,500.0,200.0,100000.0,0.0,4788.329083919525,10.0,resultados/solucoes/instancias/Aleatorio/aleatorio_grande_00_N_solucao_1.csv,resultados/iteracoes/instancias/Aleatorio/aleatorio_grande_00_N_iteracoes_1.csv
 instancias/Aleatorio/aleatorio_grande_00/,N,0,2,,,,,,,,,,
 instancias/Aleatorio/aleatorio_grande_00/,N,0,3,,,,,,,,,,
 instancias/Aleatorio/aleatorio_grande_00/,N,0,4,,,,,,,,,,
