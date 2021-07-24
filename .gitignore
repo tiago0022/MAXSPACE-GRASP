@@ -132,6 +132,8 @@ dmypy.json
 out*.txt
 instancias (copy *)\.csv
 instancias (copy **)\.csv
+instancias (cópia *)\.csv
+instancias (cópia **)\.csv
 
 # Ignora todas as instâncias...
 instancias*/*
