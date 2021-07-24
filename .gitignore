@@ -135,11 +135,3 @@ instancias (copy **)\.csv
 instancias (cópia *)\.csv
 instancias (cópia **)\.csv
 
-# Ignora todas as instâncias...
-instancias*/*
-# ...exceto estas
-!instancias/basico
-!instancias/Aleatorio/aleatorio_pequeno_00
-!instancias/Aleatorio/aleatorio_medio_00
-!instancias/Aleatorio/aleatorio_grande_00
-
