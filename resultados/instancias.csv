@@ -1266,11 +1266,11 @@ instancias/Falkenauer_U/falkenauer_u500_04/,S,30,8,,,,,,,,,,
 instancias/Falkenauer_U/falkenauer_u500_04/,S,30,9,,,,,,,,,,
 instancias/Falkenauer_U/falkenauer_u500_04/,S,30,10,,,,,,,,,,
 instancias/Falkenauer_U/falkenauer_u500_04/,S,30,11,,,,,,,,,,
-instancias/Falkenauer_U/falkenauer_u1000_00/,N,0,1,,,,,,,,,,
-instancias/Falkenauer_U/falkenauer_u1000_00/,N,0,2,,,,,,,,,,
-instancias/Falkenauer_U/falkenauer_u1000_00/,N,0,3,,,,,,,,,,
-instancias/Falkenauer_U/falkenauer_u1000_00/,N,0,4,,,,,,,,,,
-instancias/Falkenauer_U/falkenauer_u1000_00/,N,0,5,,,,,,,,,,
+instancias/Falkenauer_U/falkenauer_u1000_00/,N,0,1,S,81.0,200.0,150.0,29589.0,2967.0,176142.18137192726,15.0,resultados/solucoes/instancias/Falkenauer_U/falkenauer_u1000_00_N_solucao_1.csv,resultados/iteracoes/instancias/Falkenauer_U/falkenauer_u1000_00_N_iteracoes_1.csv
+instancias/Falkenauer_U/falkenauer_u1000_00/,N,0,2,S,81.0,200.0,150.0,29642.0,2890.0,180114.19707036018,84.0,resultados/solucoes/instancias/Falkenauer_U/falkenauer_u1000_00_N_solucao_2.csv,resultados/iteracoes/instancias/Falkenauer_U/falkenauer_u1000_00_N_iteracoes_2.csv
+instancias/Falkenauer_U/falkenauer_u1000_00/,N,0,3,S,81.0,200.0,150.0,29608.0,3480.0,218661.4006881714,96.0,resultados/solucoes/instancias/Falkenauer_U/falkenauer_u1000_00_N_solucao_3.csv,resultados/iteracoes/instancias/Falkenauer_U/falkenauer_u1000_00_N_iteracoes_3.csv
+instancias/Falkenauer_U/falkenauer_u1000_00/,N,0,4,S,81.0,200.0,150.0,29583.0,5011.0,196871.45166492465,14.0,resultados/solucoes/instancias/Falkenauer_U/falkenauer_u1000_00_N_solucao_4.csv,resultados/iteracoes/instancias/Falkenauer_U/falkenauer_u1000_00_N_iteracoes_4.csv
+instancias/Falkenauer_U/falkenauer_u1000_00/,N,0,5,S,81.0,200.0,150.0,29684.0,2182.0,220067.38314700127,75.0,resultados/solucoes/instancias/Falkenauer_U/falkenauer_u1000_00_N_solucao_5.csv,resultados/iteracoes/instancias/Falkenauer_U/falkenauer_u1000_00_N_iteracoes_5.csv
 instancias/Falkenauer_U/falkenauer_u1000_00/,N,0,6,,,,,,,,,,
 instancias/Falkenauer_U/falkenauer_u1000_00/,N,0,7,,,,,,,,,,
 instancias/Falkenauer_U/falkenauer_u1000_00/,N,0,8,,,,,,,,,,
