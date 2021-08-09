@@ -672,7 +672,7 @@ instancias/Falkenauer_T/falkenauer_t120_02/,S,30,8,S,91.0,39.0,1000.0,38701.0,17
 instancias/Falkenauer_T/falkenauer_t120_02/,S,30,9,S,91.0,39.0,1000.0,38701.0,19677.0,8994.439282178879,20.0,resultados/solucoes/instancias/Falkenauer_T/falkenauer_t120_02_S_solucao_9.csv,resultados/iteracoes/instancias/Falkenauer_T/falkenauer_t120_02_S_iteracoes_9.csv
 instancias/Falkenauer_T/falkenauer_t120_02/,S,30,10,S,91.0,39.0,1000.0,38701.0,25327.0,7341.022653102875,4.0,resultados/solucoes/instancias/Falkenauer_T/falkenauer_t120_02_S_solucao_10.csv,resultados/iteracoes/instancias/Falkenauer_T/falkenauer_t120_02_S_iteracoes_10.csv
 instancias/Falkenauer_T/falkenauer_t120_02/,S,30,11,S,91.0,39.0,1000.0,38701.0,14933.0,8099.701393127441,8.0,resultados/solucoes/instancias/Falkenauer_T/falkenauer_t120_02_S_solucao_11.csv,resultados/iteracoes/instancias/Falkenauer_T/falkenauer_t120_02_S_iteracoes_11.csv
-instancias/Falkenauer_T/falkenauer_t120_03/,N,0,1,S,86.0,39.0,1000.0,38954.0,686.0,24607.423901557922,34.0,resultados/solucoes/instancias/Falkenauer_T/falkenauer_t120_03_N_solucao_1.csv,resultados/iteracoes/instancias/Falkenauer_T/falkenauer_t120_03_N_iteracoes_1.csv
+instancias/Falkenauer_T/falkenauer_t120_03/,N,0,1,,,,,,,,,,
 instancias/Falkenauer_T/falkenauer_t120_03/,N,0,2,,,,,,,,,,
 instancias/Falkenauer_T/falkenauer_t120_03/,N,0,3,,,,,,,,,,
 instancias/Falkenauer_T/falkenauer_t120_03/,N,0,4,,,,,,,,,,
