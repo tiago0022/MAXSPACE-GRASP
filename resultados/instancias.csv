@@ -338,7 +338,7 @@ instancias/Aleatorio/aleatorio_grande_02/,S,30,4,S,1000.0,500.0,200.0,99962.0,68
 instancias/Aleatorio/aleatorio_grande_02/,S,30,5,S,1000.0,500.0,200.0,99972.0,60.0,112564.98557043076,35.0,resultados/solucoes/instancias/Aleatorio/aleatorio_grande_02_S_solucao_5.csv,resultados/iteracoes/instancias/Aleatorio/aleatorio_grande_02_S_iteracoes_5.csv
 instancias/Aleatorio/aleatorio_grande_02/,S,30,6,S,1000.0,500.0,200.0,99963.0,171.0,122260.92141103745,34.0,resultados/solucoes/instancias/Aleatorio/aleatorio_grande_02_S_solucao_6.csv,resultados/iteracoes/instancias/Aleatorio/aleatorio_grande_02_S_iteracoes_6.csv
 instancias/Aleatorio/aleatorio_grande_02/,S,30,7,S,1000.0,500.0,200.0,99966.0,38.0,111853.46517848969,99.0,resultados/solucoes/instancias/Aleatorio/aleatorio_grande_02_S_solucao_7.csv,resultados/iteracoes/instancias/Aleatorio/aleatorio_grande_02_S_iteracoes_7.csv
-instancias/Aleatorio/aleatorio_grande_02/,S,30,8,S,1000.0,500.0,200.0,99980.0,130.0,112507.07754611969,14.0,resultados/solucoes/instancias/Aleatorio/aleatorio_grande_02_S_solucao_8.csv,resultados/iteracoes/instancias/Aleatorio/aleatorio_grande_02_S_iteracoes_8.csv
+instancias/Aleatorio/aleatorio_grande_02/,S,30,8,S,1000.0,500.0,200.0,99980.0,130.0,112507.07754611968,14.0,resultados/solucoes/instancias/Aleatorio/aleatorio_grande_02_S_solucao_8.csv,resultados/iteracoes/instancias/Aleatorio/aleatorio_grande_02_S_iteracoes_8.csv
 instancias/Aleatorio/aleatorio_grande_02/,S,30,9,S,1000.0,500.0,200.0,99951.0,149.0,110254.0612590313,17.0,resultados/solucoes/instancias/Aleatorio/aleatorio_grande_02_S_solucao_9.csv,resultados/iteracoes/instancias/Aleatorio/aleatorio_grande_02_S_iteracoes_9.csv
 instancias/Aleatorio/aleatorio_grande_02/,S,30,10,S,1000.0,500.0,200.0,99965.0,169.0,99514.15671682358,67.0,resultados/solucoes/instancias/Aleatorio/aleatorio_grande_02_S_solucao_10.csv,resultados/iteracoes/instancias/Aleatorio/aleatorio_grande_02_S_iteracoes_10.csv
 instancias/Aleatorio/aleatorio_grande_02/,S,30,11,S,1000.0,500.0,200.0,99973.0,63.0,117231.64056944847,14.0,resultados/solucoes/instancias/Aleatorio/aleatorio_grande_02_S_solucao_11.csv,resultados/iteracoes/instancias/Aleatorio/aleatorio_grande_02_S_iteracoes_11.csv
@@ -782,9 +782,9 @@ instancias/Falkenauer_T/falkenauer_t249_02/,S,30,8,,,,,,,,,,
 instancias/Falkenauer_T/falkenauer_t249_02/,S,30,9,,,,,,,,,,
 instancias/Falkenauer_T/falkenauer_t249_02/,S,30,10,,,,,,,,,,
 instancias/Falkenauer_T/falkenauer_t249_02/,S,30,11,,,,,,,,,,
-instancias/Falkenauer_T/falkenauer_t249_03/,N,0,1,,,,,,,,,,
-instancias/Falkenauer_T/falkenauer_t249_03/,N,0,2,,,,,,,,,,
-instancias/Falkenauer_T/falkenauer_t249_03/,N,0,3,,,,,,,,,,
+instancias/Falkenauer_T/falkenauer_t249_03/,N,0,1,S,142.0,82.0,1000.0,81927.0,1103.0,248173.21715402603,15.0,resultados/solucoes/instancias/Falkenauer_T/falkenauer_t249_03_N_solucao_1.csv,resultados/iteracoes/instancias/Falkenauer_T/falkenauer_t249_03_N_iteracoes_1.csv
+instancias/Falkenauer_T/falkenauer_t249_03/,N,0,2,S,142.0,82.0,1000.0,81914.0,3242.0,250013.6112191677,0.0,resultados/solucoes/instancias/Falkenauer_T/falkenauer_t249_03_N_solucao_2.csv,resultados/iteracoes/instancias/Falkenauer_T/falkenauer_t249_03_N_iteracoes_2.csv
+instancias/Falkenauer_T/falkenauer_t249_03/,N,0,3,S,142.0,82.0,1000.0,81903.0,2809.0,250103.96052980423,11.0,resultados/solucoes/instancias/Falkenauer_T/falkenauer_t249_03_N_solucao_3.csv,resultados/iteracoes/instancias/Falkenauer_T/falkenauer_t249_03_N_iteracoes_3.csv
 instancias/Falkenauer_T/falkenauer_t249_03/,N,0,4,,,,,,,,,,
 instancias/Falkenauer_T/falkenauer_t249_03/,N,0,5,,,,,,,,,,
 instancias/Falkenauer_T/falkenauer_t249_03/,N,0,6,,,,,,,,,,
@@ -1261,7 +1261,7 @@ instancias/Falkenauer_U/falkenauer_u500_04/,S,30,3,S,80.0,103.0,150.0,15129.0,48
 instancias/Falkenauer_U/falkenauer_u500_04/,S,30,4,S,80.0,103.0,150.0,15166.0,1988.0,10575.944555997849,19.0,resultados/solucoes/instancias/Falkenauer_U/falkenauer_u500_04_S_solucao_4.csv,resultados/iteracoes/instancias/Falkenauer_U/falkenauer_u500_04_S_iteracoes_4.csv
 instancias/Falkenauer_U/falkenauer_u500_04/,S,30,5,S,80.0,103.0,150.0,15178.0,1440.0,13139.879361629486,93.0,resultados/solucoes/instancias/Falkenauer_U/falkenauer_u500_04_S_solucao_5.csv,resultados/iteracoes/instancias/Falkenauer_U/falkenauer_u500_04_S_iteracoes_5.csv
 instancias/Falkenauer_U/falkenauer_u500_04/,S,30,6,S,80.0,103.0,150.0,15171.0,2761.0,13581.512472391129,12.0,resultados/solucoes/instancias/Falkenauer_U/falkenauer_u500_04_S_solucao_6.csv,resultados/iteracoes/instancias/Falkenauer_U/falkenauer_u500_04_S_iteracoes_6.csv
-instancias/Falkenauer_U/falkenauer_u500_04/,S,30,7,S,80.0,103.0,150.0,15144.0,1998.0,13812.363320350647,96.0,resultados/solucoes/instancias/Falkenauer_U/falkenauer_u500_04_S_solucao_7.csv,resultados/iteracoes/instancias/Falkenauer_U/falkenauer_u500_04_S_iteracoes_7.csv
+instancias/Falkenauer_U/falkenauer_u500_04/,S,30,7,S,80.0,103.0,150.0,15144.0,1998.0,13812.363320350649,96.0,resultados/solucoes/instancias/Falkenauer_U/falkenauer_u500_04_S_solucao_7.csv,resultados/iteracoes/instancias/Falkenauer_U/falkenauer_u500_04_S_iteracoes_7.csv
 instancias/Falkenauer_U/falkenauer_u500_04/,S,30,8,S,80.0,103.0,150.0,15210.0,1094.0,12745.756215810776,77.0,resultados/solucoes/instancias/Falkenauer_U/falkenauer_u500_04_S_solucao_8.csv,resultados/iteracoes/instancias/Falkenauer_U/falkenauer_u500_04_S_iteracoes_8.csv
 instancias/Falkenauer_U/falkenauer_u500_04/,S,30,9,S,80.0,103.0,150.0,15155.0,1607.0,15993.283934354782,36.0,resultados/solucoes/instancias/Falkenauer_U/falkenauer_u500_04_S_solucao_9.csv,resultados/iteracoes/instancias/Falkenauer_U/falkenauer_u500_04_S_iteracoes_9.csv
 instancias/Falkenauer_U/falkenauer_u500_04/,S,30,10,S,80.0,103.0,150.0,15155.0,2607.0,14976.04301071167,52.0,resultados/solucoes/instancias/Falkenauer_U/falkenauer_u500_04_S_solucao_10.csv,resultados/iteracoes/instancias/Falkenauer_U/falkenauer_u500_04_S_iteracoes_10.csv
